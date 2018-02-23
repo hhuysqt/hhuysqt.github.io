@@ -6,13 +6,13 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>uclinux on STM32F103ZET6 | Hexo</title>
+  <title>uclinux on STM32F103ZET6 | hhuysqt</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="用哪个BSP？ST为他们STM3210E-EVAL的评估板制作了uClinux-dist-20080808的补丁。bootloader是一个莫名其妙的bin，kernel和rootfs放在片外nor flash里面，并且带有jffs。官方评估板又贵又买不到，不过我手上一块淘宝上一百多块钱的相似配置的板子也能玩。shell跑起来太慢了，跑个ls都要卡一两秒。 Emcraft为一些ST的板子做了第三方">
 <meta property="og:type" content="article">
 <meta property="og:title" content="uclinux on STM32F103ZET6">
 <meta property="og:url" content="http://yoursite.com/2018/02/22/uclinux-on-stm32f103/index.html">
-<meta property="og:site_name" content="Hexo">
+<meta property="og:site_name" content="hhuysqt">
 <meta property="og:description" content="用哪个BSP？ST为他们STM3210E-EVAL的评估板制作了uClinux-dist-20080808的补丁。bootloader是一个莫名其妙的bin，kernel和rootfs放在片外nor flash里面，并且带有jffs。官方评估板又贵又买不到，不过我手上一块淘宝上一百多块钱的相似配置的板子也能玩。shell跑起来太慢了，跑个ls都要卡一两秒。 Emcraft为一些ST的板子做了第三方">
 <meta property="og:image" content="http://yoursite.com/2018/02/22/uclinux-on-stm32f103/board1.jpg">
 <meta property="og:image" content="http://yoursite.com/2018/02/22/uclinux-on-stm32f103/board2.jpg">
@@ -24,13 +24,13 @@
 <meta property="og:image" content="http://yoursite.com/2018/02/22/uclinux-on-stm32f103/romfs-addr.jpeg">
 <meta property="og:image" content="http://yoursite.com/2018/02/22/uclinux-on-stm32f103/data_sec_in_nand.jpeg">
 <meta property="og:image" content="http://yoursite.com/2018/02/22/uclinux-on-stm32f103/booting.jpg">
-<meta property="og:updated_time" content="2018-02-23T12:47:24.683Z">
+<meta property="og:updated_time" content="2018-02-23T13:43:03.528Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="uclinux on STM32F103ZET6">
 <meta name="twitter:description" content="用哪个BSP？ST为他们STM3210E-EVAL的评估板制作了uClinux-dist-20080808的补丁。bootloader是一个莫名其妙的bin，kernel和rootfs放在片外nor flash里面，并且带有jffs。官方评估板又贵又买不到，不过我手上一块淘宝上一百多块钱的相似配置的板子也能玩。shell跑起来太慢了，跑个ls都要卡一两秒。 Emcraft为一些ST的板子做了第三方">
 <meta name="twitter:image" content="http://yoursite.com/2018/02/22/uclinux-on-stm32f103/board1.jpg">
   
-    <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="hhuysqt" type="application/atom+xml">
   
   
     <link rel="icon" href="/favicon.png">
@@ -57,10 +57,10 @@
 <div class="intrude-less">
 	<header id="header" class="inner">
 		<a href="/" class="profilepic">
-			<img src="" class="js-avatar">
+			<img src="/img/avatar.jpg" class="js-avatar">
 		</a>
 		<hgroup>
-		  <h1 class="header-author"><a href="/">John Doe</a></h1>
+		  <h1 class="header-author"><a href="/">hhuysqt</a></h1>
 		</hgroup>
 		
 
@@ -69,7 +69,7 @@
 			
 				<li><a href="/">主页</a></li>
 	        
-				<li><a href="/tags/随笔/">随笔</a></li>
+				<li><a href="https://hackaday.io/project/60977-uc-pc-linux-computer-on-stm32">uc-PC项目</a></li>
 	        
 			</ul>
 		</nav>
@@ -91,13 +91,9 @@
 		<nav class="header-nav">
 			<div class="social">
 				
-					<a class="github" target="_blank" href="#" title="github"><i class="icon-github"></i></a>
+					<a class="github" target="_blank" href="https://github.com/hhuysqt" title="github"><i class="icon-github"></i></a>
 		        
-					<a class="weibo" target="_blank" href="#" title="weibo"><i class="icon-weibo"></i></a>
-		        
-					<a class="rss" target="_blank" href="#" title="rss"><i class="icon-rss"></i></a>
-		        
-					<a class="zhihu" target="_blank" href="#" title="zhihu"><i class="icon-zhihu"></i></a>
+					<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/hhuysqt/activities" title="zhihu"><i class="icon-zhihu"></i></a>
 		        
 			</div>
 		</nav>
@@ -115,10 +111,10 @@
 	<div class="intrude-less">
 		<header id="header" class="inner">
 			<div class="profilepic">
-				<img src="" class="js-avatar">
+				<img src="/img/avatar.jpg" class="js-avatar">
 			</div>
 			<hgroup>
-			  <h1 class="header-author js-header-author">John Doe</h1>
+			  <h1 class="header-author js-header-author">hhuysqt</h1>
 			</hgroup>
 			
 			
@@ -132,13 +128,9 @@
 			<nav class="header-nav">
 				<div class="social">
 					
-						<a class="github" target="_blank" href="#" title="github"><i class="icon-github"></i></a>
+						<a class="github" target="_blank" href="https://github.com/hhuysqt" title="github"><i class="icon-github"></i></a>
 			        
-						<a class="weibo" target="_blank" href="#" title="weibo"><i class="icon-weibo"></i></a>
-			        
-						<a class="rss" target="_blank" href="#" title="rss"><i class="icon-rss"></i></a>
-			        
-						<a class="zhihu" target="_blank" href="#" title="zhihu"><i class="icon-zhihu"></i></a>
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/hhuysqt/activities" title="zhihu"><i class="icon-zhihu"></i></a>
 			        
 				</div>
 			</nav>
@@ -149,7 +141,7 @@
 				
 					<li style="width: 50%"><a href="/">主页</a></li>
 		        
-					<li style="width: 50%"><a href="/tags/随笔/">随笔</a></li>
+					<li style="width: 50%"><a href="https://hackaday.io/project/60977-uc-pc-linux-computer-on-stm32">uc-PC项目</a></li>
 		        
 				</ul>
 			</nav>
@@ -187,7 +179,9 @@
         <h2 id="用哪个BSP？"><a href="#用哪个BSP？" class="headerlink" title="用哪个BSP？"></a>用哪个BSP？</h2><p>ST为他们<a href="http://www.st.com/resource/en/application_note/cd00242717.pdf" target="_blank" rel="noopener">STM3210E-EVAL的评估板</a>制作了uClinux-dist-20080808的补丁。bootloader是一个莫名其妙的bin，kernel和rootfs放在片外nor flash里面，并且带有jffs。官方评估板又贵又买不到，不过我手上一块淘宝上一百多块钱的相似配置的板子也能玩。shell跑起来太慢了，跑个ls都要卡一两秒。</p>
 <p>Emcraft为一些ST的板子做了第三方的BSP，其中包括<a href="https://emcraft.com/products/343" target="_blank" rel="noopener">STM32F429I-disc的uclinux BSP</a>。虽然是给STM32F4板子写的，但是它里面也包括一些STM32F1的驱动，比方说USART、DMA。做一些修改还是可以用的。这份BSP血统比较纯正，用uboot作为bootloader，uclinux内核单独抽出来编译，应用程序用的busybox，包装为ROMFS的镜像。这些东西全部都在片内flash里<code>就地执行</code>，性能颇高，在429 discovery板子上跑的很欢快。</p>
 <p>既然要build it from scratch，那就应该好好研究Emcraft的BSP，好好学学社区的玩法吧。<a href="https://github.com/jserv/stm32f429-linux-builder" target="_blank" rel="noopener">github上有一个makefile，从头开始为429 discovery编译所有东西</a>，它从<a href="https://github.com/robutest" target="_blank" rel="noopener">robutest</a>的仓库里面下载的uboot和uclinux，我猜Emcraft的东西来源也是这个，因为里面的驱动感觉是一样的。</p>
-<p>首先在我买的板子上跑通整个系统，然后再移植到自己的板子上。别人的板子配置颇高，有2MB的片外SRAM跟4MB的片外NOR flash，还有64MB的nand flash，完全可以跑通。我的板子只有1MB的SRAM，加上一个256MB的nand flash；配置之所以那么诡异是因为我芯片只能淘宝。。。<br><img src="/2018/02/22/uclinux-on-stm32f103/board1.jpg" alt="淘宝上的板子"><br>淘宝上的板子</p>
+<p>首先在我买的板子上跑通整个系统，然后再移植到自己的板子上。别人的板子配置颇高，有2MB的片外SRAM跟4MB的片外NOR flash，还有64MB的nand flash，完全可以跑通。我的板子只有1MB的SRAM，加上一个256MB的nand flash；配置之所以那么诡异是因为我芯片只能淘宝。。。</p>
+<a id="more"></a>
+<p><img src="/2018/02/22/uclinux-on-stm32f103/board1.jpg" alt="淘宝上的板子"><br>淘宝上的板子</p>
 <p><img src="/2018/02/22/uclinux-on-stm32f103/board2.jpg" alt="自己的板子1"> <img src="/2018/02/22/uclinux-on-stm32f103/board3.jpg" alt="自己的板子2"><br>自己做的板子</p>
 <h2 id="跑通基本uboot"><a href="#跑通基本uboot" class="headerlink" title="跑通基本uboot"></a>跑通基本uboot</h2><p>正统的uboot跟<a href="https://github.com/robutest/u-boot" target="_blank" rel="noopener">robutest的</a>都有STM32F429的配置，不过并没有STM32F1的驱动。后者是老版本的uboot，还没有引入Kbuild，新增板子要改Makefile，配置全靠写头文件宏定义，但是编译出来的镜像更小，也比较容易裁剪。</p>
 <p>Makefile里面添加：<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">stm32f103zet6_config : unconfig</span><br><span class="line">	@<span class="variable">$(MKCONFIG)</span> $(@:_config=) arm arm_cortexm3 stm32f103zet6 \</span><br><span class="line">	stm stm32</span><br></pre></td></tr></table></figure></p>
@@ -281,27 +275,6 @@
 
       
 
-      
-        <div class="page-reward">
-          <a href="javascript:;" class="page-reward-btn tooltip-top">
-            <div class="tooltip tooltip-east">
-            <span class="tooltip-item">
-              赏
-            </span>
-            <span class="tooltip-content">
-              <span class="tooltip-text">
-                <span class="tooltip-inner">
-                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
-                  <div class="reward-box">
-                    
-                    
-                  </div>
-                </span>
-              </span>
-            </span>
-          </div>
-          </a>
-        </div>
       
     </div>
     <div class="article-info article-info-index">
@@ -416,7 +389,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2018 John Doe
+    		&copy; 2018 hhuysqt
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -547,27 +520,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
         <ul class="search-ul">
           
             <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接1</a>
+              <a href="https://elinux.org/STM32" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>elinux-stm32</a>
             </li>
           
             <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接2</a>
+              <a href="https://emcraft.com/index.php" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>Emcraft system</a>
             </li>
           
             <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接3</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接4</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接5</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接6</a>
+              <a href="https://hackaday.io/project/60977-uc-pc-linux-computer-on-stm32" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>uc-PC项目</a>
             </li>
           
         </ul>
@@ -578,7 +539,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
     
     	<section class="tools-section tools-section-me" q-show="aboutme">
   	  	
-  	  		<div class="aboutme-wrap" id="js-aboutme">很惭愧&lt;br&gt;&lt;br&gt;只做了一点微小的工作&lt;br&gt;谢谢大家</div>
+  	  		<div class="aboutme-wrap" id="js-aboutme">玩电路的程序员&lt;br\&gt;&lt;br\&gt;专注低性能设备</div>
   	  	
     	</section>
     
