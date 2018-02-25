@@ -24,7 +24,7 @@
 <meta property="og:image" content="http://yoursite.com/2018/02/22/uclinux-on-stm32f103/romfs-addr.jpeg">
 <meta property="og:image" content="http://yoursite.com/2018/02/22/uclinux-on-stm32f103/data_sec_in_nand.jpeg">
 <meta property="og:image" content="http://yoursite.com/2018/02/22/uclinux-on-stm32f103/booting.jpg">
-<meta property="og:updated_time" content="2018-02-23T13:43:03.528Z">
+<meta property="og:updated_time" content="2018-02-23T15:03:04.463Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="uclinux on STM32F103ZET6">
 <meta name="twitter:description" content="用哪个BSP？ST为他们STM3210E-EVAL的评估板制作了uClinux-dist-20080808的补丁。bootloader是一个莫名其妙的bin，kernel和rootfs放在片外nor flash里面，并且带有jffs。官方评估板又贵又买不到，不过我手上一块淘宝上一百多块钱的相似配置的板子也能玩。shell跑起来太慢了，跑个ls都要卡一两秒。 Emcraft为一些ST的板子做了第三方">
@@ -183,6 +183,7 @@
 <a id="more"></a>
 <p><img src="/2018/02/22/uclinux-on-stm32f103/board1.jpg" alt="淘宝上的板子"><br>淘宝上的板子</p>
 <p><img src="/2018/02/22/uclinux-on-stm32f103/board2.jpg" alt="自己的板子1"> <img src="/2018/02/22/uclinux-on-stm32f103/board3.jpg" alt="自己的板子2"><br>自己做的板子</p>
+<h2 id="工具链"><a href="#工具链" class="headerlink" title="工具链"></a>工具链</h2><p>老代码用老编译器，新代码用新编译器。比方说新版的uboot编译时候如果用gcc 4.4，就会抱怨说将来不会支持小于6的gcc了。但是6点几的gcc编译老uboot时候，就会报错说，别名不行，以及链接文件里面不能使用变量。<br>目前的编译工具链是<a href="https://sourcery.mentor.com/GNUToolchain/package6503/public/arm-uclinuxeabi/arm-2010q1-189-arm-uclinuxeabi-i686-pc-linux-gnu.tar.bz2" target="_blank" rel="noopener">Emcraft推荐的arm-uclinuxeabi-2010q1</a>。</p>
 <h2 id="跑通基本uboot"><a href="#跑通基本uboot" class="headerlink" title="跑通基本uboot"></a>跑通基本uboot</h2><p>正统的uboot跟<a href="https://github.com/robutest/u-boot" target="_blank" rel="noopener">robutest的</a>都有STM32F429的配置，不过并没有STM32F1的驱动。后者是老版本的uboot，还没有引入Kbuild，新增板子要改Makefile，配置全靠写头文件宏定义，但是编译出来的镜像更小，也比较容易裁剪。</p>
 <p>Makefile里面添加：<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">stm32f103zet6_config : unconfig</span><br><span class="line">	@<span class="variable">$(MKCONFIG)</span> $(@:_config=) arm arm_cortexm3 stm32f103zet6 \</span><br><span class="line">	stm stm32</span><br></pre></td></tr></table></figure></p>
 <p>要想在F1板子上跑起来，首先得搞定基本的驱动：时钟、串口、GPIO。为方便起见，直接在ST官方库包装一层便是了。不过ST库跟uboot都定义了一些类型，比方说u8、u32等等；如果include了两方的头文件，就会说类型重复定义。所以封装层只能够包含ST库头文件。</p>
@@ -344,11 +345,15 @@
   
 <nav id="article-nav">
   
-  
-    <a href="/2018/02/22/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Hello World</div>
-      <i class="icon-circle-right"></i>
+    <a href="/2018/02/23/cross-compiler/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          制作arm-uclinuxeabi的交叉编译工具链
+        
+      </div>
     </a>
+  
   
 </nav>
 
@@ -539,7 +544,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
     
     	<section class="tools-section tools-section-me" q-show="aboutme">
   	  	
-  	  		<div class="aboutme-wrap" id="js-aboutme">玩电路的程序员&lt;br\&gt;&lt;br\&gt;专注低性能设备</div>
+  	  		<div class="aboutme-wrap" id="js-aboutme">玩电路的程序员&lt;br&gt;&lt;br&gt;专注低性能设备</div>
   	  	
     	</section>
     

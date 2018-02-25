@@ -143,6 +143,159 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-gdb调试技巧" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/02/25/gdb调试技巧/">gdb调试stm32的技巧</a>
+    </h1>
+  
+
+        
+        <a href="/2018/02/25/gdb调试技巧/" class="archive-article-date">
+  	<time datetime="2018-02-24T16:08:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-25</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>很多人开发C程序就像写脚本那样，查错，靠的是眼睛看；但是作为系统开发程序员，bug单纯靠看是查不出来的，于是就用printf，于是每一次查错都不可避免要机械地写printf、编译、烧写、运行，没有IDE的时候烧写、运行还不太方便。如果能在命令行下面设断点、单步调试什么的，想必是极好的。</p>
+<p>有时候开发一些程序还不得不在Ubuntu下弄，比方说国外的不少开源项目像px4、openmv之类的，又比方说Linux、nuttx之类的系统开发，等等。当然诸如Eclipse之类的IDE配置一下也能聊胜于无，但是配置它们的复杂度不亚于在命令行下面弄，而且连接板子、开gdb server这些工序只能在命令行下完成；好处是调试时候能用鼠标操作。</p>
+<p>其实，命令行下面用gdb调试，熟悉基本命令之后，用起来相当顺手；在TUI模式下面调试，视觉效果不亚于使用IDE。</p>
+<h2 id="需要安装的软件"><a href="#需要安装的软件" class="headerlink" title="需要安装的软件"></a>需要安装的软件</h2><h3 id="gdb"><a href="#gdb" class="headerlink" title="gdb"></a>gdb</h3><p>包管理装就行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install gdb-arm-none-eabi</span><br></pre></td></tr></table></figure></p>
+<p>当然也可以选用别的，比方说</p>
+<ul>
+<li><a href="https://sourcery.mentor.com/GNUToolchain/package6503/public/arm-uclinuxeabi/arm-2010q1-189-arm-uclinuxeabi-i686-pc-linux-gnu.tar.bz2" target="_blank" rel="noopener">arm-uclinuxeabi-2010q1</a>里面就有arm-uclinuxeabi-gdb。不过这个的TUI有问题。</li>
+<li>SourceForge的uclinux下载页面（崩掉了）</li>
+</ul>
+        
+          <a class="article-more-a" href="/2018/02/25/gdb调试技巧/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/02/25/gdb调试技巧/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-cross-compiler" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/02/23/cross-compiler/">制作arm-uclinuxeabi的交叉编译工具链</a>
+    </h1>
+  
+
+        
+        <a href="/2018/02/23/cross-compiler/" class="archive-article-date">
+  	<time datetime="2018-02-23T15:03:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-23</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="交叉编译的常识"><a href="#交叉编译的常识" class="headerlink" title="交叉编译的常识"></a>交叉编译的常识</h2><p>制作交叉工具链，会涉及到三个架构的机器：</p>
+<ul>
+<li>build，哪个机器制作的这个编译器</li>
+<li>host，哪个机器将运行编译器</li>
+<li>target，编译器生成代码将会跑在哪个机器上</li>
+</ul>
+<p>如果build == host == target，就叫<code>native</code>编译器。这是最正常的情况。<br>如果build == host != target，就叫<code>cross</code>编译器。这就是常规意义下的交叉编译器。<br>如果build != host != target，就叫<code>canadian</code>编译器。据说在社区讨论这种情况的编译器时候，<a href="https://en.wikipedia.org/wiki/Canadian_cross" target="_blank" rel="noopener">加拿大国会有三个党，于是就这样开玩笑了</a>。。。这种情况一般用在<a href="https://en.wikipedia.org/wiki/Compile_farm" target="_blank" rel="noopener">Compile farm</a>里面。编译农场或许就是一堆树莓派，它用来编译不同架构的软件包，制作这个编译器的或许就是某台高性能的x86机器。</p>
+<p>其他情况也有不同的叫法，参考<a href="https://stackoverflow.com/questions/5139403/whats-the-difference-of-configure-option-build-host-and-target" target="_blank" rel="noopener">这个回答</a></p>
+<h2 id="对于Cortex-M，有哪些工具链可选？"><a href="#对于Cortex-M，有哪些工具链可选？" class="headerlink" title="对于Cortex M，有哪些工具链可选？"></a>对于Cortex M，有哪些工具链可选？</h2><ul>
+<li><a href="https://events.static.linuxfound.org/sites/events/files/slides/optimize-uclinux.pdf" target="_blank" rel="noopener">optimize-uclinux</a>这篇报告第34页简述了一些可用的编译器。</li>
+<li><a href="https://toolchains.bootlin.com/" target="_blank" rel="noopener">Bootlin（以前叫Free electrons）公司</a>收录了一堆常见CPU架构的不同版本的gcc工具链。不过armv7-m的工具链貌似不行。</li>
+<li><a href="https://sourcery.mentor.com/GNUToolchain/package6503/public/arm-uclinuxeabi/arm-2010q1-189-arm-uclinuxeabi-i686-pc-linux-gnu.tar.bz2" target="_blank" rel="noopener">社区推荐的arm2010-q1工具链</a>有很强的可用性。</li>
+<li><a href="https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads" target="_blank" rel="noopener">arm官方维护的亲儿子gcc-arm-none-eabi</a>可用用来开发裸机程序，基本没bug，适应的CPU又多。</li>
+<li>包管理可用安装gcc-arm-none-eabi工具链，不过版本略旧与arm官网的gcc。</li>
+<li>自己动手做arm-none-eabi或者arm-uclinuxeabi工具链。</li>
+</ul>
+        
+          <a class="article-more-a" href="/2018/02/23/cross-compiler/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/02/23/cross-compiler/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-uclinux-on-stm32f103" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -182,77 +335,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2018/02/22/uclinux-on-stm32f103/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-hello-world" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/02/22/hello-world/">Hello World</a>
-    </h1>
-  
-
-        
-        <a href="/2018/02/22/hello-world/" class="archive-article-date">
-  	<time datetime="2018-02-22T11:55:47.459Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-22</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/02/22/hello-world/">展开全文 >></a>
         </p>
       
 
@@ -442,7 +524,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
     
     	<section class="tools-section tools-section-me" q-show="aboutme">
   	  	
-  	  		<div class="aboutme-wrap" id="js-aboutme">玩电路的程序员&lt;br\&gt;&lt;br\&gt;专注低性能设备</div>
+  	  		<div class="aboutme-wrap" id="js-aboutme">玩电路的程序员&lt;br&gt;&lt;br&gt;专注低性能设备</div>
   	  	
     	</section>
     

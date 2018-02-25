@@ -6,14 +6,25 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives | hhuysqt</title>
+  <title>gdb调试stm32的技巧 | hhuysqt</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="hhuysqt">
-<meta property="og:url" content="http://yoursite.com/archives/index.html">
+  <meta name="description" content="很多人开发C程序就像写脚本那样，查错，靠的是眼睛看；但是作为系统开发程序员，bug单纯靠看是查不出来的，于是就用printf，于是每一次查错都不可避免要机械地写printf、编译、烧写、运行，没有IDE的时候烧写、运行还不太方便。如果能在命令行下面设断点、单步调试什么的，想必是极好的。 有时候开发一些程序还不得不在Ubuntu下弄，比方说国外的不少开源项目像px4、openmv之类的，又比方说Li">
+<meta property="og:type" content="article">
+<meta property="og:title" content="gdb调试stm32的技巧">
+<meta property="og:url" content="http://yoursite.com/2018/02/25/gdb调试技巧/index.html">
 <meta property="og:site_name" content="hhuysqt">
+<meta property="og:description" content="很多人开发C程序就像写脚本那样，查错，靠的是眼睛看；但是作为系统开发程序员，bug单纯靠看是查不出来的，于是就用printf，于是每一次查错都不可避免要机械地写printf、编译、烧写、运行，没有IDE的时候烧写、运行还不太方便。如果能在命令行下面设断点、单步调试什么的，想必是极好的。 有时候开发一些程序还不得不在Ubuntu下弄，比方说国外的不少开源项目像px4、openmv之类的，又比方说Li">
+<meta property="og:image" content="http://yoursite.com/2018/02/25/gdb调试技巧/segger.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/02/25/gdb调试技巧/debug.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/02/25/gdb调试技巧/layoutsrc.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/02/25/gdb调试技巧/layoutasm.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/02/25/gdb调试技巧/layoutsplit.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/02/25/gdb调试技巧/layoutregs.jpeg">
+<meta property="og:updated_time" content="2018-02-25T17:09:14.334Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hhuysqt">
+<meta name="twitter:title" content="gdb调试stm32的技巧">
+<meta name="twitter:description" content="很多人开发C程序就像写脚本那样，查错，靠的是眼睛看；但是作为系统开发程序员，bug单纯靠看是查不出来的，于是就用printf，于是每一次查错都不可避免要机械地写printf、编译、烧写、运行，没有IDE的时候烧写、运行还不太方便。如果能在命令行下面设断点、单步调试什么的，想必是极好的。 有时候开发一些程序还不得不在Ubuntu下弄，比方说国外的不少开源项目像px4、openmv之类的，又比方说Li">
+<meta name="twitter:image" content="http://yoursite.com/2018/02/25/gdb调试技巧/segger.jpeg">
   
     <link rel="alternative" href="/atom.xml" title="hhuysqt" type="application/atom+xml">
   
@@ -141,103 +152,279 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-gdb调试技巧" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      gdb调试stm32的技巧
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/25/gdb调试技巧/" class="archive-article-date">
+
+        
+        <a href="/2018/02/25/gdb调试技巧/" class="archive-article-date">
   	<time datetime="2018-02-24T16:08:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-25</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/25/gdb调试技巧/">gdb调试stm32的技巧</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>很多人开发C程序就像写脚本那样，查错，靠的是眼睛看；但是作为系统开发程序员，bug单纯靠看是查不出来的，于是就用printf，于是每一次查错都不可避免要机械地写printf、编译、烧写、运行，没有IDE的时候烧写、运行还不太方便。如果能在命令行下面设断点、单步调试什么的，想必是极好的。</p>
+<p>有时候开发一些程序还不得不在Ubuntu下弄，比方说国外的不少开源项目像px4、openmv之类的，又比方说Linux、nuttx之类的系统开发，等等。当然诸如Eclipse之类的IDE配置一下也能聊胜于无，但是配置它们的复杂度不亚于在命令行下面弄，而且连接板子、开gdb server这些工序只能在命令行下完成；好处是调试时候能用鼠标操作。</p>
+<p>其实，命令行下面用gdb调试，熟悉基本命令之后，用起来相当顺手；在TUI模式下面调试，视觉效果不亚于使用IDE。</p>
+<h2 id="需要安装的软件"><a href="#需要安装的软件" class="headerlink" title="需要安装的软件"></a>需要安装的软件</h2><h3 id="gdb"><a href="#gdb" class="headerlink" title="gdb"></a>gdb</h3><p>包管理装就行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install gdb-arm-none-eabi</span><br></pre></td></tr></table></figure></p>
+<p>当然也可以选用别的，比方说</p>
+<ul>
+<li><a href="https://sourcery.mentor.com/GNUToolchain/package6503/public/arm-uclinuxeabi/arm-2010q1-189-arm-uclinuxeabi-i686-pc-linux-gnu.tar.bz2" target="_blank" rel="noopener">arm-uclinuxeabi-2010q1</a>里面就有arm-uclinuxeabi-gdb。不过这个的TUI有问题。</li>
+<li>SourceForge的uclinux下载页面（崩掉了）</li>
+</ul>
+<a id="more"></a>
+<h3 id="ubuntu下jlink驱动"><a href="#ubuntu下jlink驱动" class="headerlink" title="ubuntu下jlink驱动"></a>ubuntu下jlink驱动</h3><p>在<a href="https://www.segger.com/downloads/jlink" target="_blank" rel="noopener">segger官网下载页面</a>上找32-bit或64-bit的deb。<strong>如果你用的是盗版jlink，则5点几的老版本驱动可能更稳定</strong>。<br><img src="/2018/02/25/gdb调试技巧/segger.jpeg" alt="segger官网"></p>
+<p>使用dpkg命令安装<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo dpkg -i jlink_5.10.16_x86_64.deb</span><br></pre></td></tr></table></figure></p>
+<p>现在就有JLinkxxxxx的命令了，常用的是<code>JLinkExe</code>和<code>JLinkGDBServer</code>。</p>
+<p><a href="https://www.segger.com/admin/uploads/productDocs/UM08001_JLink.pdf" target="_blank" rel="noopener">jlink的手册</a>里详述了命令行工具的用法和参数。jlink功能很强大，写好配置文件，并且初始化好板子的存储器接口，甚至可以将程序烧到片外nor flash上面（因为现在nor flash基本上都符合<a href="https://en.wikipedia.org/wiki/Common_Flash_Memory_Interface" target="_blank" rel="noopener">CFI规范</a>了）。</p>
+<h2 id="编译参数"><a href="#编译参数" class="headerlink" title="编译参数"></a>编译参数</h2><p>用gcc<strong>编译程序</strong>时加上<code>-g</code>参数即可，链接时不用加。需要注意的是，如果使用链接脚本的话，不要删去无关段，因为调试信息就在一系列的debug段里面。<br><a href="https://gcc.gnu.org/onlinedocs/gcc/Debugging-Options.html#Debugging-Options" target="_blank" rel="noopener">gcc的调试参数还分级别</a>。不过一般而言一个<code>-g</code>就够了。</p>
+<p>在一些工程里面，需要在Makefile里面改<code>CFLAGS</code>来添加编译参数；或者<code>make CFLAGS=xxxxxx</code>这样来弄。<br>而对于Linux内核工程来说，它专门有一个配置叫<code>CONFIG_DEBUG_INFO</code>，选择它就行，不需要翻找Makefile。</p>
+<h2 id="JLinkExe基本命令"><a href="#JLinkExe基本命令" class="headerlink" title="JLinkExe基本命令"></a>JLinkExe基本命令</h2><p>JLinkExe基本上就用来烧程序。假设要烧录的芯片是<code>STM32F429ZIT6</code>，用jlink连好板子后，开启<code>JLinkExe</code>：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ JLinkExe -device stm32f429zi -if swd -speed 4000</span><br></pre></td></tr></table></figure></p>
+<p>命令中选用了SWD接口，速度4000<strong>k</strong>Hz。</p>
+<pre><code>$ JLinkExe -device stm32f429zi -if swd -speed 4000
+SEGGER J-Link Commander V5.10p (Compiled Feb 26 2016 19:06:09)
+DLL version V5.10p, compiled Feb 26 2016 19:06:05
 
-        <div class="article-info info-on-right">
-          
-          
+Connecting to J-Link via USB...O.K.
+Firmware: J-Link ARM-OB STM32 compiled Aug 22 2012 19:52:04
+Hardware version: V7.00
+S/N: 20090928
+License(s): RDI,FlashDL,FlashBP,JFlash,GDBFull
+Emulator has Trace capability
+VTref = 3.300V
 
+
+Type &quot;connect&quot; to establish a target connection, &apos;?&apos; for help
+J-Link&gt;
+</code></pre><p>这时已经识别到了jlink，用<code>connect</code>命令来连接板子：</p>
+<pre><code>J-Link&gt;connect
+Device &quot;STM32F429ZI&quot; selected.
+
+
+Found SWD-DP with ID 0x2BA01477
+Found SWD-DP with ID 0x2BA01477
+Found Cortex-M4 r0p1, Little endian.
+FPUnit: 6 code (BP) slots and 2 literal slots
+CoreSight components:
+ROMTbl 0 @ E00FF000
+ROMTbl 0 [0]: FFF0F000, CID: B105E00D, PID: 000BB00C SCS
+ROMTbl 0 [1]: FFF02000, CID: B105E00D, PID: 003BB002 DWT
+ROMTbl 0 [2]: FFF03000, CID: B105E00D, PID: 002BB003 FPB
+ROMTbl 0 [3]: FFF01000, CID: B105E00D, PID: 003BB001 ITM
+ROMTbl 0 [4]: FFF41000, CID: B105900D, PID: 000BB9A1 TPIU
+ROMTbl 0 [5]: FFF42000, CID: B105900D, PID: 000BB925 ETM
+Cortex-M4 identified.
+J-Link&gt;
+</code></pre><p>倘若连不上，或许板子布线的不好，可以适当降低调试接口的时钟频率，1000kHz、500kHz、100kHz等等。<br>也有可能此时板子正处在一种很诡异的状态，它程序或许在跑，但是调试口连不上（比方说我在SDRAM里面跑程序的话有时候是连不上的）；此时，先按着复位键，输入connect命令回车，然后马上松开复位键，基本上都可以连上。<br>还有可能是你程序写的不好，比方说，你超频得太厉害了（本来是25MHz的晶振，你当成8MHz来初始化了），这种情况你按着复位键也连不上，只能够用镊子短路晶振，复位一下，然后再connect。<br>有些时候程序貌似没问题但是也连不上，短接晶振之后居然连上了，我有一次调PX4FLOW时候就是这种情况。这没办法，只能老老实实查代码。<br>当然也有些可能是芯片烧掉了。STM32内核烧掉的情况真不少见，拆机件都不是特别靠谱。总之，jlink居然都连不上板子，想必是有些问题了。</p>
+<p>问号可以查询JLinkExe都有哪些命令。输出很多。其中有几个是经常要用的：</p>
+<ul>
+<li><code>r</code>，即reset，复位板子</li>
+<li><code>g</code>，即go，代码继续运行</li>
+<li><code>h</code>，即halt，暂停运行</li>
+<li><code>regs</code>，查看寄存器。看寄存器用处挺大的，看PC、LR、PSR值，会知道此时CPU到底正常与否，到底发生了什么fault。</li>
+<li><code>mem8</code>、<code>mem16</code>、<code>mem32</code>，查看对应内存地址的值。比方说出现了hardfault，这时候查看NVIC的hardfault寄存器，看看哪个fault上访；比方说出现了bus fault，查看是哪种总线错误，查看出错的地址等等。用处相当大。</li>
+<li><code>w1</code>、<code>w2</code>、<code>w4</code>，将值写入对应的内存地址。写脚本时候可以用这些命令来初始化外设寄存器。这时就要老老实实翻手册，计算哪个寄存器应该写哪些值。</li>
+<li><code>erase</code>，擦除整个片内flash</li>
+<li><code>loadbin</code>，烧写程序，格式是<code>loadbin 哪个bin 哪个地址</code>。蛋疼的是，它只认.bin后缀的文件。</li>
+</ul>
+<p>用loadbin命令烧写程序。比方说烧写本目录下的xipImage.bin：</p>
+<pre><code>J-Link&gt;loadbin xipImage.bin 0x08008000         
+Downloading file [xipImage.bin]...Comparing flash   [100%] Done.
+Erasing flash     [100%] Done.
+Programming flash [100%] Done.
+Verifying flash   [100%] Done.
+J-Link: Flash download: Flash programming performed for 2 ranges (262144 bytes)
+J-Link: Flash download: Total time needed: 12.326s (Prepare: 0.163s, Compare: 0.739s, Erase: 3.303s, Program: 8.100s, Verify: 0.006s, Restore: 0.013s)
+O.K.
+J-Link&gt;r
+J-Link&gt;g
+J-Link&gt;
+</code></pre><p>烧完之后记得复位、启动。</p>
+<p>这些命令都可以写在脚本里面，然后<code>JLinkExe -commanderscript xxxxxx</code>来运行脚本。比方说要烧写一批板子，当然写脚本方便啦。</p>
+<p>有时候烧程序会失败，直接failed to download RAM code。这或许是板子布线不好，降低调试时钟频率就行；又或许是板子上电容没焊全：大芯片有十几个电源脚，这些脚外面的104电容一个都不能少。<br>有时候烧写老是卡在某个特定地址的flash块上面，擦又擦不掉，这时降低调试时钟频率或许会有用。<br>如果死活烧不进去，或许芯片烧了。（我有一次用拆机件，发现启动时有时候PC是0x08000000之后的地址，有时候又是0x1fff0000之后的地址，而后者是STM32出厂bootloader的地址；这说明它有时候从bootloader启动，有时候又从片内flash启动，从哪启动取决于boot0引脚的电平，而测得它的电平是稳定的。这表明，芯片内部boot0引脚的某个地方可能坏了。一分钱一分货）</p>
+<p>退出程序，用<code>q</code>，或者按<code>Ctrl+C</code>退出。</p>
+<h2 id="使用arm-none-eabi-gdb"><a href="#使用arm-none-eabi-gdb" class="headerlink" title="使用arm-none-eabi-gdb"></a>使用arm-none-eabi-gdb</h2><p>交叉工具链的gdb用法跟gdb几乎一样。只不过交叉工具链必须要gdb server。jlink提供了<code>JLinkGDBServer</code>，连接板子时参数跟<code>JLinkExe</code>差不多，同样要表明什么芯片、什么调试口、速度几何。默认端口是2331。</p>
+<p>假设我们要调试大名鼎鼎的<strong>Linux内核</strong>。它的elf文件是<strong>vmlinux</strong>，就在编译目录下面。而且内核配置了<code>CONFIG_DEBUG_INFO</code>。</p>
+<p>开一个终端，开gdb server：</p>
+<pre><code>$ JLinkGDBServer -device stm32f429zi -if swd -speed 4000
+  ...    
+Connecting to J-Link...                                    
+J-Link is connected.                                       
+  ...
+Checking target voltage...                                 
+Target voltage: 3.30 V                                     
+Listening on TCP/IP port 2331                              
+Connecting to target...Connected to target                 
+Waiting for GDB connection...
+</code></pre><p>在另外一个终端，开gdb：</p>
+<pre><code>$ arm-none-eabi-gdb vmlinux
+GNU gdb (7.11.90.20160917-0ubuntu1+9build1) 7.11.90.20160917-git             
+Copyright (C) 2016 Free Software Foundation, Inc.
+...
+Reading symbols from vmlinux...done. 
+(gdb) 
+</code></pre><p>在gdb里面连接gdb server<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(gdb) target remote :2331</span><br></pre></td></tr></table></figure></p>
+<p>然后就可以愉快地调试了！<br><img src="/2018/02/25/gdb调试技巧/debug.jpeg" alt="在start_kernel()处的断点"><br>以上是设在大名鼎鼎的<strong>start_kernel()</strong>处的断点。推荐使用<code>tmux</code>。上图开了两个窗口，上面的是<strong>TUI</strong>下面的arm-none-eabi-gdb，下面是JLinkGDBServer。还可以在旁边开一个窗口运行诸如picocom的串口助手，方便调试。</p>
+<h2 id="gdb常用指令"><a href="#gdb常用指令" class="headerlink" title="gdb常用指令"></a>gdb常用指令</h2><p>gdb有一本<a href="https://www.eecs.umich.edu/courses/eecs373/readings/Debugger.pdf" target="_blank" rel="noopener">厚厚的说明书</a>。其实调试时候并不需要那么多奇技淫巧，掌握基本的命令，在gdb下存活，然后碰到问题再翻手册，这才现实。</p>
+<h3 id="设置断点"><a href="#设置断点" class="headerlink" title="设置断点"></a>设置断点</h3><ul>
+<li><code>b</code>，设置程序断点，语法是<code>b 函数名</code>或者<code>b 文件名:行数</code>。如果要在特定地址设置断点，就是<code>b *那个地址</code>。值得一提的是，gcc拓展的c语法中，goto是可以直接跳到特定地址的，比方说 <strong>goto *0x08000000</strong> 就是跳到0x08000000地址去执行；如果是ANSI c的话要使用一些稍显晦涩的typedef才能达到目的。</li>
+<li><code>watch</code>，设置数据断点，watch后面加变量名。一般用来设置全局变量的断点（局部变量的话出去之后记得删掉断点）。还可以用c语言强制类型转换的语法，比方说要观察0x40023830处4个字节的变化，就是<code>watch *(int*)0x40023830</code>。</li>
+<li><code>info breakpoints</code>，查看断点。</li>
+<li><code>d</code>，删除断点，d后面跟着标号表示删除哪个断点；上面查看断点可以看到他们的标号。</li>
+</ul>
+<p>断点函数、变量都可以tab补全。</p>
+<p>在底层，STM32不同区域的存储器断点设置策略不同。<br>对于片内flash这一段只读区域来说，stm32有一个硬件断点模块，可以设置有限个断点；<br>对于RAM这些可读可写区域来说，就会以经典的方式去弄：将那个地址的指令替换为<code>bkpt</code>断点指令，碰到之后再把原来指令换回去以便继续执行，这样断点数目就没有限制了；<br>但是需要注意的是，片外的存储器都是当做RAM的，即便接的是nor flash，它也会以后面的方式来设置断点，意味着片外nor flash是无论如何都设置不上断点的，除非在代码里面强行写bkpt指令；但是单步调试之类的是绝对不可能的。<br>如果程序跑在片外RAM那里，而且是由bootloader来搬运（比方说用uboot来从tftp服务器下载镜像）的话，在复位时候设置断点也是没有意义的，因为断点指令会被覆盖；此时就需要在bootloader搬运好程序之后断下来，以便在跳转到程序之前设置断点。因为很多情况下要反复重启板子来调试，所以最好写个gdb脚本。</p>
+<h3 id="流程控制"><a href="#流程控制" class="headerlink" title="流程控制"></a>流程控制</h3><ul>
+<li><code>c</code>或者<code>continue</code>，继续执行代码，直到碰到断点。</li>
+<li><code>s</code>，单步执行，碰到程序调用则进入程序。</li>
+<li><code>n</code>，单行执行，碰到程序调用就执行完那个程序。</li>
+<li><code>si</code>，单指令执行，碰到子程序调用指令则进入子程序。</li>
+<li><code>ni</code>，单行汇编执行，碰到子程序调用指令就执行完子程序。汇编指令级别的单步调试不仅用来调汇编，而且可以用来观察哪一步触发了fault，甚至可以发现编译器深层次的bug。</li>
+<li><code>finish</code>，子程序执行到返回。</li>
+</ul>
+<h3 id="查看调用堆栈"><a href="#查看调用堆栈" class="headerlink" title="查看调用堆栈"></a>查看调用堆栈</h3><ul>
+<li><code>bt</code>，直接输出调用栈</li>
+</ul>
+<h3 id="操作变量"><a href="#操作变量" class="headerlink" title="操作变量"></a>操作变量</h3><ul>
+<li><code>p</code>，后面跟变量，即查看这个变量。可以用c语言的语法，比方说查看指针指向的值，查看结构体成员变量，甚至强制类型转换。</li>
+<li><p><code>x</code>，查看内存区域的值，语法是<code>x /FMT 地址</code>。FMT处要填三个东西：个数、输出格式、长度；输出格式可以有二进制、八进制、十进制等等，长度有单字节、双字节、四字节等等。比方说：<code>x /1xw 0x40023830</code>，表示查看0x40023830处一个四字节整数，以十六进制输出。可以<code>help x</code>来查看详细内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">(gdb) help x           </span><br><span class="line">Examine memory: x/FMT ADDRESS.                 </span><br><span class="line">ADDRESS is an expression for the memory address to examine.                                    </span><br><span class="line">FMT is a repeat count followed by a format letter and a size letter.                           </span><br><span class="line">Format letters are o(octal), x(hex), d(decimal), u(unsigned decimal),                          </span><br><span class="line">  t(binary), f(float), a(address), i(instruction), c(char), s(string)                          </span><br><span class="line">  and z(hex, zero padded on the left).         </span><br><span class="line">Size letters are b(byte), h(halfword), w(word), g(giant, 8 bytes).                             </span><br><span class="line">The specified number of objects of the specified size are printed                              </span><br><span class="line">according to the format.  If a negative number is specified, memory is                         </span><br><span class="line">examined backward from the address.            </span><br><span class="line"></span><br><span class="line">Defaults for format and size letters are those previously used.                                </span><br><span class="line">Default count is 1.  Default address is following last thing printed                           </span><br><span class="line">with this command or &quot;print&quot;.</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>set</code>，设置变量；语法：<code>set 变量=值</code>。</p>
+</li>
+</ul>
+<p>0x40023830这个地址是STM32的外设时钟使能寄存器，有时候外设莫名其妙不能初始化、不能工作，首先看看时钟是否开了。</p>
+<h3 id="TUI界面–Text-User-Interface"><a href="#TUI界面–Text-User-Interface" class="headerlink" title="TUI界面–Text User Interface"></a>TUI界面–Text User Interface</h3><p>TUI简直是神器，它划分了四种窗口即<code>src（源代码）</code>、<code>asm（反汇编）</code>、<code>regs（寄存器）</code>、<code>cmd（命令行）</code>，然后通过<code>layout</code>命令来排列组合这些窗口。有了TUI，调试时候就可以全键盘操作，视觉效果不亚于使用IDE。不妨通过<code>layout src</code>来进入TUI。<br><img src="/2018/02/25/gdb调试技巧/layoutsrc.jpeg" alt="显示源代码"><br>单纯显示源代码，<code>layout src</code></p>
+<p><img src="/2018/02/25/gdb调试技巧/layoutasm.jpeg" alt="显示反汇编"><br>显示反汇编，<code>layout asm</code></p>
+<p><img src="/2018/02/25/gdb调试技巧/layoutsplit.jpeg" alt="显示源代码"><br>显示源代码和反汇编，<code>layout split</code></p>
+<p><img src="/2018/02/25/gdb调试技巧/layoutregs.jpeg" alt="显示寄存器"><br>加一个窗口显示寄存器，<code>layout regs</code></p>
+<p>还有别的排列组合，可以通过<code>layout next</code>、<code>layout prev</code>来切换。</p>
+<p>因为开了多个窗口，上下左右方向键就不单纯控制命令行命令输入了。<code>焦点</code>一般在源代码那里，上下方向键可用来前后翻看源代码。改变焦点用<code>focus src</code>、<code>focus asm</code>、<code>focus regs</code>、<code>focus cmd</code>来实现，也可以用<code>focus next</code>和<code>focus prev</code>来循环切换焦点。</p>
+<p>要调整窗口大小，使用<code>winheight 哪个窗口 +行数</code>或者<code>winheight 哪个窗口 -行数</code>来实现。窗口即src、asm、regs、cmd四种。</p>
+<p>退出TUI，先按<code>Ctrl+x</code>，再按<code>a</code>。</p>
+<h2 id="gdb脚本"><a href="#gdb脚本" class="headerlink" title="gdb脚本"></a>gdb脚本</h2><h4 id="执行一系列gdb命令"><a href="#执行一系列gdb命令" class="headerlink" title="执行一系列gdb命令"></a>执行一系列gdb命令</h4><p>可以把gdb命令写到任何名字命名的文件里面，然后在调试时用<code>source</code>来执行这个脚本。</p>
+<h4 id="自定义宏"><a href="#自定义宏" class="headerlink" title="自定义宏"></a>自定义宏</h4><p>比方说要查看一个链表的所有信息，假设链表定义如下：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span> &#123;</span></span><br><span class="line">	<span class="keyword">int</span> foo;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">node</span> *<span class="title">next</span>;</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span> *<span class="title">head</span>;</span></span><br></pre></td></tr></table></figure></p>
+<p>要查看<code>head</code>指向的链表的所有内容，当然可以一个个地输命令<code>p head-&gt;foo</code>、<code>p head-&gt;next-&gt;foo</code>、<code>p head-&gt;next-&gt;next-&gt;foo</code>等等，显然这不优雅。</p>
+<p>不妨定义这样一个宏，把它写入gdb脚本文件里面，或者直接在gdb命令行下面输入：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">define plist</span><br><span class="line">  set var $n = $arg0</span><br><span class="line">  while $n</span><br><span class="line">    p $n-&gt;foo</span><br><span class="line">    set var $n = $n-&gt;next</span><br><span class="line">  end</span><br><span class="line">end</span><br></pre></td></tr></table></figure></p>
+<p>然后执行这个宏：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(gdb) plist head</span><br><span class="line">$1 = ...</span><br><span class="line">$2 = ...</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
+<p>后面就会逐行输出该链表的节点了。<br>值得一提的是，脚本里面还可以用<code>printf &quot;格式&quot;, 变量</code>来格式化输出，跟c语言printf()一样。只需将上面第4行改为<code>printf &quot;%d &quot;, $n-&gt;foo</code>即可。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/02/25/gdb调试技巧/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/23/cross-compiler/" class="archive-article-date">
-  	<time datetime="2018-02-23T15:03:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-23</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2018/02/23/cross-compiler/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">制作arm-uclinuxeabi的交叉编译工具链</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/23/cross-compiler/">制作arm-uclinuxeabi的交叉编译工具链</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/22/uclinux-on-stm32f103/" class="archive-article-date">
-  	<time datetime="2018-02-22T15:30:11.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-22</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/22/uclinux-on-stm32f103/">uclinux on STM32F103ZET6</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
   
 
-    
+  
 
 
           </div>
@@ -260,8 +447,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
