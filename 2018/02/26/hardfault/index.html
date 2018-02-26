@@ -6,14 +6,29 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2018 | hhuysqt</title>
+  <title>调试hardfault | hhuysqt</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="hhuysqt">
-<meta property="og:url" content="http://yoursite.com/archives/2018/index.html">
+  <meta name="description" content="对于搞Cortex M系列mcu开发的人来说，hardfault这种鬼东西，不遇到还好，倘若不幸遇到了，复位一下，瞎调一下，左右修补，或许碰巧就消除了。但是靠人品毕竟不是长久之计。下面记录我调试hardfault的一些简单的经验。 hardfault来源Cortex M3、M4的向量表中，3号异常是HardFault；接下来三个异常是MemFault、BusFault、UsageFault。发生了">
+<meta property="og:type" content="article">
+<meta property="og:title" content="调试hardfault">
+<meta property="og:url" content="http://yoursite.com/2018/02/26/hardfault/index.html">
 <meta property="og:site_name" content="hhuysqt">
+<meta property="og:description" content="对于搞Cortex M系列mcu开发的人来说，hardfault这种鬼东西，不遇到还好，倘若不幸遇到了，复位一下，瞎调一下，左右修补，或许碰巧就消除了。但是靠人品毕竟不是长久之计。下面记录我调试hardfault的一些简单的经验。 hardfault来源Cortex M3、M4的向量表中，3号异常是HardFault；接下来三个异常是MemFault、BusFault、UsageFault。发生了">
+<meta property="og:image" content="http://yoursite.com/2018/02/26/hardfault/exceptiontable.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/02/26/hardfault/hfsr.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/02/26/hardfault/bfsr.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/02/26/hardfault/keilfaultreport.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/02/26/hardfault/stackframe.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/02/26/hardfault/actlr.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/02/26/hardfault/hfhandler.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/02/26/hardfault/imprecisebusfault.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/02/26/hardfault/asm1.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/02/26/hardfault/asm2.jpeg">
+<meta property="og:updated_time" content="2018-02-26T12:04:53.293Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hhuysqt">
+<meta name="twitter:title" content="调试hardfault">
+<meta name="twitter:description" content="对于搞Cortex M系列mcu开发的人来说，hardfault这种鬼东西，不遇到还好，倘若不幸遇到了，复位一下，瞎调一下，左右修补，或许碰巧就消除了。但是靠人品毕竟不是长久之计。下面记录我调试hardfault的一些简单的经验。 hardfault来源Cortex M3、M4的向量表中，3号异常是HardFault；接下来三个异常是MemFault、BusFault、UsageFault。发生了">
+<meta name="twitter:image" content="http://yoursite.com/2018/02/26/hardfault/exceptiontable.jpeg">
   
     <link rel="alternative" href="/atom.xml" title="hhuysqt" type="application/atom+xml">
   
@@ -141,157 +156,180 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-hardfault" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/26/ucpc0/" class="archive-article-date">
-  	<time datetime="2018-02-26T06:41:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-26</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/26/ucpc0/">uc-PC[0] 序言</a>
+    <h1 class="article-title" itemprop="name">
+      调试hardfault
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/26/hardfault/" class="archive-article-date">
+        
+        <a href="/2018/02/26/hardfault/" class="archive-article-date">
   	<time datetime="2018-02-26T06:13:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-26</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/26/hardfault/">调试hardfault</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>对于搞Cortex M系列mcu开发的人来说，hardfault这种鬼东西，不遇到还好，倘若不幸遇到了，复位一下，瞎调一下，左右修补，或许碰巧就消除了。但是靠人品毕竟不是长久之计。下面记录我调试hardfault的一些简单的经验。</p>
+<h2 id="hardfault来源"><a href="#hardfault来源" class="headerlink" title="hardfault来源"></a>hardfault来源</h2><p>Cortex M3、M4的向量表中，3号异常是<code>HardFault</code>；接下来三个异常是<code>MemFault</code>、<code>BusFault</code>、<code>UsageFault</code>。发生了hardfault，基本是因为后面三个异常<code>上访</code>来的。<br><img src="/2018/02/26/hardfault/exceptiontable.jpeg" alt="向量表"><br><a href="http://infocenter.arm.com/help/topic/com.arm.doc.dui0553a/DUI0553A_cortex_m4_dgug.pdf" target="_blank" rel="noopener">手册</a>上的向量表</p>
+<a id="more"></a>
+<p>（按照他们的意思，<code>异常</code>与<code>中断</code>是两个概念，中断专指外设产生的中断，中断是一种异常）</p>
+<ul>
+<li><code>MemFault</code>是由MPU（内存保护模块）产生的。对于用到MPU的工程来说必定写好了MemFault处理函数，<strong>不应该由它上访</strong>；</li>
+<li><code>BusFault</code>，CPU访问存储器出错时发生总线错误。主要就是读写数据失败。这是最常碰到的一类错误，鉴于不少单片机工程师基本不写busfault处理函数，<strong>我碰到的基本上所有hardfault都是由总线错误引起的</strong>。。。</li>
+<li><code>UsageFault</code>，CPU执行到非法指令，或者处于非法的模式下面。比方说在没有fpu的情况下访问fpu，没有协处理器的情况下访问协处理器；更常见的情况是PC最低位莫名其妙的变成了0进入ARM模式，而Cortex M只有thumb模式，从而出错。碰到了用法错误，如果不是自己作死（比方说写错汇编），<strong>基本上就是碰到了编译器的bug</strong>。。。</li>
+</ul>
+<h2 id="碰到hardfault"><a href="#碰到hardfault" class="headerlink" title="碰到hardfault"></a>碰到hardfault</h2><p>此时板子上应当连着一个调试器。。。<br>（对于Cortex M0，我试过在它正在跑的时候用jlink连它，无论当时它还是不是在欢快地运行，一连就hardfault；以我拙见，如果板子确定是由于hardfault死掉了，那要从一开始就连着调试器，然后复现状况）</p>
+<h3 id="看哪个fault引起的"><a href="#看哪个fault引起的" class="headerlink" title="看哪个fault引起的"></a>看哪个fault引起的</h3><p>先看<code>Hardfault Status Register</code>，地址<code>0xE000ED2C</code>。看第30位是否为1，验证一下它是不是上访而来的。<br><img src="/2018/02/26/hardfault/hfsr.jpeg" alt="HFSR第30位"></p>
+<p>然后<strong>关注总线错误</strong>。看<code>BusFault Status Register</code>，地址<code>0xE000ED29</code>；这是一个8位寄存器，重点关注第1、2位：<br><img src="/2018/02/26/hardfault/bfsr.jpeg" alt="BFSR第1、2位"><br>就看它是不是<code>精确的</code>总线错误；PRECISE的话，<code>0xE000ED38</code>地址的寄存器<code>BusFault Address Register</code>记录了哪里而引发的错误；IMPRECISE的话就有点麻烦了。</p>
+<p>如果用keil，则可以打开 <strong>Peripherals -&gt; Core Peripherals -&gt; Fault Reports</strong> 窗口直观地看哪个fault：<br><img src="/2018/02/26/hardfault/keilfaultreport.jpeg" alt="fault reports"></p>
+<p>如果是命令行工具，<code>JLinkExe</code>命令行下面用<code>mem8</code>、<code>mem32</code>来看；<code>gdb</code>下面则用<code>x</code>命令来看。</p>
+<h3 id="看堆栈"><a href="#看堆栈" class="headerlink" title="看堆栈"></a>看堆栈</h3><p>直接在CPU寄存器那里看两个堆栈指针。</p>
+<p>首先，堆栈应该在合法的RAM那里，比方说0x20000000后面的几十上百k处，又比方说初始化了片外RAM之后在片外RAM处。还要看堆栈是否溢出。<br>如果SP明显不合法的话，那接下来就要检查代码写的对不对，有没有死递归，链接脚本有没有写对（比方说移植某些项目时候，代码原本跑在内存里面，然后转片内flash了，也没有把堆栈段放好），等等。<br>如果判断是堆栈溢出了，一般来说跑裸机的话没有写堆栈溢出的保护措施，以至于stack段践踏了heap段，甚至践踏了data段，以致于破坏了一些全局变量，那就需要增加堆栈的大小；对于keil工程，在那个startup_xxxxx.s里面改stack和heap的大小；对于makefile工程，就在链接脚本里面改（不过一般都会设到SRAM的最末端）。<strong>堆栈溢出可能造成任何fault</strong>。</p>
+<p>如果堆栈安好，那问题就出在别处；此时堆栈里面记录了出事地点，还有一些寄存器的值：<br><img src="/2018/02/26/hardfault/stackframe.jpeg" alt="堆栈情况"><br>其中，第7个int是出事时候的PC值，第6个int是出事时候的LR值（即调用者）。通过<strong>堆栈里的PC值</strong>可以查到出事的那行代码：gcc工具链中的<code>addr2line</code>就在专门干这个的；keil的话在反汇编窗口，右键，show disassembly at address，输入那个地址即可。</p>
+<p>一般来说，看到哪一行代码出事，差不多就解决了问题，对于<code>PRECISE</code>的总线错误的话，<code>0xE000ED38</code>地址处的寄存器<code>BusFault Address Register</code>记录了哪里而引发的错误，此时检查一些变量，检查一下野指针。</p>
+<h3 id="应对IMPRECISE-BusFault"><a href="#应对IMPRECISE-BusFault" class="headerlink" title="应对IMPRECISE BusFault"></a>应对IMPRECISE BusFault</h3><p>以我的经验，<strong>非精确的总线错误基本上是因为<code>写</code>了片内flash区域</strong>。不信你试试给const char*的字符串赋值（强转一下）。但是出现非精确总线错误时候<strong>并不知道CPU已经执行了多少指令</strong>，没有哪个寄存器可以定位出错地点。<br>但是对于Cortex M3、Cortex M4来说，<strong>IMPRECISE的错误可以转化为PRECISE的错误</strong>！将地址<code>0xE000E008</code>处的寄存器<code>Auxiliary Control Register</code>的第1位<code>DISDEFWBUF</code>置1，取消写缓冲，于是内核就会老老实实等待每个写访问完成之后再继续运行，<a href="https://community.nxp.com/docs/DOC-103810" target="_blank" rel="noopener">据说就不会产生IMPRECISE总线错误了</a>。<br><img src="/2018/02/26/hardfault/actlr.jpeg" alt="Auxiliary Control Register"></p>
+<h2 id="一个例子"><a href="#一个例子" class="headerlink" title="一个例子"></a>一个例子</h2><p>C语言里面指针跟数组名不是一回事。指针<strong>是变量</strong>，但是数组名就<strong>不是变量</strong>。虽然有时候混用并没有语法错误，但是运行时候就不同了。。。</p>
+<p>假设我在<code>str.c</code>里面定义一个buff数组：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span> buff[<span class="number">10</span>];</span><br></pre></td></tr></table></figure></p>
+<p>然后我在<code>main.c</code>里面才用到它；我声明它为一个指针，并且这样用它：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="keyword">char</span> *buff;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	buff[<span class="number">0</span>] = <span class="string">'a'</span>;</span><br><span class="line">	<span class="keyword">while</span>(<span class="number">1</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong><em>没语法错误</em></strong>啊，<code>buff</code>不管是一个数组名，还是一个指针，<code>buff[0]</code>这样引用第0个元素怎么都是对的。</p>
+<p>然后我们烧进板子里面，跑一下，结果它最后卡在<code>HardFault_Handler</code>里面了。<br><img src="/2018/02/26/hardfault/hfhandler.jpg" alt="进入hardfault死循环"></p>
+<p>然后看fault report，发现居然还是IMPRECISE的总线错误。<br><img src="/2018/02/26/hardfault/imprecisebusfault.jpeg" alt="观察fault report"></p>
+<p>程序非常简单，错误肯定出在main.c第5行<code>buff[0] = &#39;a&#39;</code>这里。为什么呢？</p>
+<p>我们来看看反汇编：<br><img src="/2018/02/26/hardfault/asm1.jpeg" alt="char \*buff的反汇编"></p>
+<p>因为<strong>指针是变量</strong>，但凡变量都客观存在，都有一块实际的内存；引用一个变量要两步，先找到它的地址，再通过地址找它；所以若要给指针指向的值赋值，就要：<code>取指针地址</code>，<code>通过指针地址取指针值</code>，<code>用寄存器寻址方式去赋值</code>，所以它有两次<code>LDR</code>。<br>但是<strong>数组名不是变量</strong>，所以它不客观存在，它没有地址，引用它，就一步到位找到它的值了。<br>因为二者不是同一类型，所以如果你在同一个文件里面这样写的话就会出编译错误，说buff重复定义：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span> buff[<span class="number">10</span>];</span><br><span class="line"><span class="keyword">extern</span> <span class="keyword">char</span> *buff;</span><br></pre></td></tr></table></figure></p>
+<p>将定义和声明分开在不同的文件里面写<strong>的确是良好的工程习惯</strong>。但是上面的东西分开来写之后，编译器<strong>先逐个文件编译再链接</strong>，每个c文件<strong>都没有</strong>语法错误；而链接器并不识别类型，只根据名字将符号组合在一起，所以也发现不了这样的错误。然后程序员就愉快地以为天下无事了。</p>
+<p>然后在运行时候，因为多了一次LDR命令，导致它将<code>buff</code>指向的值当做了<code>buff</code>本身，而现在这个值是0x00000000，然后将’a’写到0x00000000处，对STM32来说这是片内flash的地址。另外Cortex M将这个地址视为可写的，并不会立即出错；等到STM32的flash控制器发现flash没有解锁而写入了，就触发一个总线错误，然而此时CPU不知道已经跑了多久了。</p>
+<p>如果把声明为数组：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="keyword">char</span> buff[];</span><br></pre></td></tr></table></figure></p>
+<p>那么反汇编就没事：<br><img src="/2018/02/26/hardfault/asm2.jpeg" alt="char buff\[\]的反汇编"><br>自然运行也没事了。</p>
+<p>在一个大工程里面找这样的<strong>编译器发现不了的</strong>错误，源自于某程序员一时手抖的错误，解决办法那么简单的错误，然而那么难以定位的错误，而且责任又那么难以追究的错误，要多坑有多坑。</p>
+<h2 id="编写hardfault处理函数"><a href="#编写hardfault处理函数" class="headerlink" title="编写hardfault处理函数"></a>编写hardfault处理函数</h2><p>hardfault处理函数的手段十分有限，基本上只能干两种事：<code>上报错误</code>，<code>重启</code>。</p>
+<p>对于裸机来说，出现了hardfault就意味着代码有严重错误，肯定不能指望hardfault来恢复些什么东西的，hardfault就是用来给你调试的，如果实在调不出来，为保证系统持续工作，你应该在出现hardfault之前重启系统。</p>
+<p>如果上了操作系统，那就是你某个任务出现了严重错误，应该想办法将错误print到上位机以便调试。可选的方式是，将错误信息复制出去，消掉错误状态位，然后在别的地方上报错误，最后想办法重启任务，以便继续工作。</p>
+<p>更详细的方案，请参考<strong><em>《ARM Cortex-M3 权威指南》</em></strong>附录E，以及别的某某权威指南。</p>
 
-        <div class="article-info info-on-right">
-          
-          
+      
 
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/02/26/hardfault/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/25/gdb调试技巧/" class="archive-article-date">
-  	<time datetime="2018-02-24T16:08:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-25</time>
-</a>
+<nav id="article-nav">
+  
+    <a href="/2018/02/26/ucpc0/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          uc-PC[0] 序言
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/02/25/gdb调试技巧/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">gdb调试stm32的技巧</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/25/gdb调试技巧/">gdb调试stm32的技巧</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/23/cross-compiler/" class="archive-article-date">
-  	<time datetime="2018-02-23T15:03:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-23</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/23/cross-compiler/">制作arm-uclinuxeabi的交叉编译工具链</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/22/uclinux-on-stm32f103/" class="archive-article-date">
-  	<time datetime="2018-02-22T15:30:11.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-22</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/22/uclinux-on-stm32f103/">uclinux on STM32F103ZET6</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
-  
-    </div></section>
-  
-
-    
 
 
           </div>
@@ -314,8 +352,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
