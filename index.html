@@ -143,6 +143,73 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-ucpc1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/02/27/ucpc1/">uc-PC[1] ucLinux or Linux?</a>
+    </h1>
+  
+
+        
+        <a href="/2018/02/27/ucpc1/" class="archive-article-date">
+  	<time datetime="2018-02-27T06:04:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-27</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>这是一个笼统的说法：Linux要有MMU才能跑，没有MMU的只能跑uclinux。但事实上自从2.6版本开始的Linux内核，<code>arch/arm/Kconfig</code>里就有了<code>CONFIG_MMU</code>的选项，因此严格地说，Linux内核<strong>早就能存活在没有MMU的ARM芯片上</strong>了。</p>
+<p>uclinux严格意义上说是一个完整的发行版，它就是<code>主流内核 + 大量应用程序</code>。uclinux一直在慢慢悠悠地更新。最新的是2016年发布的4.4内核版本，然后直到现在再也没有更新了。</p>
+<p>Linux内核里面MMU-less芯片的驱动日渐丰富，到了2015年内核4.2时代，里面竟赫然出现了STM32的配置和驱动！随后其STM32的驱动逐渐多了起来，从一开始的只有串口、pinctrl、RCC等的少量驱动，发展到支持I2C、DMA、定时器、ADC、DAC、LTDC、DCMI、USB、MII/RMII等等几乎所有STM32的外设；从一开始只支持stm32f429，到如今甚至已经支持<code>stm32h7</code>了，而现在2018年初h7芯片还基本买不到；stm32的设备树写法也改了一版。</p>
+        
+          <a class="article-more-a" href="/2018/02/27/ucpc1/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/02/27/ucpc1/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-ucpc0" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -163,9 +230,9 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>研究一个系统，就先抽筋剥骨以详其经脉，然后搭出骨架，使其生筋，让其长肉，覆之以皮肤，并让气息充实其中，从而让其鲜活起来，方能叫吃透这个系统。</p>
+        <p>研究系统，宜先抽筋剥骨以详其经脉，然后搭出骨架，使其生筋，让其长肉，覆之以皮肤，并让气息充实其中，从而让其鲜活起来，方能叫吃透这个系统。</p>
 <p>玩嵌入式，就是在创造麻雀虽小五脏俱全的系统。茶余饭后，我一直在兴致勃勃地挖掘单片机的潜能，就如让一把大提琴拉出三把琴的和声，令一架管风琴弹出整个乐队的合奏。</p>
-<p>我想uc-PC就应该是这样一个系统，逐长筋肉，五脏俱全的系统。</p>
+<p>uc-PC就应该是这样的系统：逐长筋肉，五脏俱全的系统。</p>
 <h3 id="它是一个完整的电脑"><a href="#它是一个完整的电脑" class="headerlink" title="它是一个完整的电脑"></a>它是一个完整的电脑</h3><p>虽是单片机开发板，但它有着与诸如树莓派、杨梅派、香蕉派、橙子派等相似的接口，插上显示器和键盘，然后假装是一台电脑。</p>
         
           <a class="article-more-a" href="/2018/02/26/ucpc0/#more">more >></a>

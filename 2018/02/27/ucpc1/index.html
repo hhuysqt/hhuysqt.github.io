@@ -6,14 +6,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2018 | hhuysqt</title>
+  <title>uc-PC[1] ucLinux or Linux? | hhuysqt</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="hhuysqt">
-<meta property="og:url" content="http://yoursite.com/archives/2018/index.html">
+  <meta name="description" content="这是一个笼统的说法：Linux要有MMU才能跑，没有MMU的只能跑uclinux。但事实上自从2.6版本开始的Linux内核，arch/arm/Kconfig里就有了CONFIG_MMU的选项，因此严格地说，Linux内核早就能存活在没有MMU的ARM芯片上了。 uclinux严格意义上说是一个完整的发行版，它就是主流内核 + 大量应用程序。uclinux一直在慢慢悠悠地更新。最新的是2016年发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="uc-PC[1] ucLinux or Linux?">
+<meta property="og:url" content="http://yoursite.com/2018/02/27/ucpc1/index.html">
 <meta property="og:site_name" content="hhuysqt">
+<meta property="og:description" content="这是一个笼统的说法：Linux要有MMU才能跑，没有MMU的只能跑uclinux。但事实上自从2.6版本开始的Linux内核，arch/arm/Kconfig里就有了CONFIG_MMU的选项，因此严格地说，Linux内核早就能存活在没有MMU的ARM芯片上了。 uclinux严格意义上说是一个完整的发行版，它就是主流内核 + 大量应用程序。uclinux一直在慢慢悠悠地更新。最新的是2016年发">
+<meta property="og:image" content="http://yoursite.com/2018/02/27/ucpc1/openmv.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/02/27/ucpc1/tuxuclinux.jpeg">
+<meta property="og:updated_time" content="2018-02-27T10:54:44.184Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hhuysqt">
+<meta name="twitter:title" content="uc-PC[1] ucLinux or Linux?">
+<meta name="twitter:description" content="这是一个笼统的说法：Linux要有MMU才能跑，没有MMU的只能跑uclinux。但事实上自从2.6版本开始的Linux内核，arch/arm/Kconfig里就有了CONFIG_MMU的选项，因此严格地说，Linux内核早就能存活在没有MMU的ARM芯片上了。 uclinux严格意义上说是一个完整的发行版，它就是主流内核 + 大量应用程序。uclinux一直在慢慢悠悠地更新。最新的是2016年发">
+<meta name="twitter:image" content="http://yoursite.com/2018/02/27/ucpc1/openmv.jpeg">
   
     <link rel="alternative" href="/atom.xml" title="hhuysqt" type="application/atom+xml">
   
@@ -141,184 +148,179 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-ucpc1" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      uc-PC[1] ucLinux or Linux?
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/27/ucpc1/" class="archive-article-date">
+
+        
+        <a href="/2018/02/27/ucpc1/" class="archive-article-date">
   	<time datetime="2018-02-27T06:04:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-27</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/27/ucpc1/">uc-PC[1] ucLinux or Linux?</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>这是一个笼统的说法：Linux要有MMU才能跑，没有MMU的只能跑uclinux。但事实上自从2.6版本开始的Linux内核，<code>arch/arm/Kconfig</code>里就有了<code>CONFIG_MMU</code>的选项，因此严格地说，Linux内核<strong>早就能存活在没有MMU的ARM芯片上</strong>了。</p>
+<p>uclinux严格意义上说是一个完整的发行版，它就是<code>主流内核 + 大量应用程序</code>。uclinux一直在慢慢悠悠地更新。最新的是2016年发布的4.4内核版本，然后直到现在再也没有更新了。</p>
+<p>Linux内核里面MMU-less芯片的驱动日渐丰富，到了2015年内核4.2时代，里面竟赫然出现了STM32的配置和驱动！随后其STM32的驱动逐渐多了起来，从一开始的只有串口、pinctrl、RCC等的少量驱动，发展到支持I2C、DMA、定时器、ADC、DAC、LTDC、DCMI、USB、MII/RMII等等几乎所有STM32的外设；从一开始只支持stm32f429，到如今甚至已经支持<code>stm32h7</code>了，而现在2018年初h7芯片还基本买不到；stm32的设备树写法也改了一版。</p>
+<a id="more"></a>
+<h3 id="真能叫Linux么？"><a href="#真能叫Linux么？" class="headerlink" title="真能叫Linux么？"></a>真能叫Linux么？</h3><p><a href="http://emcraft.com/" target="_blank" rel="noopener">Emcraft System</a>推出不少STM32的SOM（system on module），并提供了他们的Linux BSP，内核有2.6、4.2、4.4等。他们的工程就是一个带有了bootloader的完整的发行版，应用程序也不仅仅是busybox，不过<strong>他们更愿意把它称为uclinux</strong>，可能是他们应用程序的来源就是uclinux。</p>
+<p>Linux只是一个<strong>内核</strong>，uclinux是一个<strong>完整的发行版</strong>，就像<a href="https://buildroot.org/" target="_blank" rel="noopener">buildroot</a>、<a href="https://www.yoctoproject.org/" target="_blank" rel="noopener">yocto</a>这样的发行版；但是uclinux太众所周知了，以至于大家都把MMU-less的Linux发行版都称为uclinux。</p>
+<p>目前我的429板子上跑的是最低配置的Linux发行版，只有区区一个busybox。以开源的自由的精神，叫uclinux还是叫Linux其实并不需要学术上的争论233</p>
+<h3 id="没MMU的片子跑Linux，何用之有？"><a href="#没MMU的片子跑Linux，何用之有？" class="headerlink" title="没MMU的片子跑Linux，何用之有？"></a>没MMU的片子跑Linux，何用之有？</h3><p>最大的理由是，<strong>Linux下应用简直太丰富了</strong>。玩单片机如果不仅满足于让电机动起来（不过控制算法的确有很多文章可做），自然要玩些系统性的东西；如果仅是一个小实时系统，要带上文件系统、网络协议栈、USB设备之类的，则都是体力活，更不用说搭个小服务器了（或许你要远程访问它，或者要它连服务器）；而在Linux世界里面这些都不是问题。跑上Linux，单片机的负担重了点，但程序员的负担就轻了不少。</p>
+<p>当年不少性能强劲的MMU-less的芯片促使了uclinux的迅速发展，比方说blackfin那些数百兆主频的DSP；而如今数百兆主频的ARM Cortex M系列单片机也并不少见，更有甚者如NXP准备推出1.2GHz主频的所谓跨界单片机，计算性能想必大大强于数百兆的Cortex A5/A7。单片机已非当年十几兆主频的吴下阿蒙。</p>
+<p>想要比ARM9之流稍微强大一点的计算性能，又要比Cortex A5之流更低的功耗，还要比传统的SBC更为简单的开发模式，那么无MMU配置的Linux想必是极好的选择。</p>
+<h3 id="为什么选择STM32F429？"><a href="#为什么选择STM32F429？" class="headerlink" title="为什么选择STM32F429？"></a>为什么选择STM32F429？</h3><p>429是当年的旗舰芯片，外设丰富，计算性能也相当不错（至少强于AT91SAM9260了）。目前主流内核对它支持相当好，基本所有外设都支持了。stm32f429-discovery开发板口碑不错，价格还不贵（要知道单片机评估板都特别特别特别贵），它可能是目前恰好能跑通主流Linux内核的最低配置的板子了。不少开源STM32的项目，但凡需要那么一点计算性能的，选型基本上从429往上走。</p>
+<p>有人在<a href="https://openmv.io/" target="_blank" rel="noopener">OpenMV</a>上弄uclinux尝鲜，<a href="https://events.static.linuxfound.org/sites/events/files/slides/optimize-uclinux.pdf" target="_blank" rel="noopener">据说1秒钟之内就启动完毕了</a>。。寻常的ARM9板子哪能秒启动。。。应该感谢当年那些逮着uclinux到处移植的极客们，让<a href="https://github.com/robutest/uclinux" target="_blank" rel="noopener">内核里面有了F1、F2、F4的基本驱动</a>。<br><img src="/2018/02/27/ucpc1/openmv.jpeg" alt="OpenMV uclinux"></p>
+<p><img src="/2018/02/27/ucpc1/tuxuclinux.jpeg" alt="uclinux下移动的企鹅"><br><a href="https://www.youtube.com/watch?v=shLbYdH02rA" target="_blank" rel="noopener">油管视频</a></p>
+<h3 id="性能几何？"><a href="#性能几何？" class="headerlink" title="性能几何？"></a>性能几何？</h3><p>实话说，Linux的性能比不上裸机程序和真正的嵌入式实时操作系统，这个根深蒂固为服务器设计的内核考虑的都是无数个CPU、无数内存、无数存储设备，以致于被人吐槽为怪物；比方说，<a href="http://ck.kolivas.org/patches/bfs/bfs-faq.txt" target="_blank" rel="noopener">Con Kolivas对它的CFS调度器相当不满，然后他自己写了个BFS，称为“脑残调度器”</a>。越是新版本的内核，占用资源越大（回报是功能越齐全，漏洞越得到修补）。</p>
+<p>就拿同一块STM32F429板子来说，只带有串口驱动的话：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">内核版本</th>
+<th style="text-align:left">镜像大小</th>
+<th style="text-align:left">BogoMIPS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">uclinux 2.6.33</td>
+<td style="text-align:left">700KB</td>
+<td style="text-align:left">168.34</td>
+</tr>
+<tr>
+<td style="text-align:left">Linux 4.2.8</td>
+<td style="text-align:left">1.1MB</td>
+<td style="text-align:left">~110</td>
+</tr>
+<tr>
+<td style="text-align:left">Linux 4.13.3</td>
+<td style="text-align:left">1.5MB</td>
+<td style="text-align:left">~110</td>
+</tr>
+</tbody>
+</table>
+<p>BogoMIPS是个挺娱乐的参数，内核启动时候自行测量，以校准udelay等延时的参数，数值越高意味着单位时间内跑的指令越多，意味着性能越强。参考AT91SAM9260这个ARM9芯片，时钟频率同样是180MHz，同样跑2.6的内核，而且它还有cache，但<a href="http://linux-arm-kernel.infradead.narkive.com/8KI4atsi/at91sam9260-bogomips" target="_blank" rel="noopener">它的BogoMIPS只有八九十</a>。所以可以说，Cortex M4性能还是挺强的。</p>
+<p>在2015年的ELC中有人做了一份<a href="https://www.youtube.com/watch?v=6F1eZKFzkUE" target="_blank" rel="noopener">如何优化uclinux的报告</a>，还有<a href="https://events.static.linuxfound.org/sites/events/files/slides/optimize-uclinux.pdf" target="_blank" rel="noopener">讲义</a>可供下载，干货满满。</p>
+<h3 id="裁剪提示"><a href="#裁剪提示" class="headerlink" title="裁剪提示"></a>裁剪提示</h3><p>因为f429没有cache，所以内核<strong>一定要塞进片内flash</strong>，否则在片外SDRAM上运行的性能感人：BogoMIPS只有个位数，刷屏时候能体会到相当明显的卡顿，并且摄像头会抱怨<strong>DMA下溢</strong>，USB会枚举不到设备。如果是f7的芯片大可不必担心，即使在片外SDRAM里跑，其BogoMIPS据说都可达三百余。</p>
+<p>因此f429的芯片只能选i系列的带2MB片内flash版本的才够用；f7的片子就随便啦。</p>
 
-        <div class="article-info info-on-right">
-          
-          
+      
 
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/02/27/ucpc1/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/26/ucpc0/" class="archive-article-date">
-  	<time datetime="2018-02-26T06:41:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-26</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2018/02/26/ucpc0/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">uc-PC[0] 序言</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/26/ucpc0/">uc-PC[0] 序言</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/26/hardfault/" class="archive-article-date">
-  	<time datetime="2018-02-26T06:13:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-26</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/26/hardfault/">调试hardfault</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/25/gdb调试技巧/" class="archive-article-date">
-  	<time datetime="2018-02-24T16:08:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-25</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/25/gdb调试技巧/">gdb调试stm32的技巧</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/23/cross-compiler/" class="archive-article-date">
-  	<time datetime="2018-02-23T15:03:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-23</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/23/cross-compiler/">制作arm-uclinuxeabi的交叉编译工具链</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/22/uclinux-on-stm32f103/" class="archive-article-date">
-  	<time datetime="2018-02-22T15:30:11.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-22</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/22/uclinux-on-stm32f103/">uclinux on STM32F103ZET6</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
 
 
           </div>
@@ -341,8 +343,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
