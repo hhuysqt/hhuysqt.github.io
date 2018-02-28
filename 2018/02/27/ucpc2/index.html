@@ -6,14 +6,39 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>hhuysqt</title>
+  <title>uc-PC[2] 硬件设计 | hhuysqt</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="hhuysqt">
-<meta property="og:url" content="http://yoursite.com/index.html">
+  <meta name="description" content="引脚与外设分配利用STM32CubeMX的引脚自动分配功能，前期准备工作方便了不少：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="uc-PC[2] 硬件设计">
+<meta property="og:url" content="http://yoursite.com/2018/02/27/ucpc2/index.html">
 <meta property="og:site_name" content="hhuysqt">
+<meta property="og:description" content="引脚与外设分配利用STM32CubeMX的引脚自动分配功能，前期准备工作方便了不少：">
+<meta property="og:image" content="http://yoursite.com/2018/02/27/ucpc2/cubemx.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/02/27/ucpc2/remap.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/02/27/ucpc2/pathsetting.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/02/27/ucpc2/pathsetting2.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/02/27/ucpc2/dragging.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/02/27/ucpc2/power.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/02/27/ucpc2/pins.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/02/27/ucpc2/ethernet.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/02/27/ucpc2/vga.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/02/27/ucpc2/vgaout.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/02/27/ucpc2/cameramodule.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/02/27/ucpc2/camera.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/02/27/ucpc2/usb.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/02/27/ucpc2/dac.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/02/27/ucpc2/sdcard.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/02/27/ucpc2/board.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/02/27/ucpc2/files.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/02/27/ucpc2/tux.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/02/27/ucpc2/board2.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/02/27/ucpc2/board3.jpg">
+<meta property="og:updated_time" content="2018-02-28T16:15:28.642Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hhuysqt">
+<meta name="twitter:title" content="uc-PC[2] 硬件设计">
+<meta name="twitter:description" content="引脚与外设分配利用STM32CubeMX的引脚自动分配功能，前期准备工作方便了不少：">
+<meta name="twitter:image" content="http://yoursite.com/2018/02/27/ucpc2/cubemx.jpeg">
   
     <link rel="alternative" href="/atom.xml" title="hhuysqt" type="application/atom+xml">
   
@@ -141,16 +166,14 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-ucpc2" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-ucpc2" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/02/27/ucpc2/">uc-PC[2] 硬件设计</a>
+    <h1 class="article-title" itemprop="name">
+      uc-PC[2] 硬件设计
     </h1>
   
 
@@ -164,363 +187,126 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h3 id="引脚与外设分配"><a href="#引脚与外设分配" class="headerlink" title="引脚与外设分配"></a>引脚与外设分配</h3><p>利用<a href="http://www.st.com/en/development-tools/stm32cubemx.html" target="_blank" rel="noopener">STM32CubeMX</a>的引脚自动分配功能，前期准备工作方便了不少：<br><img src="/2018/02/27/ucpc2/cubemx.jpeg" alt="stm32cubemx"></p>
-        
-          <a class="article-more-a" href="/2018/02/27/ucpc2/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/02/27/ucpc2/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-ucpc1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/02/27/ucpc1/">uc-PC[1] ucLinux or Linux?</a>
-    </h1>
-  
-
-        
-        <a href="/2018/02/27/ucpc1/" class="archive-article-date">
-  	<time datetime="2018-02-27T06:04:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-27</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>这是一个笼统的说法：Linux要有MMU才能跑，没有MMU的只能跑uclinux。但事实上自从2.6版本开始的Linux内核，<code>arch/arm/Kconfig</code>里就有了<code>CONFIG_MMU</code>的选项，因此严格地说，Linux内核<strong>早就能存活在没有MMU的ARM芯片上</strong>了。</p>
-<p>uclinux严格意义上说是一个完整的发行版，它就是<code>主流内核 + 大量应用程序</code>。uclinux一直在慢慢悠悠地更新。最新的是2016年发布的4.4内核版本，然后直到现在再也没有更新了。</p>
-<p>Linux内核里面MMU-less芯片的驱动日渐丰富，到了2015年内核4.2时代，里面竟赫然出现了STM32的配置和驱动！随后其STM32的驱动逐渐多了起来，从一开始的只有串口、pinctrl、RCC等的少量驱动，发展到支持I2C、DMA、定时器、ADC、DAC、LTDC、DCMI、USB、MII/RMII等等几乎所有STM32的外设；从一开始只支持stm32f429，到如今甚至已经支持<code>stm32h7</code>了，而现在2018年初h7芯片还基本买不到；stm32的设备树写法也改了一版。</p>
-        
-          <a class="article-more-a" href="/2018/02/27/ucpc1/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/02/27/ucpc1/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-ucpc0" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/02/26/ucpc0/">uc-PC[0] 序言</a>
-    </h1>
-  
-
-        
-        <a href="/2018/02/26/ucpc0/" class="archive-article-date">
-  	<time datetime="2018-02-26T06:41:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-26</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>研究系统，宜先抽筋剥骨以详其经脉，然后搭出骨架，使其生筋，让其长肉，覆之以皮肤，并让气息充实其中，从而让其鲜活起来，方能叫吃透这个系统。</p>
-<p>玩嵌入式，就是在创造麻雀虽小五脏俱全的系统。茶余饭后，我一直在兴致勃勃地挖掘单片机的潜能，就如让一把大提琴拉出三把琴的和声，令一架管风琴弹出整个乐队的合奏。</p>
-<p>uc-PC就应该是这样的系统：逐长筋肉，五脏俱全的系统。</p>
-<h3 id="它是一个完整的电脑"><a href="#它是一个完整的电脑" class="headerlink" title="它是一个完整的电脑"></a>它是一个完整的电脑</h3><p>虽是单片机开发板，但它有着与诸如树莓派、杨梅派、香蕉派、橙子派等相似的接口，插上显示器和键盘，然后假装是一台电脑。</p>
-        
-          <a class="article-more-a" href="/2018/02/26/ucpc0/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/02/26/ucpc0/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-hardfault" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/02/26/hardfault/">调试hardfault</a>
-    </h1>
-  
-
-        
-        <a href="/2018/02/26/hardfault/" class="archive-article-date">
-  	<time datetime="2018-02-26T06:13:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-26</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>对于搞Cortex M系列mcu开发的人来说，hardfault这种鬼东西，不遇到还好，倘若不幸遇到了，复位一下，瞎调一下，左右修补，或许碰巧就消除了。但是靠人品毕竟不是长久之计。下面记录我调试hardfault的一些简单的经验。</p>
-<h2 id="hardfault来源"><a href="#hardfault来源" class="headerlink" title="hardfault来源"></a>hardfault来源</h2><p>Cortex M3、M4的向量表中，3号异常是<code>HardFault</code>；接下来三个异常是<code>MemFault</code>、<code>BusFault</code>、<code>UsageFault</code>。发生了hardfault，基本是因为后面三个异常<code>上访</code>来的。<br><img src="/2018/02/26/hardfault/exceptiontable.jpeg" alt="向量表"><br><a href="http://infocenter.arm.com/help/topic/com.arm.doc.dui0553a/DUI0553A_cortex_m4_dgug.pdf" target="_blank" rel="noopener">手册</a>上的向量表</p>
-        
-          <a class="article-more-a" href="/2018/02/26/hardfault/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/02/26/hardfault/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-gdb调试技巧" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/02/25/gdb调试技巧/">gdb调试stm32的技巧</a>
-    </h1>
-  
-
-        
-        <a href="/2018/02/25/gdb调试技巧/" class="archive-article-date">
-  	<time datetime="2018-02-24T16:08:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-25</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>很多人开发C程序就像写脚本那样，查错，靠的是眼睛看；但是作为系统开发程序员，bug单纯靠看是查不出来的，于是就用printf，于是每一次查错都不可避免要机械地写printf、编译、烧写、运行，没有IDE的时候烧写、运行还不太方便。如果能在命令行下面设断点、单步调试什么的，想必是极好的。</p>
-<p>有时候开发一些程序还不得不在Ubuntu下弄，比方说国外的不少开源项目像px4、openmv之类的，又比方说Linux、nuttx之类的系统开发，等等。当然诸如Eclipse之类的IDE配置一下也能聊胜于无，但是配置它们的复杂度不亚于在命令行下面弄，而且连接板子、开gdb server这些工序只能在命令行下完成；好处是调试时候能用鼠标操作。</p>
-<p>其实，命令行下面用gdb调试，熟悉基本命令之后，用起来相当顺手；在TUI模式下面调试，视觉效果不亚于使用IDE。</p>
-<h2 id="需要安装的软件"><a href="#需要安装的软件" class="headerlink" title="需要安装的软件"></a>需要安装的软件</h2><h3 id="gdb"><a href="#gdb" class="headerlink" title="gdb"></a>gdb</h3><p>包管理装就行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install gdb-arm-none-eabi</span><br></pre></td></tr></table></figure></p>
-<p>当然也可以选用别的，比方说</p>
+<a id="more"></a>
+<p>选择了：</p>
 <ul>
-<li><a href="https://sourcery.mentor.com/GNUToolchain/package6503/public/arm-uclinuxeabi/arm-2010q1-189-arm-uclinuxeabi-i686-pc-linux-gnu.tar.bz2" target="_blank" rel="noopener">arm-uclinuxeabi-2010q1</a>里面就有arm-uclinuxeabi-gdb。不过这个的TUI有问题。</li>
-<li>SourceForge的uclinux下载页面（崩掉了）</li>
+<li>FMC SDRAM bank1，16位数据线，13位地址线</li>
+<li>FMC nand flash bank2，8位总线</li>
+<li>RMII接口</li>
+<li>LTDC接口配置为RGB565</li>
+<li>DCMI接口</li>
+<li>DAC1、DAC2</li>
+<li>USB1-fs、USB2-fs</li>
+<li>SDIO，4位数据线</li>
+<li>SWD调试接口</li>
+<li>USART1<br>引脚所剩无几；再加上4个LED吧。</li>
 </ul>
-        
-          <a class="article-more-a" href="/2018/02/25/gdb调试技巧/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/02/25/gdb调试技巧/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-cross-compiler" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/02/23/cross-compiler/">制作arm-uclinuxeabi的交叉编译工具链</a>
-    </h1>
-  
-
-        
-        <a href="/2018/02/23/cross-compiler/" class="archive-article-date">
-  	<time datetime="2018-02-23T15:03:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-23</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="交叉编译的常识"><a href="#交叉编译的常识" class="headerlink" title="交叉编译的常识"></a>交叉编译的常识</h2><p>制作交叉工具链，会涉及到三个架构的机器：</p>
+<p>之所以选择SDRAM的第一个bank（而不是像stm32f429-disc1那样在第二个bank），是因为据参考手册，这个bank可以重定位到0地址，在上面跑代码时候就能使用ICode总线从而提高性能。而且stm32429-eval评估板也这么干。不过我试验感觉并没有效果，可能瓶颈就是SDRAM的带宽了吧。<br><img src="/2018/02/27/ucpc2/remap.jpeg" alt="参考手册建议将SDRAM bank1重定位到0地址"></p>
+<h3 id="KiCad布线工具"><a href="#KiCad布线工具" class="headerlink" title="KiCad布线工具"></a>KiCad布线工具</h3><p><a href="http://kicad-pcb.org/" target="_blank" rel="noopener">KiCad</a>这个开源的布线工具一点都不含糊，功能相当齐全，元件库相当华丽而齐全，运行起来也相当流畅（个人感觉比AD流畅多了）。<a href="http://kicad-pcb.org/download/ubuntu/" target="_blank" rel="noopener">Ubuntu下安装</a>要通过kicad的ppa源，下载过程相当慢；Debian的话它的软件源里面就有了。照着<a href="http://docs.kicad-pcb.org/stable/en/getting_started_in_kicad.html" target="_blank" rel="noopener">Getting Started</a>文档走一遍，可以一小时之内上手kicad。</p>
+<h4 id="一个大坑"><a href="#一个大坑" class="headerlink" title="一个大坑"></a>一个大坑</h4><p>kicad的<code>CvPcb</code>用来为原理图的元件分配PCB的封装，它默认PCB封装库从github上下载，于是每一次启动CvPcb时候都要从网上下载那上百个封装库，这时候整个kicad都卡死了。所以先要将其设置为本地的库文件；记得要跑到<code>pcbnew</code>里面设置。。。<br><img src="/2018/02/27/ucpc2/pathsetting.jpeg" alt="设置本地库文件"></p>
+<p>然后将所有github的链接删掉，点击<code>Append with Wizard</code>，一个个用鼠标添加库文件。。。<br><img src="/2018/02/27/ucpc2/pathsetting2.jpeg" alt="添加本地库文件"></p>
+<h4 id="交互式布线"><a href="#交互式布线" class="headerlink" title="交互式布线"></a>交互式布线</h4><p>kicad手工拖线的体验相当不错。按<code>F11</code>快捷键可以切换到<code>OpenGL模式</code>，马上视觉效果就不简陋了，而且此时布线是<code>interactive</code>的，拖线时候会避开无关的net。</p>
+<p>有些人用kicad画出来的板子走线就跟用protel99se画的那样不整齐，或许是因为他不知道<strong><em>还有一个很难找到的快捷键</em></strong>。kicad能像AD那样调整一批线和过孔，方法如下：在OpenGL的布线状态下，按着<code>Ctrl</code>键去然后拖拽之前布好的线或过孔，调整时附近的其他线与过孔都能够避开。这样来调整线路，kicad也能布出非常规整的线路来。</p>
+<p><img src="/2018/02/27/ucpc2/dragging.jpeg" alt="调整一批已布好的线"></p>
+<h4 id="有一个bug"><a href="#有一个bug" class="headerlink" title="有一个bug"></a>有一个bug</h4><p>目前kicad在铺铜时候，能正确避开不同net的焊盘、线、过孔等，但是不会避开不同net的铺铜。因此同一层中不同net的铺铜不能重叠。</p>
+<h3 id="STM32主控"><a href="#STM32主控" class="headerlink" title="STM32主控"></a>STM32主控</h3><p>ST官网上的手册分为<code>数据手册（DS开头的）</code>、<code>应用手册（AN开头的）</code>、<code>参考手册（RM开头的）</code>等多种手册。对于STM32F429，</p>
+<p><a href="http://www.st.com/content/ccc/resource/technical/document/datasheet/03/b4/b2/36/4c/72/49/29/DM00071990.pdf/files/DM00071990.pdf/jcr:content/translations/en.DM00071990.pdf" target="_blank" rel="noopener">DS9405</a>数据手册给出了电气特性、引脚定义、外设概况等信息。<br><a href="http://www.st.com/content/ccc/resource/technical/document/application_note/76/f9/c8/10/8a/33/4b/f0/DM00115714.pdf/files/DM00115714.pdf/jcr:content/translations/en.DM00115714.pdf" target="_blank" rel="noopener">AN4488</a>应用手册给了详细的硬件设计提示。<br><a href="http://www.st.com/content/ccc/resource/technical/document/reference_manual/3d/6d/5a/66/b4/99/40/d4/DM00031020.pdf/files/DM00031020.pdf/jcr:content/translations/en.DM00031020.pdf" target="_blank" rel="noopener">RM0090</a>参考手册给出了所有寄存器的详细解释和编程指南。</p>
+<p>根据<a href="http://www.st.com/content/ccc/resource/technical/document/application_note/73/76/21/47/ef/d0/4c/16/DM00164538.pdf/files/DM00164538.pdf/jcr:content/translations/en.DM00164538.pdf" target="_blank" rel="noopener">AN4660</a>应用手册，LQFP176封装的stm32f429ix和stm32f767ix引脚兼容。</p>
+<h4 id="电源"><a href="#电源" class="headerlink" title="电源"></a>电源</h4><p>据说设计四层板的话，一般外层走线，内层构成完整的电源层。在主芯片每一个电源脚附近都要打过孔以确保电源连接，而且它们附近都要安排104滤波电容，这些电容一个都不能少焊：对于stm32的电源引脚很多的大芯片来说都要这样，否则可能会烧写不了程序。</p>
+<p>LQFP176的片子有<code>BYPASS_REG</code>引脚，直接拉低则表示，使用片内的稳压器给内核供电，此时<code>VCAP1</code>和<code>VCAP2</code>外面都要接一个2.2uF左右的电容，这两个引脚将测得为1点几伏的内核电压。电容也不能省，否则接调试器时候可能识别不了芯片。<br><code>PDR_ON</code>引脚用于在刚上电时检测电源是否已达标（AN4488手册说，超过1.7V），以保证稳妥的启动。它直接拉到3V3就行。<br>复位引脚片内有上拉电阻，片外不用加上拉了，只需要在复位开关两端并联一个104电容即可。<br><img src="/2018/02/27/ucpc2/power.jpeg" alt="一些晦涩引脚的接法"></p>
+<p>另外据说，铺铜后，应该在空闲的地方多打过孔，以便使得上下层铺铜连接更好。</p>
+<h4 id="时钟"><a href="#时钟" class="headerlink" title="时钟"></a>时钟</h4><p>选择了25MHz的晶振。</p>
+<p>板子上有3个部分需要时钟：STM32主芯片、以太网PHY芯片、摄像头。据<a href="http://www.st.com/content/ccc/resource/technical/document/reference_manual/3d/6d/5a/66/b4/99/40/d4/DM00031020.pdf/files/DM00031020.pdf/jcr:content/translations/en.DM00031020.pdf" target="_blank" rel="noopener">RM0090</a>参考手册，以太网的PHY芯片时钟源，可以直接用<code>MCO</code>引脚输出的STM32主芯片的晶振时钟。但是MCO1、MCO2引脚都距离RMII接口有点远，并且摄像头也要用时钟；摄像头用一个定时器输出时钟的话，设备树会写得非常绕。</p>
+<p>为确保成功，STM32和以太网PHY都各自用一个25MHz的晶振，而摄像头就用MCO。3225无源晶振价格也不贵。</p>
+<h4 id="原理图中优雅地分配net"><a href="#原理图中优雅地分配net" class="headerlink" title="原理图中优雅地分配net"></a>原理图中优雅地分配net</h4><p>STM32中同一个外设对应的GPIO引脚分布四方，然后很多人画原理图时候就整张图地翻找引脚、分配net，画的相当不方便，看原理图的人也很感觉很绕。</p>
+<p>而ST官网发布的原理图就画的很清晰：主芯片的每个GPIO都有net，先不管它想用在哪个外设上面，GPIO原本是P几就设为P几；对于其他外接的芯片的引脚的net，先不管它准备接到STM32哪个GPIO上，该是什么功能就是什么功能；最后在一块单独的地方画一批平行线段，两端放net，GPIO对应到外设，一目了然。这种风格相当优雅。<br><img src="/2018/02/27/ucpc2/pins.jpeg" alt="原理图中清晰地分配外设GPIO"></p>
+<h3 id="SDRAM和nand-flash"><a href="#SDRAM和nand-flash" class="headerlink" title="SDRAM和nand flash"></a>SDRAM和nand flash</h3><p>拆机的64MB SDRAM、128MB nand flash淘宝上很多，价格低廉；这些SDRAM一般是从远古时代的PC100/PC133的内存条上面拆下来的，跑起来感觉没问题（当然不能当工业级产品用）。低容量的nand flash是<a href="https://en.wikipedia.org/wiki/Multi-level_cell" target="_blank" rel="noopener">SLC</a>的，很耐擦写，回收的芯片里面顶多多了几个坏块，对这板子完全够用了。</p>
+<p>虽然STM32F429的最高主频是180MHz，那么PLL倍频时候就可以先拉到360MHz再除以2；但因为USB需要精确的48MHz时钟，而48不能整除360，因此只能找别的倍频数。最后HCLK只设到到168MHz；而FMC的最小分频数是2，因此SDRAM的时钟频率最高是84MHz。SDRAM其他参数可以这样设置：</p>
 <ul>
-<li>build，哪个机器制作的这个编译器</li>
-<li>host，哪个机器将运行编译器</li>
-<li>target，编译器生成代码将会跑在哪个机器上</li>
+<li><code>CL（即CAS latency）</code>设为2；因为选用的SDRAM芯片是<code>K4S511632C-KC75</code>，最高时钟是133MHz；CL设低一点以稍微增加一点带宽。</li>
+<li>其他时序比较常规，如<code>RCD</code> = 2，<code>RP</code> = 2，<code>WR</code> = 2，<code>RAS</code> = 4</li>
 </ul>
-<p>如果build == host == target，就叫<code>native</code>编译器。这是最正常的情况。<br>如果build == host != target，就叫<code>cross</code>编译器。这就是常规意义下的交叉编译器。<br>如果build != host != target，就叫<code>canadian</code>编译器。据说在社区讨论这种情况的编译器时候，<a href="https://en.wikipedia.org/wiki/Canadian_cross" target="_blank" rel="noopener">加拿大国会有三个党，于是就这样开玩笑了</a>。。。这种情况一般用在<a href="https://en.wikipedia.org/wiki/Compile_farm" target="_blank" rel="noopener">Compile farm</a>里面。编译农场或许就是一堆树莓派，它用来编译不同架构的软件包，制作这个编译器的或许就是某台高性能的x86机器。</p>
-<p>其他情况也有不同的叫法，参考<a href="https://stackoverflow.com/questions/5139403/whats-the-difference-of-configure-option-build-host-and-target" target="_blank" rel="noopener">这个回答</a></p>
-<h2 id="对于Cortex-M，有哪些工具链可选？"><a href="#对于Cortex-M，有哪些工具链可选？" class="headerlink" title="对于Cortex M，有哪些工具链可选？"></a>对于Cortex M，有哪些工具链可选？</h2><ul>
-<li><a href="https://events.static.linuxfound.org/sites/events/files/slides/optimize-uclinux.pdf" target="_blank" rel="noopener">optimize-uclinux</a>这篇报告第34页简述了一些可用的编译器。</li>
-<li><a href="https://toolchains.bootlin.com/" target="_blank" rel="noopener">Bootlin（以前叫Free electrons）公司</a>收录了一堆常见CPU架构的不同版本的gcc工具链。不过armv7-m的工具链貌似不行。</li>
-<li><a href="https://sourcery.mentor.com/GNUToolchain/package6503/public/arm-uclinuxeabi/arm-2010q1-189-arm-uclinuxeabi-i686-pc-linux-gnu.tar.bz2" target="_blank" rel="noopener">社区推荐的arm2010-q1工具链</a>有很强的可用性。</li>
-<li><a href="https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads" target="_blank" rel="noopener">arm官方维护的亲儿子gcc-arm-none-eabi</a>可用用来开发裸机程序，基本没bug，适应的CPU又多。</li>
-<li>包管理可用安装gcc-arm-none-eabi工具链，不过版本略旧与arm官网的gcc。</li>
-<li>自己动手做arm-none-eabi或者arm-uclinuxeabi工具链。</li>
+<p>nand flash因为有busy引脚，所以大可不必担心CPU跑得太快；配置常规的时序就行了。</p>
+<p>因为将SDRAM放在主芯片背面，引线非常短，而且时钟频率也很低，所以布线时不讲究等长，制版不搞阻抗，板子也能跑的很欢快。</p>
+<h3 id="网卡"><a href="#网卡" class="headerlink" title="网卡"></a>网卡</h3><p>像我这种穷学生，当然选用一两块钱的<code>LAN8720A</code>这个RMII接口的百兆网卡啦。<br><img src="/2018/02/27/ucpc2/ethernet.jpeg" alt="网卡"></p>
+<p>复位脚我下拉了，所以程序里面初始化网卡之前先得将<code>ETH_RST</code>引脚拉高，设备树里面也记得要加复位引脚（stm32429-eval板就没加）。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&amp;mac &#123;</span><br><span class="line">	...</span><br><span class="line"></span><br><span class="line">	snps,reset-gpio = &lt;&amp;gpioh 2 GPIO_ACTIVE_HIGH&gt;;</span><br><span class="line">	snps,reset-active-low;</span><br><span class="line">	snps,reset-delays-us = &lt;0 10000 100000&gt;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h3 id="VGA显示接口"><a href="#VGA显示接口" class="headerlink" title="VGA显示接口"></a>VGA显示接口</h3><p>STM32F429只有LTDC液晶屏接口，并没有专门的VGA接口。VGA接口简单说就是，RGB三个模拟电平，加上行同步、帧同步信号线。STM32的DAC只有两路，不够RGB三路信号用；网上弄VGA的STM32玩家，或者是在FSMC上<a href="http://v.youku.com/v_show/id_XNzcwMzM4NTky.html" target="_blank" rel="noopener">外接一块CPLD、FPGA来弄</a>，或者RGB<a href="https://hackaday.com/2015/01/04/800-x-600-vga-with-the-stm32f4/" target="_blank" rel="noopener">只有零和一的数字电平</a>，或者<a href="http://www.eefocus.com/aliceqiulijun/blog/17-11/425157_ca8e6.html" target="_blank" rel="noopener">外接一个昂贵的高速DAC来弄</a>。</p>
+<p>其实LTDC已经有行同步和帧同步了，关键就是将并行RGB信号转化为模拟信号嘛，最低成本的做法便是用<a href="https://www.cnblogs.com/raymon-tec/p/5129583.html" target="_blank" rel="noopener">R-2R电阻网络搭成简易DAC啦</a>。R-2R电阻网络之所以能有数模转换的效果，可用基尔霍夫定律算出来。<br><img src="/2018/02/27/ucpc2/vga.jpeg" alt="LTDC加上简易DAC搭成VGA"></p>
+<p>VGA的效果其实还是相当不错的：<br><img src="/2018/02/27/ucpc2/vgaout.jpg" alt="VGA效果"></p>
+<h3 id="摄像头"><a href="#摄像头" class="headerlink" title="摄像头"></a>摄像头</h3><p>选用了0.5mm间距的fpc-24封装的摄像头模组。像OV7670、OV2640之类的摄像头模组引脚定义一般是一样的，而且Linux内核里面有大量摄像头的驱动，替换时候也相当方便。<br><img src="/2018/02/27/ucpc2/cameramodule.jpeg" alt="摄像头模组"></p>
+<p>据他们的手册，这种模组有三个电源：</p>
+<ul>
+<li>AVDD，模拟电路电源，2.5～3.0V；</li>
+<li>DVDD，数字电路电源，1.3V；有些原理图给到了1.8V，我之前也拉到过1.8V也没发生什么事情。</li>
+<li>DOVDD，IO口电源，3.3V；</li>
 </ul>
-        
-          <a class="article-more-a" href="/2018/02/23/cross-compiler/#more">more >></a>
-        
+<p>摄像头的SCCB命令接口其实就是I2C接口。给了1.5k的上拉电阻。<br>其数据并行口最多有10位，但是实用的就8位，而且有些厂商的模组也就引出8位出来。并口、像素时钟、行同步、帧同步等信号都接到STM32的DCMI外设那里。<br><img src="/2018/02/27/ucpc2/camera.jpeg" alt="摄像头电路"></p>
+<h3 id="其他外设"><a href="#其他外设" class="headerlink" title="其他外设"></a>其他外设</h3><ul>
+<li>两个USB都工作在全速模式下面，直接分别引出D+、D-就可以了。（为降低板子复杂度，USB2没有外接高速phy芯片）<br><img src="/2018/02/27/ucpc2/usb.jpeg" alt="USB电路"></li>
+<li>两路DAC引出为3.5mm音频接口。<br><img src="/2018/02/27/ucpc2/dac.jpeg" alt="音频接口"></li>
+<li>SDIO接SD卡槽，除了时钟线之外，都加了10k上拉电阻。<br><img src="/2018/02/27/ucpc2/sdcard.jpeg" alt="SD卡"></li>
+</ul>
+<p>最终效果：<br><img src="/2018/02/27/ucpc2/board.jpeg" alt="板子布好线了"></p>
+<h3 id="布完线，就要出图了"><a href="#布完线，就要出图了" class="headerlink" title="布完线，就要出图了"></a>布完线，就要出图了</h3><p>国内工程师大规模用AD系的CAD软件，以至于国内PCB厂商都直接能接受.pcbdoc的文件了；不过最通用的还是gerber光绘文件，况且kicad也出不了.pcbdoc文件。</p>
+<p>打样需要一批gerber文件：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">名称</th>
+<th style="text-align:left">作用</th>
+<th style="text-align:left">kicad里面的名字</th>
+<th style="text-align:left">输出gerber文件后缀</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">信号层</td>
+<td style="text-align:left">外层内层导电的铜层</td>
+<td style="text-align:left">F.Cu、B.Cu、In1.Cu、In2.Cu等</td>
+<td style="text-align:left">.gtl、.gbl、.g2、.g3</td>
+</tr>
+<tr>
+<td style="text-align:left">阻焊层</td>
+<td style="text-align:left">PCB外表的那一层红红绿绿的油墨层</td>
+<td style="text-align:left">F.Mask 和 B.Mask</td>
+<td style="text-align:left">.gts、.gbs</td>
+</tr>
+<tr>
+<td style="text-align:left">锡膏层</td>
+<td style="text-align:left">用来出钢网的</td>
+<td style="text-align:left">F.Paste 和 B.Paste</td>
+<td style="text-align:left">.gtp、.gbp</td>
+</tr>
+<tr>
+<td style="text-align:left">丝印层</td>
+<td style="text-align:left">即板子印有的油墨字体、logo之类的</td>
+<td style="text-align:left">F.SilkS 和 B.Silks</td>
+<td style="text-align:left">.gto、.gbo</td>
+</tr>
+<tr>
+<td style="text-align:left">机械层</td>
+<td style="text-align:left">勾出板子的轮廓，一般只需要一个机械层</td>
+<td style="text-align:left">Edge.Cuts</td>
+<td style="text-align:left">.gm1</td>
+</tr>
+<tr>
+<td style="text-align:left">钻孔文件</td>
+<td style="text-align:left">板子上打的通孔焊盘、过孔等等</td>
+<td style="text-align:left">在plot时单独生成</td>
+<td style="text-align:left">.drl</td>
+</tr>
+</tbody>
+</table>
+<p>最终输出的文件有：<br><img src="/2018/02/27/ucpc2/files.jpeg" alt="输出的文件"></p>
+<p>接着就可以投板生产了。不少PCB厂商都有网上平台，如果不想注册账号的话可以上淘宝翻找。打少量样片的话有些厂商可以免费24小时或48小时加急，没得加急的就等一周吧。</p>
+<p><img src="/2018/02/27/ucpc2/tux.jpeg" alt="这只企鹅印的真是orz"></p>
+<h3 id="手工焊接技巧"><a href="#手工焊接技巧" class="headerlink" title="手工焊接技巧"></a>手工焊接技巧</h3><p>根据我多年的焊接经验（我初中就开始弄了），焊引脚密集的贴片元件，一定要用<strong>有铅焊锡</strong>！63%的有铅焊锡加上<strong>松香</strong>，可以解决所有连锡问题！焊接时候一定要<strong>恒温烙铁</strong>或者<strong>焊台</strong>（恒温烙铁比普通烙铁贵不了多少），设置的焊接温度一定<strong>不能超过400摄氏度</strong>（其实300度已经很高了）！</p>
+<p>有人说有铅焊锡不环保啊，铅是重金属对身体有害啊云云；但是要知道锡本身就是重金属啊。。。机器焊接不用有铅焊锡，忌惮的是电路板废弃之后对环境的影响；有铅焊锡的流动性、可焊接性比无铅焊锡要好多了，要想尽量减少对身体的害处，当然是快点焊完，缩短接触时间啦。</p>
+<p>刚焊上的主控芯片。有两处连锡是因为那里本身就是连在一起的。<br><img src="/2018/02/27/ucpc2/board2.jpg" alt="刚焊上的主控芯片"></p>
+<p>如果花点小钱定制钢网，就可以刷锡膏然后用热风枪吹了。不过锡膏刷的时候容易干掉，而且容易刷的太多，0.5mm间距的封装引脚容易连在一起，这时候还是要用电烙铁和松香将锡带出来。</p>
+<p>对于qfn封装这类引脚在底下的芯片，就只能用热风枪来吹了。</p>
+<p>板子全图：<br><img src="/2018/02/27/ucpc2/board3.jpg" alt="板子全图"></p>
+
       
 
       
@@ -531,16 +317,75 @@
       
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/02/23/cross-compiler/">展开全文 >></a>
-        </p>
-      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/02/27/ucpc2/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2018/02/27/ucpc1/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">uc-PC[1] ucLinux or Linux?</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -560,76 +405,14 @@
 
 
 
-
   
-    <article id="post-uclinux-on-stm32f103" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/02/22/uclinux-on-stm32f103/">uclinux on STM32F103ZET6</a>
-    </h1>
   
 
-        
-        <a href="/2018/02/22/uclinux-on-stm32f103/" class="archive-article-date">
-  	<time datetime="2018-02-22T15:30:11.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-22</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="用哪个BSP？"><a href="#用哪个BSP？" class="headerlink" title="用哪个BSP？"></a>用哪个BSP？</h2><p>ST为他们<a href="http://www.st.com/resource/en/application_note/cd00242717.pdf" target="_blank" rel="noopener">STM3210E-EVAL的评估板</a>制作了uClinux-dist-20080808的补丁。bootloader是一个莫名其妙的bin，kernel和rootfs放在片外nor flash里面，并且带有jffs。官方评估板又贵又买不到，不过我手上一块淘宝上一百多块钱的相似配置的板子也能玩。shell跑起来太慢了，跑个ls都要卡一两秒。</p>
-<p>Emcraft为一些ST的板子做了第三方的BSP，其中包括<a href="https://emcraft.com/products/343" target="_blank" rel="noopener">STM32F429I-disc的uclinux BSP</a>。虽然是给STM32F4板子写的，但是它里面也包括一些STM32F1的驱动，比方说USART、DMA。做一些修改还是可以用的。这份BSP血统比较纯正，用uboot作为bootloader，uclinux内核单独抽出来编译，应用程序用的busybox，包装为ROMFS的镜像。这些东西全部都在片内flash里<code>就地执行</code>，性能颇高，在429 discovery板子上跑的很欢快。</p>
-<p>既然要build it from scratch，那就应该好好研究Emcraft的BSP，好好学学社区的玩法吧。<a href="https://github.com/jserv/stm32f429-linux-builder" target="_blank" rel="noopener">github上有一个makefile，从头开始为429 discovery编译所有东西</a>，它从<a href="https://github.com/robutest" target="_blank" rel="noopener">robutest</a>的仓库里面下载的uboot和uclinux，我猜Emcraft的东西来源也是这个，因为里面的驱动感觉是一样的。</p>
-<p>首先在我买的板子上跑通整个系统，然后再移植到自己的板子上。别人的板子配置颇高，有2MB的片外SRAM跟4MB的片外NOR flash，还有64MB的nand flash，完全可以跑通。我的板子只有1MB的SRAM，加上一个256MB的nand flash；配置之所以那么诡异是因为我芯片只能淘宝。。。</p>
-        
-          <a class="article-more-a" href="/2018/02/22/uclinux-on-stm32f103/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/02/22/uclinux-on-stm32f103/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
+  
 
   
+
   
 
 
@@ -652,8 +435,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
