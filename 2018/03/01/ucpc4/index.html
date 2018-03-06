@@ -6,14 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives | hhuysqt</title>
+  <title>uc-PC[4] 小议“设备树” | hhuysqt</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="hhuysqt">
-<meta property="og:url" content="http://yoursite.com/archives/index.html">
+  <meta name="description" content="讲设备树的文章不少。以下是一些挺有意思的文章：  蜗窝科技的博客紧扣Linux内核来讲设备树的来历与用法； Thomas Petazzoni是Bootlin公司（以前叫Free Electrons，一家很有水平的专注Linux的法国公司）的CTO，他写过一份讲义叫《傻瓜都懂的设备树》，详细地介绍了设备树的语法与Linux内核中现实的用例； device tree kernel internals这">
+<meta name="keywords" content="ucpc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="uc-PC[4] 小议“设备树”">
+<meta property="og:url" content="http://yoursite.com/2018/03/01/ucpc4/index.html">
 <meta property="og:site_name" content="hhuysqt">
+<meta property="og:description" content="讲设备树的文章不少。以下是一些挺有意思的文章：  蜗窝科技的博客紧扣Linux内核来讲设备树的来历与用法； Thomas Petazzoni是Bootlin公司（以前叫Free Electrons，一家很有水平的专注Linux的法国公司）的CTO，他写过一份讲义叫《傻瓜都懂的设备树》，详细地介绍了设备树的语法与Linux内核中现实的用例； device tree kernel internals这">
+<meta property="og:image" content="http://yoursite.com/2018/03/01/ucpc4/block-pc.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/03/01/ucpc4/dts-basic.jpeg">
+<meta property="og:updated_time" content="2018-03-06T13:41:22.688Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hhuysqt">
+<meta name="twitter:title" content="uc-PC[4] 小议“设备树”">
+<meta name="twitter:description" content="讲设备树的文章不少。以下是一些挺有意思的文章：  蜗窝科技的博客紧扣Linux内核来讲设备树的来历与用法； Thomas Petazzoni是Bootlin公司（以前叫Free Electrons，一家很有水平的专注Linux的法国公司）的CTO，他写过一份讲义叫《傻瓜都懂的设备树》，详细地介绍了设备树的语法与Linux内核中现实的用例； device tree kernel internals这">
+<meta name="twitter:image" content="http://yoursite.com/2018/03/01/ucpc4/block-pc.jpeg">
   
     <link rel="alternative" href="/atom.xml" title="hhuysqt" type="application/atom+xml">
   
@@ -141,36 +149,175 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-ucpc4" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      uc-PC[4] 小议“设备树”
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/03/01/ucpc4/" class="archive-article-date">
+
+        
+        <a href="/2018/03/01/ucpc4/" class="archive-article-date">
   	<time datetime="2018-03-01T07:33:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-01</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/03/01/ucpc4/">uc-PC[4] 小议“设备树”</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>讲设备树的文章不少。以下是一些挺有意思的文章：</p>
+<ul>
+<li><a href="http://www.wowotech.net/device_model/why-dt.html" target="_blank" rel="noopener">蜗窝科技的博客</a>紧扣Linux内核来讲设备树的来历与用法；</li>
+<li>Thomas Petazzoni是Bootlin公司（以前叫Free Electrons，一家很有水平的专注Linux的法国公司）的CTO，他写过一份讲义叫<a href="https://bootlin.com/pub/conferences/2013/elce/petazzoni-device-tree-dummies/petazzoni-device-tree-dummies.pdf" target="_blank" rel="noopener">《傻瓜都懂的设备树》</a>，详细地介绍了设备树的语法与Linux内核中现实的用例；</li>
+<li><a href="https://elinux.org/images/0/0c/Rowand--devicetree_kernel_internals.pdf" target="_blank" rel="noopener">device tree kernel internals</a>这篇报告更加详细地描述了设备树的语法、编译过程，并分析了设备树展开过程的一些源码；</li>
+<li>还是Thomas Petazzoni，他在2015年的ELC会议上抱怨说：<a href="https://events.static.linuxfound.org/sites/events/files/slides/petazzoni-dt-as-stable-abi-fairy-tale.pdf" target="_blank" rel="noopener">不同内核里设备树接口要保持可移植性，这简直是个神话</a>；</li>
+</ul>
+<p>很多介绍设备树的文章都会开门见山地介绍设备树的各种概念，然后罗列出设备树的语法。<strong>不过很少有人会从头到尾讲透驱动程序和设备树，然后旗帜鲜明地指出，设备树描述的就是平台设备（platform_device），或许他们默认了你已经懂得那些前提知识</strong>。以下记录了我的一些思考，尝试从<code>面向对象</code>的角度去切入。</p>
+<a id="more"></a>
+<h3 id="1、C语言实现面向对象的概念"><a href="#1、C语言实现面向对象的概念" class="headerlink" title="1、C语言实现面向对象的概念"></a>1、C语言实现面向对象的概念</h3><p>“面向对象”与其说是一种程序设计方法（方法论），不如说是一种思维（世界观）。我的一位老师粗略估计了一下：如果你用面向过程的思维去写代码维护代码，顶多能弄50万行；而用面向对象的思维的话，还不知道上限是多少。Windows XP泄露出来的源码就有4500万行了，前段时间泄露出来的Win10源码大小有12TB，一般人下下来都存不下。</p>
+<p>如今Linux内核也有接近2000万行代码，uboot都有80万行代码了，而它们都用C语言写成，想必是用了不同于面向过程的思维和技巧了。</p>
+<p>C语言可以实现相当多的面向对象的概念，有相当多的书籍讲述了object oriented C（OOC），关键就是使用struct去封装成员对象和函数指针，函数指针就是方法；指针很自由，可以表达各种概念。其中，<a href="http://customers.hbci.com/~rpopp/Books/Object-oriented%20Programming%20With%20ANSI-C.pdf" target="_blank" rel="noopener"><strong><em><code>Object-oriented Programming With ANSI-C</code></em></strong></a>这本书里的实现方法相当优雅，它并不局限于struct，而且它将void指针玩出花来了，可以说离仅使用基本面向对象语法的C++就差个class关键字了。</p>
+<h4 id="1-1、封装"><a href="#1-1、封装" class="headerlink" title="1.1、封装"></a>1.1、封装</h4><p>声明一个<code>struct</code>就是声明一个<code>类</code>。定义一个struct就是将类<code>实例化</code>为<code>对象</code>。</p>
+<p>一个类里面声明有<code>属性</code>和<code>方法</code>。使用struct的话，属性就照常写，方法就写为<code>函数指针</code>。比方说在<strong>一个头文件里</strong>声明foo类，里面有一个成员叫bar，然后有一个方法get_bar，返回实际对象里的bar值：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">foo</span> &#123;</span></span><br><span class="line">    <span class="comment">// 属性</span></span><br><span class="line">    <span class="keyword">int</span> bar;</span><br><span class="line">    <span class="comment">// 接口</span></span><br><span class="line">    <span class="keyword">int</span> (*get_bar)(struct foo*);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>get_bar()函数一般在<strong>某一个C文件里</strong>实现为static函数：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">my_get_bar</span><span class="params">(struct foo* f)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> f-&gt;bar;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后，在<strong>同一个C文件里面</strong>实现<strong>全局可见</strong>的<code>构造函数</code>：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">struct foo* <span class="title">new_foo</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">foo</span>* <span class="title">f</span> = (<span class="title">struct</span> <span class="title">foo</span>*)</span></span><br><span class="line"><span class="class">    <span class="title">malloc</span>(<span class="title">sizeof</span>(<span class="title">struct</span> <span class="title">foo</span>));</span></span><br><span class="line">    <span class="keyword">if</span> (!f)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="comment">// 然后可有一些默认初始化</span></span><br><span class="line">    f-&gt;bar = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">// 还要初始化接口函数指针！</span></span><br><span class="line">    f-&gt;get_bar = my_get_bar;</span><br><span class="line">    <span class="keyword">return</span> f;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>最后，这样使用这个类：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// new一个对象：</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">foo</span>* <span class="title">f</span> = <span class="title">new_foo</span>();</span></span><br><span class="line"><span class="comment">// 通过接口访问该对象</span></span><br><span class="line"><span class="keyword">int</span> the_bar = f-&gt;get_bar(f);</span><br><span class="line"><span class="comment">// 删除这个对象</span></span><br><span class="line"><span class="built_in">free</span>(f);</span><br></pre></td></tr></table></figure></p>
+<p>上述的实现方法展示了最基础的类的封装。接口除了基本的getter和setter之外，<code>构造函数</code>和<code>析构函数</code>也可以定义为函数指针。这时候可以写出通用的new和delete函数统一管理所有的类。Linux内核里有多种宏可以达到new和delete的目的，比方说可以通过<code>MODULE_init()</code>宏修饰构造函数，通过<code>MODULE_exit()</code>宏修饰析构函数。</p>
+<p><code>封装</code>不仅仅是属性和方法的整合，还包括要<code>数据隐藏</code>：只能通过一些接口来访问一个对象的属性。鉴于C语言缺乏private等语法，数据隐藏有以下方法：</p>
+<ul>
+<li>像上面提到的<a href="http://customers.hbci.com/~rpopp/Books/Object-oriented%20Programming%20With%20ANSI-C.pdf" target="_blank" rel="noopener">OO ANSI-C</a>那本书那样使用void指针。void指针也称自由指针，这样的话struct里面的东西就完全private了，只能通过接口来访问。</li>
+<li>或者，靠程序员的自律（Linux内核就是这样干的）</li>
+</ul>
+<h4 id="1-2、继承"><a href="#1-2、继承" class="headerlink" title="1.2、继承"></a>1.2、继承</h4><p>（继承也称泛化。“A<code>泛化</code>为B”，跟“B<code>继承</code>了A”是一个意思。）</p>
+<p>现在假设另一个类foo2<code>继承</code>了foo，可以这样声明：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">foo2</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">foo</span> *<span class="title">super</span>;</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>然后foo2的构造函数如下：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">struct foo2 *<span class="title">new_foo2</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">foo2</span> *<span class="title">f2</span> = (<span class="title">struct</span> <span class="title">foo2</span>)</span></span><br><span class="line"><span class="class">        <span class="title">malloc</span>(<span class="title">sizeof</span>(<span class="title">struct</span> <span class="title">foo2</span>));</span></span><br><span class="line">    <span class="keyword">if</span> (!f2)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="comment">// 构造父类</span></span><br><span class="line">    f2-&gt;super = new_foo();</span><br><span class="line">    <span class="keyword">if</span> (!f2-&gt;super) &#123;</span><br><span class="line">        <span class="built_in">free</span>(f2);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> f2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果需要访问foo2继承自foo的属性，则通过foo2-&gt;super的接口来访问。也可以在foo2里面重新造轮子，先做一些自己的东西，然后再调用super的方法（Linux内核里面经常这样做）。</p>
+<p><strong>可见，要实现继承，一般在子类里面定义一个父类（或它的指针）</strong>。如果是<code>多继承</code>，那就多构造几个父类。值得注意的是，要逐个构造不同的类时，只要有一个类没有成功构造，之前所成功构造的类都得析构。这样的话会写得很麻烦，于是Linux内核推荐使用<code>goto</code>语句：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">f1</span> *<span class="title">f1</span> = <span class="title">new_f1</span>();</span></span><br><span class="line">    <span class="keyword">if</span> (!f1) <span class="keyword">goto</span> NULL_F1;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">f2</span> *<span class="title">f2</span> = <span class="title">new_f2</span>();</span></span><br><span class="line">    <span class="keyword">if</span> (!f2) <span class="keyword">goto</span> NULL_F2;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">f3</span> *<span class="title">f3</span> = <span class="title">new_f3</span>();</span></span><br><span class="line">    <span class="keyword">if</span> (!f3) <span class="keyword">goto</span> NULL_F3;</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">// 成功</span></span><br><span class="line">    <span class="keyword">return</span> foobar;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 各种程度的失败</span></span><br><span class="line">NULL_F3:</span><br><span class="line">    <span class="built_in">free</span>(f2);</span><br><span class="line">NULL_F2:</span><br><span class="line">    <span class="built_in">free</span>(f1);</span><br><span class="line">NULL_F1:</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br></pre></td></tr></table></figure></p>
+<h4 id="1-3、多态"><a href="#1-3、多态" class="headerlink" title="1.3、多态"></a>1.3、多态</h4><p>因为使用了函数指针，指针非常自由，因而可以将其替换为任何合适的函数。于是子类可以<code>重写（overridding）</code>父类的方法，这体现了<code>多态</code>。</p>
+<p><code>重载（overloading）</code>是一种语言特性，然而C语言并不能提供这种特性，所以在需要重载的地方使用多个函数。比方说Linux的<code>wait3()</code>、<code>wait4()</code>等一系列wait系统调用，wait3表示它有3个参数，wait4表示它有4个参数。。。</p>
+<h4 id="1-4、举个例子：内核中STM32的串口驱动"><a href="#1-4、举个例子：内核中STM32的串口驱动" class="headerlink" title="1.4、举个例子：内核中STM32的串口驱动"></a>1.4、举个例子：内核中STM32的串口驱动</h4><p>其实不只是STM32，其他片子的串口都实现为一个tty驱动。tty不只有串口终端，还有framebuffer终端、网络终端等等，它们都统一为一个相当复杂的tty架构，不过下面仅简单探讨一些类的继承关系。</p>
+<p>它涉及到<code>tty_driver</code>、<code>uart_port</code>、<code>stm32_port</code>这3个类，它们这样定义：</p>
+<p><a href="https://elixir.bootlin.com/linux/v4.13.3/source/include/linux/tty_driver.h#L296" target="_blank" rel="noopener">include/linux/tty_driver.h</a><br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">tty_driver</span> &#123;</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">tty_operations</span> *<span class="title">ops</span>;</span></span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p><a href="https://elixir.bootlin.com/linux/v4.13.3/source/include/linux/serial_core.h#L117" target="_blank" rel="noopener">include/linux/serial_core.h</a><br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">uart_port</span> &#123;</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">uart_ops</span> *<span class="title">ops</span>;</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">tty_driver</span> *<span class="title">tty_driver</span>;</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p><a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/tty/serial/stm32-usart.h#L214" target="_blank" rel="noopener">drivers/tty/serial/stm32-usart.h</a><br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">stm32_port</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">uart_port</span> <span class="title">port</span>;</span></span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>其中，tty_operations和uart_ops都是函数指针表。从上面代码片段可以看出，uart_port继承了tty_driver，stm32_port继承了uart_port。</p>
+<p>值得注意的是，tty_operations里的函数，不实现在tty相关的c文件里，而实现在serial相关的c文件里；uart_port的函数，不实现在serial相关c文件里，而实现在每一个芯片的串口驱动的c文件里面。这说明前两个类是<strong>抽象类</strong>。</p>
+<p>假设我们要发送数据。tty_operations里有个<code>write()</code>，<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/tty/serial/serial_core.c#L546" target="_blank" rel="noopener">drivers/tty/serial/serial_core.c</a>里将其实现为<code>uart_write()</code>；它将数据填入缓冲区后，最终调用了uart_ops的<code>start_tx()</code>，<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/tty/serial/stm32-usart.c#L393" target="_blank" rel="noopener">drivers/tty/serial/stm32-usart.c</a>里将其实现为<code>stm32_start_tx()</code>，最终依靠DMA或者轮询（polling IO）的方式将数据写入串口数据寄存器中。</p>
+<p>还应注意到的是，它们构造父类的风格并不统一：uart_port想要继承tty_driver，则通过<code>alloc_tty_driver()</code>来new一个父类，然后<code>tty_set_operations()</code>等建立与父类的联系，最后<code>tty_register_driver()</code>注册驱动函数。而stm32_port要继承uart_port就直接在子类内部定义一个父类对象就完事了。</p>
+<h4 id="1-5、container-of"><a href="#1-5、container-of" class="headerlink" title="1.5、container_of()"></a>1.5、container_of()</h4><p>写驱动时常需要继承一些已有的类，比方说一个字符设备驱动继承cdev，或者如1.4的例子stm32串口设备继承uart_port。C语言里父类定义在子类内部，而内核的基础设施传参时只将父类对象的指针传进来，但是驱动程序要用到的又是子类对象。所以问题就是，如何通过父类对象找到子类对象。</p>
+<p>有一个解决办法是，将父类定义为子类的<strong>第一个成员</strong>，这样的话就可以通过强制类型转换，直接得到子类。比如：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">son</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">father</span> <span class="title">father</span>;</span></span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>如果有一个指针<code>struct father *f</code>，而且知道它肯定是被继承为son的对象，那么这个指针可以强转为<code>struct son*</code>指针。</p>
+<p>但是多继承的情况就无法这样做了；而且只能将父类定义为第一个成员，简直太死板了。于是Linux内核里面定义了一个<code>contailer_of()</code>宏，通过结构体成员的地址找到整个结构体的地址。定义在<a href="https://elixir.bootlin.com/linux/v4.13.3/source/include/linux/kernel.h#L858" target="_blank" rel="noopener">include/linux/kernel.h</a>：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> container_of(ptr, type, member) (&#123;   \</span></span><br><span class="line">    <span class="keyword">void</span> *__mptr = (<span class="keyword">void</span> *)(ptr); \</span><br><span class="line">    ((type *)(__mptr - offsetof(type, member))); &#125;)</span><br></pre></td></tr></table></figure></p>
+<p>意思是，该成员的地址减去其在结构体中的偏移量，就是包含它的那个结构体的地址。其中<code>offsetof()</code>宏定义在<a href="https://elixir.bootlin.com/linux/v4.13.3/source/include/linux/stddef.h" target="_blank" rel="noopener">include/linux/stddef.h</a>：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#ifdef __compiler_offsetof</span><br><span class="line">#define offsetof(TYPE, MEMBER)    __compiler_offsetof(TYPE, MEMBER)</span><br><span class="line">#else</span><br><span class="line">#define offsetof(TYPE, MEMBER)    ((size_t)&amp;((TYPE *)0)-&gt;MEMBER)</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure></p>
+<p>gcc预定义了<code>__compiler_offsetof()</code>宏，可以直接用。如果编译器没有这个手段的话，那么就将其定义为<strong>在0地址处的那个结构体的那个成员的偏移量</strong>。。。</p>
+<p>值得一提的是，gcc对C语言做了大量的扩展，比方说它允许花括号括着的<code>块结构</code>有返回值：注意到那个圆括号花括号的组合<code>({...})</code>，返回的是块结构中最后一句话的返回值。另外它还允许在块结构中定义函数，于是gcc的<a href="https://www.codeproject.com/tips/614570/lambda-in-c-gcc" target="_blank" rel="noopener">C语言可以神奇地写出lamda函数</a>。。。</p>
+<h3 id="2、Linux设备驱动模型"><a href="#2、Linux设备驱动模型" class="headerlink" title="2、Linux设备驱动模型"></a>2、Linux设备驱动模型</h3><p>在2.5版本的内核中集中精力重新设计了设备驱动程序的架构，提出了一个精心设计的<code>设备模型</code>。想要实现的效果便是：如果内核发现一个设备，而且内核中有其驱动，那么内核就可以把该设备暴露到用户空间中，以待应用程序操作。而且引入sysfs，并以kobj作为sysfs里面每个对象的基类。</p>
+<h4 id="2-1、著名的设备、驱动、总线三剑客"><a href="#2-1、著名的设备、驱动、总线三剑客" class="headerlink" title="2.1、著名的设备、驱动、总线三剑客"></a>2.1、著名的设备、驱动、总线三剑客</h4><p>外设通过总线挂到CPU上，整个系统看上去长这样（图自<em>essential linux device drivers</em>）：<br><img src="/2018/03/01/ucpc4/block-pc.jpeg" alt="system"></p>
+<p>经过抽象，引入<code>device</code>、<code>device_driver</code>、<code>bus_type</code>这三个类；现实世界中device通过bus挂载到CPU上，device通过bus_type与device_driver联系起来。它们都声明在<a href="https://elixir.bootlin.com/linux/v4.13.3/source/include/linux/device.h" target="_blank" rel="noopener">include/linux/device.h</a>中：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">device</span> &#123;</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">bus_type</span>    *<span class="title">bus</span>;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">device_driver</span> *<span class="title">driver</span>;</span></span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">device_driver</span> &#123;</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">/* 一堆函数指针 */</span></span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">bus_type</span> &#123;</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">/* 一堆函数指针 */</span></span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>这三个类中最为复杂的是device类，另外两个类基本上是一些方法。下面罗列了它们一些简单的特性：</p>
+<ul>
+<li>device_driver和device都会注册到一个bus上。bus_type里面最重要的方法是<code>match()</code>，如果判断设备和驱动相匹配，将调用device_driver的<code>probe()</code>方法，交给device_driver来完成接下来的工作。</li>
+<li>device_driver里的<code>probe()</code>方法也被称为驱动程序的入口，probe成功后设备将有一系列<code>file_operations</code>从而可以被应用程序访问，此时设备的实例就产生了。</li>
+<li>device内有device指针和链表，让device之间形成一个树状结构去模拟现实系统中的情况；</li>
+<li>device又有kobject，通过kobj的指针在<strong>sysfs</strong>里又形成一个树状结构；</li>
+<li>device里还有of_node，对应到<strong>设备树</strong>上的节点。这又是一个树状结构；</li>
+<li>device内有个struct class*，为了方便在sysfs将设备归类。</li>
+</ul>
+<p>device类集中了设备的属性，device_driver、bus_type等类集中了设备的操作；从面向对象的角度可以有数种解读，比如：</p>
+<ul>
+<li>device、device_driver、bus_type是相互独立的类；其中device依赖bus_type，device和device_driver之间是关联关系。这是一种合乎常理的理解，很多资料也从这个角度理解。</li>
+<li>device是以device_driver、bus_type等为父类的<strong>多继承</strong>。要实例化一个device，先实例化父类driver和bus。这也是一个合理的解读角度。</li>
+</ul>
+<h4 id="2-2、平台设备、平台驱动、平台总线"><a href="#2-2、平台设备、平台驱动、平台总线" class="headerlink" title="2.2、平台设备、平台驱动、平台总线"></a>2.2、平台设备、平台驱动、平台总线</h4><p>PC上的设备大都接在PCI一类的总线上，可动态探索设备、动态分配地址空间、动态分配中断资源。这时总线的处理程序就可以动态生成device来与driver配对了。</p>
+<p>但是对于像ARM这种将内存空间和设备空间统一编址的架构来说，很多设备并不挂载在可以动态探知设备的总线上，而是有固定的地址供CPU寻址。<strong>STM32所有外设都这样</strong>（当然也有不少ARM架构的SOC有PCI总线）。这些设备都叫<code>平台设备（platform device）</code>。为符合Linux设备模型，就专门造出了一个虚拟的总线叫<code>平台总线（platform bus)</code>，上面注册有平台设备与<code>平台驱动（platform driver）</code>。它们分别继承自device、bus_type、device_driver。</p>
+<p>由于平台设备不能动态探知，所以内核应该事先知道这些设备，于是platform_device对象应该写死在内核里面。2.6.x内核里面就是这样干的。所以当年如果你要实现一个驱动，除了要实现platform_driver，还要在某一个地方定义一个static的platform_device（或者继承它的子类），然后在使用<code>MODULE_init()</code>宏修饰的构造函数里面注册driver和device（MODULE_init的工作方式是将一堆函数指针存到某一个section里，形成一个数组，以便内核初始化时候逐个调用）。</p>
+<p>平台总线的match()方法，对比的是平台设备和平台驱动的<strong>name字段是否相同</strong>，以此来配对设备和驱动。比方说，我在一个地方定义一个设备：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">platform_device</span> </span></span><br><span class="line"><span class="class"><span class="title">foo_device</span> = &#123;</span></span><br><span class="line">    .name        = <span class="string">"foo"</span>,</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>然后在另一个地方定义一个驱动：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">platform_driver</span> </span></span><br><span class="line"><span class="class"><span class="title">foo_driver</span> = &#123;</span></span><br><span class="line">    .driver    = &#123;</span><br><span class="line">        .name        = <span class="string">"foo"</span>,</span><br><span class="line">    &#125;;</span><br><span class="line">    .probe = foo_probe,</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>在构造函数里面注册设备和驱动：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在一个地方添加设备</span></span><br><span class="line">platform_add_devices(&amp;foo_device, <span class="number">1</span>);</span><br><span class="line">...</span><br><span class="line"><span class="comment">// 在另一个地方添加驱动</span></span><br><span class="line">platform_driver_register(&amp;foo_driver);</span><br></pre></td></tr></table></figure></p>
+<p>随后驱动中的foo_probe()函数将被调用。</p>
+<p>有不少代码，driver定义在它驱动目录下的文件里，device或许又定义在板级初始化目录下的文件里面，显得相当随心所欲。如今内核中这种代码也还存在，比方说omap使用了<code>plat_nand</code>设备：<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/mtd/nand/plat_nand.c" target="_blank" rel="noopener">drivers/mtd/nand/plat_nand.c</a>里注册驱动，<a href="https://elixir.bootlin.com/linux/v4.13.3/source/arch/arm/mach-omap1/board-h2.c" target="_blank" rel="noopener">arch/arm/mach-omap1/board-h2.c</a>里面定义了nand flash的分区信息，并注册设备。</p>
+<p>ARM架构片子浩如烟海，而且外设基本上都是平台设备，这导致内核里板级初始化部分相当混乱，充斥着长达数万行的静态声明的结构体和函数，又多又杂。这令Linus本人忍无可忍，终于<a href="https://lkml.org/lkml/2011/3/17/492" target="_blank" rel="noopener">在2011年3月17日将ARM社区臭骂一顿，斥其为痔疮（a f**king pain in the ass）</a>。经过激烈的讨论，ARM从内核3.x之后便引入<code>设备树</code>来代替代码里面的平台设备了。。。</p>
+<h3 id="3、如何刻画一个设备？"><a href="#3、如何刻画一个设备？" class="headerlink" title="3、如何刻画一个设备？"></a>3、如何刻画一个设备？</h3><p>现在我们要用另一种机制来代替平台设备。它简单明了，并且运行时转化为平台设备。</p>
+<p>一个设备就是一个<code>对象</code>，世间万物都是对象。每个对象拥有一系列<code>属性</code>，属性即是<code>名</code>和<code>值</code>的对应；现在<strong>不想声明类而直接把对象表达出来</strong>。</p>
+<h4 id="3-1、可选用的语言"><a href="#3-1、可选用的语言" class="headerlink" title="3.1、可选用的语言"></a>3.1、可选用的语言</h4><p>假若我们要表达一个名字为”serial1”，波特率为115200的串口，当然现实世界的串口属性远不止这些，还有它寄存器组的地址、中断源、DMA通道、时钟源等等。</p>
+<p>如果直接用c语言数据结构来表示的话，显然就要先声明一个类再实例化：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">usart_struct</span> &#123;</span></span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *name;</span><br><span class="line">    <span class="keyword">unsigned</span> baudrate;</span><br><span class="line">&#125;</span><br><span class="line">usart = &#123;</span><br><span class="line">    .name = <span class="string">"serial1"</span>,</span><br><span class="line">    .baudrate = <span class="number">115200</span>,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>因为设备实在太千奇百怪多种多样了，如果每一种芯片的外设都这么搞的话，那代码就相当臃肿了。其实不少语言都能直接<strong>随心所欲地</strong>定义对象，它们可有两种风格：</p>
+<ul>
+<li><p>标签式的风格，标签接标签，标签套标签。如XML：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">usart</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>serial1<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">baudrate</span>&gt;</span>115200<span class="tag">&lt;/<span class="name">baudrate</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">usart</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>数据结构式的风格。如json：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"usart"</span>: &#123;</span><br><span class="line">    <span class="attr">"name"</span>: <span class="string">"serial1"</span>,</span><br><span class="line">    <span class="attr">"baudrate"</span>: <span class="number">115200</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>内核中，我们会用设备树来描述，其文件后缀是dts：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/ &#123;</span><br><span class="line">    usart:serial1@0 &#123;</span><br><span class="line">        baudrate = &lt;115200&gt;;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>看上去像极了json，因为它们都是数据结构式的风格。其实内核编译dts之前先过一遍c预处理器，所以可以使用各种宏定义，包含头文件等等。</p>
+<p>除了单纯刻画出对象的属性，还得表达不同对象之间的关系。对于硬件设备而言可以有以下的例子：</p>
+<ul>
+<li><code>串口</code>和<code>时钟管理器</code>这两个设备体现了<code>依赖关系（dependency）</code>：串口依赖于时钟管理器产生时钟，初始化串口之前必须初始化时钟，初始化完时钟之后串口一般就不必理会时钟了；</li>
+<li><code>串口</code>和<code>串口对应的GPIO</code>体现了<code>聚合关系（aggregation）</code>：串口可以包含一些GPIO，但是这些GPIO不依赖串口而存在（或者说这些GPIO还可以用于其他的外设），初始化时并不强制要求谁先谁后；</li>
+<li><code>串口</code>等一系列外设和<code>SOC芯片</code>体现了<code>组合关系（composition）</code>：一系列外设组合成为SOC芯片；</li>
+<li><code>串口</code>和<code>DMA</code>这两个设备体现的是一种比较通用的<code>关联关系（association）</code>：它们是独立的两个设备，并且相互知道对方的存在；</li>
+</ul>
+<p>如果要表达<code>组合关系</code>这种强烈的整体和局部的关系，那么直接把小的一方定义在大的一方之内就行了。但是如果两个对象比较独立，它们之间的关系就没有整体和局部那么的强烈，那么就需要有一个表达<code>引用</code>的语法，即在一个对象中去引用另一个对象，此时单纯的XML或者json就表达不出来了；而dts就可以表达出来。</p>
+<h4 id="3-2、设备树基本语法"><a href="#3-2、设备树基本语法" class="headerlink" title="3.2、设备树基本语法"></a>3.2、设备树基本语法</h4><p>一张图就够了：<br><img src="/2018/03/01/ucpc4/dts-basic.jpeg" alt="设备树基本语法"></p>
+<p>关注点是，</p>
+<ul>
+<li>语句末要加分号</li>
+<li>在哪里定义该节点的名字（Node name，在花括号之前，<strong>label之后</strong>）</li>
+<li>在哪里定义该外设寄存器组的地址（Unit address，@符号）</li>
+<li>属性名和属性值怎么定义（Property name和Property value，等于号来连接）</li>
+<li>布尔属性（没有写值，仅表示这个属性声明与否）</li>
+<li>数组怎么定义（a-string-list-property，用逗号分割的值）</li>
+<li>一个属性有多个值该怎么定义（a-cell-property，尖括号中空格分隔的值）</li>
+<li><strong>标号怎么定义（Label，节点名字之前，用冒号）</strong></li>
+<li><strong>怎么引用别的节点（phandel，&amp;符号）</strong></li>
+</ul>
+<p>dts文件里面的节点里，一系列同名的节点描述的都是同一个对象，它们的属性相互叠加，若有冲突，则以最后出现的描述为准，是谓“后来居上”。比方说在<strong>靠前</strong>的地方这样描述这个串口：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">/ &#123;</span><br><span class="line">    soc &#123;</span><br><span class="line">        ...</span><br><span class="line">        serial@<span class="number">40011000</span> &#123;</span><br><span class="line">            status = <span class="string">"disabled"</span>;</span><br><span class="line">            dma-names = <span class="string">"rx"</span>, <span class="string">"tx"</span>;</span><br><span class="line">            ...</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>然后在<strong>靠后</strong>的地方又这样描述一遍：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/ &#123;</span><br><span class="line">    soc &#123;</span><br><span class="line">        <span class="comment">// 记得要重新画一次设备树，然后</span></span><br><span class="line">        <span class="comment">// 在相同的枝干下面写同名节点</span></span><br><span class="line">        serial@<span class="number">40011000</span> &#123;</span><br><span class="line">            status = <span class="string">"okay"</span>;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>最后生成的效果是：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">/ &#123;</span><br><span class="line">    soc &#123;</span><br><span class="line">        ...</span><br><span class="line">        serial@<span class="number">40011000</span> &#123;</span><br><span class="line">            status = <span class="string">"okay"</span>;</span><br><span class="line">            dma-names = <span class="string">"rx"</span>, <span class="string">"tx"</span>;</span><br><span class="line">            ...</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>注意到，status属性被改为okay了。</p>
+<p>特别要强调的是，如果要在两个文件里面这样干，那么两个文件里面都得画上<strong>结构相同的设备树</strong>，然后在<strong>相同的枝干上写同名的节点</strong>，这才有效。就像上面例子中画了两次设备树，在根节点下soc节点下重写了serial节点。这显然很麻烦。不过可以使用<code>标号</code>和<code>引用</code>来简化。</p>
+<p>还有这种操作：拿STM32的设备树作为例子：<br>在<a href="https://elixir.bootlin.com/linux/v4.13.3/source/arch/arm/boot/dts/stm32f429.dtsi#L422" target="_blank" rel="noopener">arch/arm/boot/dts/stm32f429.dtsi</a>里面这样定义串口：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">/ &#123;</span><br><span class="line">    soc &#123;</span><br><span class="line">        ...</span><br><span class="line">        <span class="comment">// 跟上面相比，加了标号</span></span><br><span class="line">        usart1: serial@<span class="number">40011000</span> &#123;</span><br><span class="line">            status = <span class="string">"disabled"</span>;</span><br><span class="line">            dma-names = <span class="string">"rx"</span>, <span class="string">"tx"</span>;</span><br><span class="line">            ...</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>然后在<a href="https://elixir.bootlin.com/linux/v4.13.3/source/arch/arm/boot/dts/stm32429i-eval.dts#L286" target="_blank" rel="noopener">arch/arm/boot/dts/stm32f429i-eval.dts</a>里面，include刚才那个设备树，接着使用标号改写这个节点：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stm32f429.dtsi&gt;</span></span></span><br><span class="line">...</span><br><span class="line"><span class="comment">// 直接引用那个标号就行了</span></span><br><span class="line">&amp;usart1 &#123;</span><br><span class="line">    status = <span class="string">"okay"</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>最后达到相同的效果。</p>
+<h4 id="3-3、设备树对应到驱动程序"><a href="#3-3、设备树对应到驱动程序" class="headerlink" title="3.3、设备树对应到驱动程序"></a>3.3、设备树对应到驱动程序</h4><p>设备树会展开为平台设备，但是它并不通过name字段去与平台驱动相匹配，而是通过<code>compatible</code>属性与driver中的<code>compatible</code>相匹配。compatible都是一个字符串。<br>比方说STM32F429的串口在设备树中这样写：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">usart1: serial@<span class="number">40011000</span> &#123;</span><br><span class="line">    compatible = <span class="string">"st,stm32-usart"</span>, </span><br><span class="line">        <span class="string">"st,stm32-uart"</span>;</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>在<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/tty/serial/stm32-usart.c#L709" target="_blank" rel="noopener">drivers/tty/serial/stm32-usart.c</a>中这样定义compatible：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">of_device_id</span> <span class="title">stm32_match</span>[] = &#123;</span></span><br><span class="line">    &#123; .compatible = <span class="string">"st,stm32-usart"</span>, .data = &amp;stm32f4_info&#125;,</span><br><span class="line">    &#123; .compatible = <span class="string">"st,stm32-uart"</span>, .data = &amp;stm32f4_info&#125;,</span><br><span class="line">    &#123; .compatible = <span class="string">"st,stm32f7-usart"</span>, .data = &amp;stm32f7_info&#125;,</span><br><span class="line">    &#123; .compatible = <span class="string">"st,stm32f7-uart"</span>, .data = &amp;stm32f7_info&#125;,</span><br><span class="line">    &#123;&#125;,</span><br><span class="line">&#125;;</span><br><span class="line">...</span><br><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">platform_driver</span> <span class="title">stm32_serial_driver</span> = &#123;</span></span><br><span class="line">    .driver    = &#123;</span><br><span class="line">        .of_match_table = of_match_ptr(stm32_match),</span><br><span class="line">    &#125;,</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>设备树和驱动中的compatible字段都可以不只有一个，只要<strong>任何一个字符串相同</strong>，就可以匹配上了。</p>
+<p>注意到<code>of_device_id</code>列表里面，每一个compatible项目都对应了一个data成员。驱动匹配上设备后，可以顺藤摸瓜找到相关的data，从而在一个驱动程序里面实现多个相似设备的驱动。</p>
+<h4 id="3-4、“设备树绑定”，以及“设备树绑定”的文档"><a href="#3-4、“设备树绑定”，以及“设备树绑定”的文档" class="headerlink" title="3.4、“设备树绑定”，以及“设备树绑定”的文档"></a>3.4、“设备树绑定”，以及“设备树绑定”的文档</h4><p>设备树中应该描述哪些属性，属性值应该怎么设置？写BSP的程序员可以自由去定义，然后通过一系列设备树相关接口找到设备树中设置的值。比方说STM32的串口：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">usart1: serial@<span class="number">40011000</span> &#123;</span><br><span class="line">    compatible = <span class="string">"st,stm32-usart"</span>, </span><br><span class="line">        <span class="string">"st,stm32-uart"</span>;</span><br><span class="line">    reg = &lt;<span class="number">0x40011000</span> <span class="number">0x400</span>&gt;;</span><br><span class="line">    interrupts = &lt;<span class="number">37</span>&gt;;</span><br><span class="line">    clocks = &lt;&amp;rcc <span class="number">0</span> STM32F4_APB2_CLOCK(USART1)&gt;;</span><br><span class="line">    dmas = &lt;&amp;dma2 <span class="number">2</span> <span class="number">4</span> <span class="number">0x400</span> <span class="number">0x0</span>&gt;,</span><br><span class="line">           &lt;&amp;dma2 <span class="number">7</span> <span class="number">4</span> <span class="number">0x400</span> <span class="number">0x0</span>&gt;;</span><br><span class="line">    dma-names = <span class="string">"rx"</span>, <span class="string">"tx"</span>;</span><br><span class="line">    pinctrl<span class="number">-0</span> = &lt;&amp;usart1_pins_a&gt;;</span><br><span class="line">    pinctrl-names = <span class="string">"default"</span>;</span><br><span class="line">    status = <span class="string">"okay"</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>它有各种属性，驱动程序里逐个查找这些属性的配置，比方说：</p>
+<ul>
+<li><a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/of/device.c#L24" target="_blank" rel="noopener">of_match_device()</a>通过匹配<code>compatible</code>，找到3.3中所述<code>of_device_id</code>表中对应项，以方便提取其对应的<code>data</code>，作为驱动程序里面自定义的<strong>私有数据</strong>。</li>
+<li><a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/base/platform.c#L67" target="_blank" rel="noopener">platform_get_resource()</a>和<a href="https://elixir.bootlin.com/linux/v4.13.3/source/lib/devres.c#L134" target="_blank" rel="noopener">devm_ioremap_resource()</a>配对使用，提取出设备树节点的<code>reg</code>属性。</li>
+<li><a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/base/platform.c#L87" target="_blank" rel="noopener">platform_get_irq()</a>提取<code>interrupts</code>属性。</li>
+<li><a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/clk/clk-devres.c#L17" target="_blank" rel="noopener">devm_clk_get()</a>提取<code>clocks</code>属性。</li>
+<li><a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/dma/dmaengine.c#L752" target="_blank" rel="noopener">dma_request_slave_channel()</a>输入<code>dma-names</code>里某一个字符串，查找出对应的<code>dmas</code>属性。比方说通过”rx”找到&lt;&amp;dma2 2 4 0x400 0x0&gt;。</li>
+</ul>
+<p>这些属性可能的配置，以及处理这些配置的代码，<strong>综合起来叫<code>设备树绑定（devicetree bindings）</code></strong>。在源码<code>Documentation/devicetree/bindings/</code>目录下面罗列了一大堆<strong>描述设备树绑定的文档</strong>。</p>
+<p>应该说，设备树绑定长什么样，这取决于程序员的设计；有不少属性的用途是“众所周知”的，比方说</p>
+<ul>
+<li>compatible属性用于匹配驱动</li>
+<li>reg属性用于描述改外设接口寄存器的地址空间</li>
+<li>pinctrl-0、pinctrl-names用于描述该外设对应到的GPIO</li>
+<li><strong>status表示这个外设是否启用</strong></li>
+</ul>
+<p>有不少属性是该驱动所特有的，比方说，根据<a href="https://elixir.bootlin.com/linux/v4.13.3/source/Documentation/devicetree/bindings/serial/st,stm32-usart.txt" target="_blank" rel="noopener">Documentation/devicetree/bindings/serial/st,stm32-usart.txt</a>文档，还有一个<strong>布尔属性</strong>叫”st,hw-flow-ctrl”，表示是否启用USART的流控功能。</p>
+<p><strong>设备树复杂的地方并不在于它的语法，而恰恰在于设备树绑定</strong>。不同的程序员写出的设备树绑定不尽相同，同一个外设在不同芯片中的设备树绑定相差甚远，甚至同名的属性功效完全不同。最典型的例子就是pinctrl了，它管GPIO引脚复用；换一款芯片、换一个BSP，或许也得重新学习一遍它的pinctrl。。。</p>
+<p>所以，设备树仿佛变成了最不具有可移植性的那部分了。Linus顺利地将ARM芯片的混乱性，从板级初始化程序中成功转嫁到设备树绑定中去了，然后他仿佛就不管后事了。。。这也为人所诟病：Thomas Petazzoni在2015年的ELC会议上抱怨说：<a href="https://events.static.linuxfound.org/sites/events/files/slides/petazzoni-dt-as-stable-abi-fairy-tale.pdf" target="_blank" rel="noopener">不同内核里设备树绑定要保持可移植性，这简直是个神话</a>。他说，很多厂商推出的系列芯片，它们的数据手册并不存在（doesn’t exist），以至于社区的工程师们要发挥想象力猜测它的功能；不少外设寄存器设计得相当傻逼（stupid），有很多神秘而唐突的使能位叫人捉摸不透，要维护这些驱动简直是折磨。他举出了Marvell和全志的芯片作为反面例子：这些芯片手册又冇，上流社会又要设备树绑定的移植性好；又举出Atmel芯片作为正面例子：Atmel的数据手册流传甚广，但是Atmel的维护者明确地声明：我的设备树绑定不能保证移植性。</p>
+<p>不管怎样，时至今日，ARM端的代码已经深刻地与设备树相耦合了。话说回来，设备树也算是一个相当优雅的设计，或许这是应对ARM架构芯片纷繁复杂的驱动的最好解决方法了。。。</p>
 
-        <div class="article-info info-on-right">
-          
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -182,279 +329,106 @@
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/03/01/ucpc4/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/03/01/ucpc3/" class="archive-article-date">
-  	<time datetime="2018-02-28T16:23:39.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-01</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2018/03/01/ucpc3/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">uc-PC[3] 板子验证与bootloader移植</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/03/01/ucpc3/">uc-PC[3] 板子验证与bootloader移植</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ucpc</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/27/ucpc2/" class="archive-article-date">
-  	<time datetime="2018-02-27T12:26:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-27</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/27/ucpc2/">uc-PC[2] 硬件设计</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ucpc</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/27/ucpc1/" class="archive-article-date">
-  	<time datetime="2018-02-27T06:04:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-27</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/27/ucpc1/">uc-PC[1] ucLinux or Linux?</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ucpc</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/26/ucpc0/" class="archive-article-date">
-  	<time datetime="2018-02-26T06:41:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-26</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/26/ucpc0/">uc-PC[0] 序言</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ucpc</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/26/hardfault/" class="archive-article-date">
-  	<time datetime="2018-02-26T06:13:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-26</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/26/hardfault/">调试hardfault</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/25/gdb调试技巧/" class="archive-article-date">
-  	<time datetime="2018-02-24T16:08:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-25</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/25/gdb调试技巧/">gdb调试stm32的技巧</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/23/cross-compiler/" class="archive-article-date">
-  	<time datetime="2018-02-23T15:03:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-23</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/23/cross-compiler/">制作arm-uclinuxeabi的交叉编译工具链</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/22/uclinux-on-stm32f103/" class="archive-article-date">
-  	<time datetime="2018-02-22T15:30:11.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-22</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/22/uclinux-on-stm32f103/">uclinux on STM32F103ZET6</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
 
 
           </div>
@@ -477,8 +451,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
