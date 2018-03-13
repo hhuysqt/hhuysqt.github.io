@@ -17,7 +17,7 @@
 <meta property="og:description" content="讲设备树的文章不少。以下是一些挺有意思的文章：  蜗窝科技的博客紧扣Linux内核来讲设备树的来历与用法； Thomas Petazzoni是Bootlin公司（以前叫Free Electrons，一家很有水平的专注Linux的法国公司）的CTO，他写过一份讲义叫《傻瓜都懂的设备树》，详细地介绍了设备树的语法与Linux内核中现实的用例； device tree kernel internals这">
 <meta property="og:image" content="http://yoursite.com/2018/03/01/ucpc4/block-pc.jpeg">
 <meta property="og:image" content="http://yoursite.com/2018/03/01/ucpc4/dts-basic.jpeg">
-<meta property="og:updated_time" content="2018-03-06T13:41:22.688Z">
+<meta property="og:updated_time" content="2018-03-07T12:43:56.599Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="uc-PC[4] 小议“设备树”">
 <meta name="twitter:description" content="讲设备树的文章不少。以下是一些挺有意思的文章：  蜗窝科技的博客紧扣Linux内核来讲设备树的来历与用法； Thomas Petazzoni是Bootlin公司（以前叫Free Electrons，一家很有水平的专注Linux的法国公司）的CTO，他写过一份讲义叫《傻瓜都懂的设备树》，详细地介绍了设备树的语法与Linux内核中现实的用例； device tree kernel internals这">
@@ -216,7 +216,7 @@
 <p>gcc预定义了<code>__compiler_offsetof()</code>宏，可以直接用。如果编译器没有这个手段的话，那么就将其定义为<strong>在0地址处的那个结构体的那个成员的偏移量</strong>。。。</p>
 <p>值得一提的是，gcc对C语言做了大量的扩展，比方说它允许花括号括着的<code>块结构</code>有返回值：注意到那个圆括号花括号的组合<code>({...})</code>，返回的是块结构中最后一句话的返回值。另外它还允许在块结构中定义函数，于是gcc的<a href="https://www.codeproject.com/tips/614570/lambda-in-c-gcc" target="_blank" rel="noopener">C语言可以神奇地写出lamda函数</a>。。。</p>
 <h3 id="2、Linux设备驱动模型"><a href="#2、Linux设备驱动模型" class="headerlink" title="2、Linux设备驱动模型"></a>2、Linux设备驱动模型</h3><p>在2.5版本的内核中集中精力重新设计了设备驱动程序的架构，提出了一个精心设计的<code>设备模型</code>。想要实现的效果便是：如果内核发现一个设备，而且内核中有其驱动，那么内核就可以把该设备暴露到用户空间中，以待应用程序操作。而且引入sysfs，并以kobj作为sysfs里面每个对象的基类。</p>
-<h4 id="2-1、著名的设备、驱动、总线三剑客"><a href="#2-1、著名的设备、驱动、总线三剑客" class="headerlink" title="2.1、著名的设备、驱动、总线三剑客"></a>2.1、著名的设备、驱动、总线三剑客</h4><p>外设通过总线挂到CPU上，整个系统看上去长这样（图自<em>essential linux device drivers</em>）：<br><img src="/2018/03/01/ucpc4/block-pc.jpeg" alt="system"></p>
+<h4 id="2-1、著名的设备、驱动、总线三剑客"><a href="#2-1、著名的设备、驱动、总线三剑客" class="headerlink" title="2.1、著名的设备、驱动、总线三剑客"></a>2.1、著名的设备、驱动、总线三剑客</h4><p>外设通过总线挂到CPU上，整个系统看上去长这样（图自<a href="https://doc.lagout.org/operating%20system%20/linux/Essential%20Linux%20Device%20Drivers.pdf" target="_blank" rel="noopener"><em>essential linux device drivers</em></a>）：<br><img src="/2018/03/01/ucpc4/block-pc.jpeg" alt="system"></p>
 <p>经过抽象，引入<code>device</code>、<code>device_driver</code>、<code>bus_type</code>这三个类；现实世界中device通过bus挂载到CPU上，device通过bus_type与device_driver联系起来。它们都声明在<a href="https://elixir.bootlin.com/linux/v4.13.3/source/include/linux/device.h" target="_blank" rel="noopener">include/linux/device.h</a>中：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">device</span> &#123;</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">bus_type</span>    *<span class="title">bus</span>;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">device_driver</span> *<span class="title">driver</span>;</span></span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">device_driver</span> &#123;</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">/* 一堆函数指针 */</span></span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">bus_type</span> &#123;</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">/* 一堆函数指针 */</span></span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
 <p>这三个类中最为复杂的是device类，另外两个类基本上是一些方法。下面罗列了它们一些简单的特性：</p>
 <ul>
@@ -308,8 +308,8 @@
 </ul>
 <p>有不少属性是该驱动所特有的，比方说，根据<a href="https://elixir.bootlin.com/linux/v4.13.3/source/Documentation/devicetree/bindings/serial/st,stm32-usart.txt" target="_blank" rel="noopener">Documentation/devicetree/bindings/serial/st,stm32-usart.txt</a>文档，还有一个<strong>布尔属性</strong>叫”st,hw-flow-ctrl”，表示是否启用USART的流控功能。</p>
 <p><strong>设备树复杂的地方并不在于它的语法，而恰恰在于设备树绑定</strong>。不同的程序员写出的设备树绑定不尽相同，同一个外设在不同芯片中的设备树绑定相差甚远，甚至同名的属性功效完全不同。最典型的例子就是pinctrl了，它管GPIO引脚复用；换一款芯片、换一个BSP，或许也得重新学习一遍它的pinctrl。。。</p>
-<p>所以，设备树仿佛变成了最不具有可移植性的那部分了。Linus顺利地将ARM芯片的混乱性，从板级初始化程序中成功转嫁到设备树绑定中去了，然后他仿佛就不管后事了。。。这也为人所诟病：Thomas Petazzoni在2015年的ELC会议上抱怨说：<a href="https://events.static.linuxfound.org/sites/events/files/slides/petazzoni-dt-as-stable-abi-fairy-tale.pdf" target="_blank" rel="noopener">不同内核里设备树绑定要保持可移植性，这简直是个神话</a>。他说，很多厂商推出的系列芯片，它们的数据手册并不存在（doesn’t exist），以至于社区的工程师们要发挥想象力猜测它的功能；不少外设寄存器设计得相当傻逼（stupid），有很多神秘而唐突的使能位叫人捉摸不透，要维护这些驱动简直是折磨。他举出了Marvell和全志的芯片作为反面例子：这些芯片手册又冇，上流社会又要设备树绑定的移植性好；又举出Atmel芯片作为正面例子：Atmel的数据手册流传甚广，但是Atmel的维护者明确地声明：我的设备树绑定不能保证移植性。</p>
-<p>不管怎样，时至今日，ARM端的代码已经深刻地与设备树相耦合了。话说回来，设备树也算是一个相当优雅的设计，或许这是应对ARM架构芯片纷繁复杂的驱动的最好解决方法了。。。</p>
+<p>所以，设备树仿佛变成了最不具有可移植性的那部分了。Linus顺利地将ARM芯片的混乱性，从板级初始化程序中成功转嫁到设备树绑定中去了，然后他仿佛就不管后事了。。。这也为人所诟病：Thomas Petazzoni在2015年的ELC会议上抱怨说：<a href="https://events.static.linuxfound.org/sites/events/files/slides/petazzoni-dt-as-stable-abi-fairy-tale.pdf" target="_blank" rel="noopener">不同内核里设备树绑定要保持可移植性，这简直是个神话</a>。他说，很多厂商推出的系列芯片，它们的数据手册并不存在（doesn’t exist），以至于社区的工程师们要发挥想象力猜测它的功能；不少外设寄存器设计得相当傻逼（stupid），有很多神秘而唐突的使能位叫人捉摸不透，要维护这些驱动简直是折磨。他举出了Marvell和全志的芯片作为反面例子：这些芯片手册又冇，上流社会又要设备树绑定的移植性好；又举出Atmel芯片作为正面例子：Atmel的数据手册流传甚广，但是Atmel的维护者明确地声明：我的设备树绑定不能保证移植性。<a href="https://www.youtube.com/watch?v=rPRqIS9q6CY" target="_blank" rel="noopener">油管视频在此</a>。</p>
+<p>不管怎样，时至今日，ARM端的代码已经深刻地与设备树相耦合了。话说回来，设备树也是一个相当优雅的设计，或许这是应对ARM架构芯片纷繁复杂的驱动的最好解决方法了。。。</p>
 
       
 
@@ -392,6 +392,15 @@
 
   
 <nav id="article-nav">
+  
+    <a href="/2018/03/07/ucpc5/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          uc-PC[5] Linux设备驱动配置
+        
+      </div>
+    </a>
   
   
     <a href="/2018/03/01/ucpc3/" id="article-nav-older" class="article-nav-link-wrap">
