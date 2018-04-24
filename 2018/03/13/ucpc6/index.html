@@ -20,7 +20,7 @@
 <meta property="og:image" content="http://yoursite.com/2018/03/13/ucpc6/romfs1.jpeg">
 <meta property="og:image" content="http://yoursite.com/2018/03/13/ucpc6/romfs2.jpeg">
 <meta property="og:image" content="http://yoursite.com/2018/03/13/ucpc6/busybox.jpeg">
-<meta property="og:updated_time" content="2018-04-24T14:29:34.484Z">
+<meta property="og:updated_time" content="2018-04-24T14:31:04.359Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="uc-PC[6] 构建rootfs">
 <meta name="twitter:description" content="简单来讲，内核、文件系统、应用程序，三者构成一个完整可用的系统。发行版之间不同之处不在于内核啥的，而在于rootfs——它的一套系统工具；比如包管理，Ubuntu上面就是apt-get，Arch上面就是pacman，OpenWRT上面就是opkg，等等。 内核可以放在文件系统里面，如果bootloader支持文件系统的话就可以找到内核在哪里，树莓派啥的就是这样的风格。而不少嵌入式设备bootloa">
@@ -264,9 +264,7 @@ $
 <li><code>CONFIG_PREFIX</code>设置安装目录</li>
 <li><strong>其他命令按需设置</strong></li>
 <li><p>编译时，需要SKIP_STRIP：</p>
-<p>  $ make SKIP_STRIP=y</p>
-<pre><code>...
-</code></pre><p>  $ make install</p>
+<p>  $ make SKIP_STRIP=y<br>  $ make install</p>
 </li>
 </ul>
 <p>现在这个rootfs有/bin、/usr、/sbin这些目录了。还需要添加一些目录，比方说/etc、/sys、/proc等。规范的根目录布局参考<a href="https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard" target="_blank" rel="noopener">“Filesystem Hierarchy Standard”</a>规范。</p>
