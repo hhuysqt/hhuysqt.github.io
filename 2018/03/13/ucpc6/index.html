@@ -6,14 +6,25 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2018/3 | hhuysqt</title>
+  <title>uc-PC[6] 构建rootfs | hhuysqt</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="hhuysqt">
-<meta property="og:url" content="http://yoursite.com/archives/2018/03/index.html">
+  <meta name="description" content="简单来讲，内核、文件系统、应用程序，三者构成一个完整可用的系统。发行版之间不同之处不在于内核啥的，而在于rootfs——它的一套系统工具；比如包管理，Ubuntu上面就是apt-get，Arch上面就是pacman，OpenWRT上面就是opkg，等等。 内核可以放在文件系统里面，如果bootloader支持文件系统的话就可以找到内核在哪里，树莓派啥的就是这样的风格。而不少嵌入式设备bootloa">
+<meta name="keywords" content="ucpc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="uc-PC[6] 构建rootfs">
+<meta property="og:url" content="http://yoursite.com/2018/03/13/ucpc6/index.html">
 <meta property="og:site_name" content="hhuysqt">
+<meta property="og:description" content="简单来讲，内核、文件系统、应用程序，三者构成一个完整可用的系统。发行版之间不同之处不在于内核啥的，而在于rootfs——它的一套系统工具；比如包管理，Ubuntu上面就是apt-get，Arch上面就是pacman，OpenWRT上面就是opkg，等等。 内核可以放在文件系统里面，如果bootloader支持文件系统的话就可以找到内核在哪里，树莓派啥的就是这样的风格。而不少嵌入式设备bootloa">
+<meta property="og:image" content="http://yoursite.com/2018/03/13/ucpc6/initramfs.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/03/13/ucpc6/helloworld.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/03/13/ucpc6/romfs1.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/03/13/ucpc6/romfs2.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/03/13/ucpc6/busybox.jpeg">
+<meta property="og:updated_time" content="2018-04-24T14:29:34.484Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hhuysqt">
+<meta name="twitter:title" content="uc-PC[6] 构建rootfs">
+<meta name="twitter:description" content="简单来讲，内核、文件系统、应用程序，三者构成一个完整可用的系统。发行版之间不同之处不在于内核啥的，而在于rootfs——它的一套系统工具；比如包管理，Ubuntu上面就是apt-get，Arch上面就是pacman，OpenWRT上面就是opkg，等等。 内核可以放在文件系统里面，如果bootloader支持文件系统的话就可以找到内核在哪里，树莓派啥的就是这样的风格。而不少嵌入式设备bootloa">
+<meta name="twitter:image" content="http://yoursite.com/2018/03/13/ucpc6/initramfs.jpeg">
   
     <link rel="alternative" href="/atom.xml" title="hhuysqt" type="application/atom+xml">
   
@@ -141,36 +152,155 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-ucpc6" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      uc-PC[6] 构建rootfs
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/03/13/ucpc6/" class="archive-article-date">
+
+        
+        <a href="/2018/03/13/ucpc6/" class="archive-article-date">
   	<time datetime="2018-03-13T12:57:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-13</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/03/13/ucpc6/">uc-PC[6] 构建rootfs</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>简单来讲，内核、文件系统、应用程序，三者构成一个完整可用的系统。发行版之间不同之处不在于内核啥的，而在于rootfs——它的一套系统工具；比如包管理，Ubuntu上面就是apt-get，Arch上面就是pacman，OpenWRT上面就是opkg，等等。</p>
+<p>内核可以放在文件系统里面，如果bootloader支持文件系统的话就可以找到内核在哪里，树莓派啥的就是这样的风格。而不少嵌入式设备bootloader不会关注文件系统的事情，它只需有引导、更新内核的能力即可。所以不少板子直接将内核放在nand flash的某一个或几个block里面，如用uboot，则只需要<code>nand read xxxx xxxx xxxx</code>就可以了。而对于ucpc这块板子来说，内核在片内flash里面就地运行，文件系统完全可以放在别的地方。</p>
+<p>更完整的系统还需要包括各种运行时库（如C库）和链接器等，而且编译器是其中的重要软件，再不济也得有个解释器（比如Sylixos里面有个C解释器）。不过编译器在嵌入式设备上面几乎无用，即使性能强如智能手机也一样，没多少人愿意在板子上做native编译，毕竟上位机工具功能才全面。而对于ucpc这块板子来说，因为现成的arm-uclinuxeabi工具链都不能编译动态链接库，所以所有应用程序都是静态链接的，于是rootfs里面就连C库和链接器都不需要了。</p>
+<p><em>（手机请横屏看代码）</em><br><a id="more"></a></p>
+<h3 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h3><ul>
+<li><a href="#1、helloworld例子">1、hello world</a><ul>
+<li><a href="#1-1、initramfs">1-1、initramfs</a></li>
+<li><a href="#1-2、romfs">1-2、romfs</a></li>
+<li><a href="#1-3、yaffs">1-3、yaffs</a></li>
+<li><a href="#1-4、nfs">1-4、nfs</a></li>
+</ul>
+</li>
+<li><a href="#2、busybox">2、busybox</a></li>
+</ul>
+<h3 id="1、helloworld例子"><a href="#1、helloworld例子" class="headerlink" title="1、helloworld例子"></a>1、helloworld例子</h3><p>稍微大一点的操作系统，即使是nuttx、rtthread等；它们都有所谓的根文件系统rootfs，*nix的思想是任何东西都通过rootfs来访问：一切皆为文件，文件都在同一个<code>命名空间</code>里；某物需先接入命名空间才能被识别、使用，这个过程叫<code>挂载（mount）</code>。nuttx的rootfs可以空无一物——直接用VFS作为rootfs，因为它的应用程序可以是<strong>内核中內建的</strong>；而Linux的rootfs必须依赖于某个物理存在的文件系统，任何一个物理存在的文件系统都行，因为Linux<strong>内核中并不会內建任何工具</strong>，这也可以说体现了Linux的哲学吧：提供机制而不是策略。</p>
+<p>ucpc上试过的根文件系统类型有：initramfs、romfs、nfs、yaffs。如果将SD卡、USB大容量设备等的驱动编译进内核的话，那么fatfs、ext4等等的东西也可以作为根文件系统，不然的话就只能手动mount然后chroot，才能说是所谓根文件系统了。</p>
+<p>现成的initramfs可以从<a href="https://elinux.org/File:Stm32_mini_rootfs.cpio.bz2" target="_blank" rel="noopener">eLinux</a>这里下载，里面是busybox的一堆命令以及/etc下面的简单的配置文件，如果不想自己配置一遍busybox编译的话可以直接解压这份rootfs来用。</p>
+<p>下面我们做一个最最简单的rootfs作为例子，让内核启动之后打印hello world！<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">		<span class="built_in">fprintf</span>(<span class="built_in">stdout</span>, <span class="string">"hello world!\n"</span>);</span><br><span class="line">		fflush(<span class="built_in">stdout</span>);</span><br><span class="line">		sleep(<span class="number">10</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>死循环是为了防止init进程退出而kernel panic。之所以要fflush这么麻烦，是因为它不flush的话还真的没输出。。。</p>
+<p>编译生成hello可执行文件。arm-uclinuxeabi工具链详见前面的文章：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ arm-uclinuxeabi-gcc -o hello hello.c -march=armv7-m -mthumb</span><br><span class="line">$ ls</span><br><span class="line">hello  hello.c  hello.gdb</span><br><span class="line">$</span><br></pre></td></tr></table></figure></p>
+<p>然后将hello放到rootfs里面，重命名为linuxrc，这个名字是因为设备树里面的参数<code>init=linuxrc</code>：</p>
+<pre><code>$ mkdir rootfs
+$ cp hello rootfs/linuxrc
+$
+</code></pre><p>另外rootfs里面还需要有<code>/dev</code>文件夹，并且手动生成console节点；因为没有写mount函数，所以刚刚挂载这个rootfs时候是没有/dev和设备节点的，而init进程的<code>stdin</code>、<code>stdout</code>、<code>stderr</code>都是/dev/console，没有的话printf就会没地方输出。</p>
+<pre><code>$ mkdir rootfs/dev
+$ sudo mknod rootfs/dev/console c 5 1
+$ find rootfs  #然后看看rootfs里面有啥东西
+rootfs/
+rootfs/dev
+rootfs/dev/console
+rootfs/linuxrc
+$
+</code></pre><h4 id="1-1、initramfs"><a href="#1-1、initramfs" class="headerlink" title="1-1、initramfs"></a>1-1、initramfs</h4><p>Linux发行版最开始启动时挂载的rootfs一般是构建在内存中的，它里面的初始化脚本最终会chroot到真正的位于磁盘上的rootfs。实用的ramfs有两个：initrd和initramfs，相当相似，但是initrd是一个RAM disk，访问disk的话要经过block io，从而拉低了性能；而initramfs直接就是一个fs了，绕开了block io以及不必要的cache从而性能稍高，有助于提高开机速度。这两个机制都有保留，取决于传入内核的rootfs是一个镜像还是一个cpio，参考<a href="https://www.cnblogs.com/lcw/archive/2013/06/27/3159401.html" target="_blank" rel="noopener">这篇博客</a>。</p>
+<p>initramfs内核默认就支持。我们直接将cpio编译进内核中，配置选项<code>CONFIG_INITRAMFS_SOURCE</code>是一个字符串，它就是经过打包的cpio根文件系统的路径。<br><img src="/2018/03/13/ucpc6/initramfs.jpeg" alt="initramfs"></p>
+<p>将上面做好的rootfs<strong>打包为cpio</strong>。这需要在rootfs目录下面进行：</p>
+<pre><code>$ cd rootfs
+rootfs$ find . | cpio -o -H newc &gt; ../hello.cpio
+rootfs$ 
+</code></pre><p>注意，cpio如果打包的是initramfs的话，必须<code>-H newc</code>。</p>
+<p>设备树里面，确认bootargs这样设置：<strong>root=/dev/ram rdinit=linuxrc</strong>。<br>然后编译、下载到板子上，就可以启动到hello world啦！<br><img src="/2018/03/13/ucpc6/helloworld.jpeg" alt="helloworld"></p>
+<h4 id="1-2、romfs"><a href="#1-2、romfs" class="headerlink" title="1-2、romfs"></a>1-2、romfs</h4><p>romfs需要用<code>genromfs</code>工具，它由包管理安装。<code>-d</code>指明打包的目录，<code>-f</code>指明输出的文件：</p>
+<pre><code>$ genromfs -f hello.bin -d ./rootfs/
+$ 
+</code></pre><p>将这个romfs烧写到一个地址那里，不妨烧到<strong>0x081E0000</strong>处吧，它是stm32f429ii片内flash的最后一个block。</p>
+<p><img src="/2018/03/13/ucpc6/romfs1.jpeg" alt="romfs1"><br>romfs需要开启以下的选项：<br>首先是ROMFS：</p>
+<pre><code>-&gt; File systems
+  -&gt; Miscellaneous filesystems
+    -&gt; ROM file system support
+</code></pre><p>然后是<code>CONFIG_MTD_BLOCK</code>：</p>
+<pre><code>-&gt; Device Drivers
+  -&gt; Memory Technology Device (MTD) support
+    -&gt; Caching block device access to MTD devices
+</code></pre><p>然后是<code>CONFIG_MTD_ROM</code>：</p>
+<pre><code>-&gt; Device Drivers
+  -&gt; Memory Technology Device (MTD) support
+    -&gt; RAM/ROM/Flash chip drivers
+      -&gt; Support for ROM chips in bus mapping
+</code></pre><p>还有<code>CONFIG_MTD_UCLINUX</code></p>
+<pre><code>-&gt; Device Drivers
+  -&gt; Memory Technology Device (MTD) support
+    -&gt; Mapping drivers for chip access
+      -&gt; Generic uClinux RAM/ROM filesystem support
+</code></pre><p>上面最后一个选项编译的是<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/mtd/maps/uclinux.c" target="_blank" rel="noopener">drivers/mtd/maps/uclinux.c</a>，负责将ROM mapped的东西注册为mtd设备。而开启了CONFIG_MTD_BLOCK之后它就能生成/dev/mtdblock0、1、2等等了。</p>
+<p>uclinux.c里面有一个参数：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">unsigned</span> <span class="keyword">long</span> physaddr = <span class="number">-1</span>;</span><br><span class="line">module_param(physaddr, ulong, S_IRUGO);</span><br></pre></td></tr></table></figure></p>
+<p>这是romfs的地址。上面我们将它烧到了0x081E0000了，因此在设备树里面要将其传入bootargs中。</p>
+<p>启动之后可以看到如下的printk：</p>
+<pre><code>[    0.720000] uclinux[mtd]: probe address=0x81e0000 size=0x3000
+[    0.720000] Creating 1 MTD partitions on &quot;rom&quot;:
+[    0.730000] 0x000000000000-0x000000003000 : &quot;ROMfs&quot;
+</code></pre><p>/dev/mtdblock的编号是怎么来的呢？这取决于注册该设备的<strong>时间顺序</strong>，因此如果注册了很多个mtd块设备的话，要从头到尾翻看内核log，找<strong>“Creating x MTD partitions on xxx”</strong>这段话，数数它是第几个注册的。这里是第0个注册的，因此0x081e0000处的romfs镜像对应的就是/dev/mtdlock0。需要写入bootargs中。</p>
+<p>因此内核参数如下：<strong>root=/dev/mtdblock0 init=/linuxrc uclinux.physaddr=0x081E0000</strong></p>
+<p>内核启动之后会有如下的printk：</p>
+<pre><code>[    0.310000] romfs: ROMFS MTD (C) 2007 Red Hat, Inc.
+...
+[    0.720000] uclinux[mtd]: probe address=0x81e0000 size=0x3000
+[    0.720000] Creating 1 MTD partitions on &quot;rom&quot;:
+[    0.730000] 0x000000000000-0x000000003000 : &quot;ROMfs&quot;
+...
+[    0.780000] VFS: Mounted root (romfs filesystem) readonly on device 31:0.
+</code></pre><p>接下来就是hello world了！<br><img src="/2018/03/13/ucpc6/romfs2.jpeg" alt="romfs1"></p>
+<h4 id="1-3、yaffs"><a href="#1-3、yaffs" class="headerlink" title="1-3、yaffs"></a>1-3、yaffs</h4><p><a href="/2018/03/07/ucpc5/#6、yaffs2">上一篇文章</a>里讲述了给内核打补丁、添加nand flash分区、添加nand flash驱动、改动bootargs等工序。整个rootfs可以通过nfs来复制到nand上，从而启动该hello world。当然如果要量产的话，还是要老老实实在bootloader里面添加yaffs的逻辑，添加USB之类的驱动，从而可以快速烧写程序。</p>
+<h4 id="1-4、nfs"><a href="#1-4、nfs" class="headerlink" title="1-4、nfs"></a>1-4、nfs</h4><p><a href="/2018/03/07/ucpc5/#1、网络">上一篇文章</a>里讲述了如何搭建nfs、挂载nfs、内核配置、改动bootargs等工序。值得一提的是，如果主机用WiFi的话，nfs传输速度有可能会极慢，有些时候甚至都挂不上nfs，还是连网线大法好。</p>
+<h3 id="2、busybox"><a href="#2、busybox" class="headerlink" title="2、busybox"></a>2、busybox</h3><p>busybox是嵌入式Linux的瑞士军刀，它内置了诸如bash、ls、mount、cat、vi等等一大堆命令行工具，基本上编译通过之后丢进去就能跑通一个小系统了！</p>
+<p>从官网上下载的源码无需任何修改，只需要配置就行了：</p>
+<ul>
+<li>它有<code>CONFIG_NOMMU</code>的配置</li>
+<li><code>CONFIG_CROSS_COMPILER_PREFIX</code>设置交叉编译工具链，需要用<strong>应用程序</strong>的工具arm-uclinuxeabi-，而不是裸机程序的工具arm-none-eabi-</li>
+<li><code>CONFIG_EXTRA_CFLAGS</code>设置为<code>-march=armv7-m -mthumb</code>，使之生成thumb2的代码</li>
+<li><code>CONFIG_PREFIX</code>设置安装目录</li>
+<li><strong>其他命令按需设置</strong></li>
+<li><p>编译时，需要SKIP_STRIP：</p>
+<p>  $ make SKIP_STRIP=y</p>
+<pre><code>...
+</code></pre><p>  $ make install</p>
+</li>
+</ul>
+<p>现在这个rootfs有/bin、/usr、/sbin这些目录了。还需要添加一些目录，比方说/etc、/sys、/proc等。规范的根目录布局参考<a href="https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard" target="_blank" rel="noopener">“Filesystem Hierarchy Standard”</a>规范。</p>
+<p>/etc目录放的是一堆配置文件，可以参考busybox源码下面的<code>examples/bootfloppy/etc</code>目录。其中：</p>
+<p><code>/etc/fstab</code>是启动时候要挂载的文件系统。可以添加dev、sysfs的东西：</p>
+<pre><code>proc  /proc proc defaults 0 0
+sysfs /sys sysfs defaults 0 0
+tmpfs /tmp tmpfs defaults 0 0
+</code></pre><p><code>/etc/inittab</code>是init进程维护的东西，可以这样设置：</p>
+<pre><code>::sysinit:/etc/init.d/rcS
+ttyS0::respawn:/bin/sh
+tty0::respawn:/bin/sh
+</code></pre><p>其中后面两行表示在ttyS0和tty0上面开启shell终端，而且这些终端退出之后可以重新登录，即respawn。另外第一行表示，它会执行<code>/etc/init.d/rcS</code>脚本。</p>
+<p><code>/etc/init.d/rcS</code>就是一个bash脚本，可以做任何想做的事情，比方说挂载各种各样的文件系统、加载内核驱动模块等等：</p>
+<pre><code>#! /bin/sh
 
-        <div class="article-info info-on-right">
-          
+# see also /etc/fstab
+/bin/mount -a
+
+# load other drivers
+/sbin/modprobe usb-storage
+/sbin/modprobe sd_mod
+# and many other things....
+</code></pre><p>内核模块放在<code>/lib/modules/4.13.3/</code>目录下面。编译内核之后，将<code>INSTALL_MOD_PATH</code>环境变量设置为那个目录，然后通过<strong>make modules_install</strong>来安装模块。</p>
+<pre><code>$ INSTALL_MOD_PATH=某某某 make modules_install
+</code></pre><p>至此，就构建了一个带有shell的rootfs啦。<br><img src="/2018/03/13/ucpc6/busybox.jpeg" alt="busybox"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -182,133 +312,106 @@
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/03/13/ucpc6/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/03/07/ucpc5/" class="archive-article-date">
-  	<time datetime="2018-03-07T01:21:49.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-07</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2018/03/07/ucpc5/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">uc-PC[5] Linux设备驱动配置</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/03/07/ucpc5/">uc-PC[5] Linux设备驱动配置</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ucpc</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/03/01/ucpc4/" class="archive-article-date">
-  	<time datetime="2018-03-01T07:33:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-01</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/03/01/ucpc4/">uc-PC[4] 小议“设备树”</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ucpc</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/03/01/ucpc3/" class="archive-article-date">
-  	<time datetime="2018-02-28T16:23:39.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-01</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/03/01/ucpc3/">uc-PC[3] 板子验证与bootloader移植</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ucpc</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
-  
-    </div></section>
-  
-
-    
 
 
           </div>
@@ -331,8 +434,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
