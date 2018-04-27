@@ -143,6 +143,83 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-bcmf1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/04/26/bcmf1/">bcmf[1] SDIO-WiFi-phy选型</a>
+    </h1>
+  
+
+        
+        <a href="/2018/04/26/bcmf1/" class="archive-article-date">
+  	<time datetime="2018-04-26T02:58:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-26</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>物联网硬件联网的方案很多，其中WiFi相当诱人。如果说传感器分布于野外，那WiFi不一定适用，但是在室内就不同了：WiFi技术成熟，带宽大，而且很多家庭都有的路由器，就是现成的网关，功能性的东西可以迅速实现（当然也要考虑别的质量属性，比如安全性等等）。</p>
+<p>最近正在给pulpino移植AP6212的驱动，pulpino又跑不了Linux，AP6xxx的非Linux资料又几乎没有，参考手册又没有，就一堆数据手册；碰壁许久，总算有点感想和发现，遂记录几篇文章。</p>
+        
+          <a class="article-more-a" href="/2018/04/26/bcmf1/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">bcm-wifi</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/04/26/bcmf1/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-ucpc6" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -845,86 +922,6 @@
 
 
   
-    <article id="post-cross-compiler" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/02/23/cross-compiler/">制作arm-uclinuxeabi的交叉编译工具链</a>
-    </h1>
-  
-
-        
-        <a href="/2018/02/23/cross-compiler/" class="archive-article-date">
-  	<time datetime="2018-02-23T15:03:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-23</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="交叉编译的常识"><a href="#交叉编译的常识" class="headerlink" title="交叉编译的常识"></a>交叉编译的常识</h2><p>制作交叉工具链，会涉及到三个架构的机器：</p>
-<ul>
-<li>build，哪个机器制作的这个编译器</li>
-<li>host，哪个机器将运行编译器</li>
-<li>target，编译器生成代码将会跑在哪个机器上</li>
-</ul>
-<p>如果build == host == target，就叫<code>native</code>编译器。这是最正常的情况。<br>如果build == host != target，就叫<code>cross</code>编译器。这就是常规意义下的交叉编译器。<br>如果build != host != target，就叫<code>canadian</code>编译器。据说在社区讨论这种情况的编译器时候，<a href="https://en.wikipedia.org/wiki/Canadian_cross" target="_blank" rel="noopener">加拿大国会有三个党，于是就这样开玩笑了</a>。。。这种情况一般用在<a href="https://en.wikipedia.org/wiki/Compile_farm" target="_blank" rel="noopener">Compile farm</a>里面。编译农场或许就是一堆树莓派，它用来编译不同架构的软件包，制作这个编译器的或许就是某台高性能的x86机器。</p>
-<p>其他情况也有不同的叫法，参考<a href="https://stackoverflow.com/questions/5139403/whats-the-difference-of-configure-option-build-host-and-target" target="_blank" rel="noopener">这个回答</a></p>
-<h2 id="对于Cortex-M，有哪些工具链可选？"><a href="#对于Cortex-M，有哪些工具链可选？" class="headerlink" title="对于Cortex M，有哪些工具链可选？"></a>对于Cortex M，有哪些工具链可选？</h2><ul>
-<li><a href="https://events.static.linuxfound.org/sites/events/files/slides/optimize-uclinux.pdf" target="_blank" rel="noopener">optimize-uclinux</a>这篇报告第34页简述了一些可用的编译器。</li>
-<li><a href="https://toolchains.bootlin.com/" target="_blank" rel="noopener">Bootlin（以前叫Free electrons）公司</a>收录了一堆常见CPU架构的不同版本的gcc工具链。不过armv7-m的工具链貌似不行。</li>
-<li><a href="https://sourcery.mentor.com/GNUToolchain/package6503/public/arm-uclinuxeabi/arm-2010q1-189-arm-uclinuxeabi-i686-pc-linux-gnu.tar.bz2" target="_blank" rel="noopener">社区推荐的arm2010-q1工具链</a>有很强的可用性。</li>
-<li><a href="https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads" target="_blank" rel="noopener">arm官方维护的亲儿子gcc-arm-none-eabi</a>可用用来开发裸机程序，基本没bug，适应的CPU又多。</li>
-<li>包管理可用安装gcc-arm-none-eabi工具链，不过版本略旧与arm官网的gcc。</li>
-<li>自己动手做arm-none-eabi或者arm-uclinuxeabi工具链。</li>
-</ul>
-        
-          <a class="article-more-a" href="/2018/02/23/cross-compiler/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/02/23/cross-compiler/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1020,6 +1017,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
             <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
           </label>
           <ul class="article-tag-list" q-show="showTags">
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">bcm-wifi</a>
+              </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">ucpc</a>

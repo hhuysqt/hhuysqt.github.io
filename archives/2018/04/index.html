@@ -6,47 +6,14 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>uc-PC[5] Linux设备驱动配置 | hhuysqt</title>
+  <title>Archives: 2018/4 | hhuysqt</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="uc-PC板子上跑的是Linux 4.13.3，使用设备树。内核不经压缩，就地运行（XIP，全称execute in place）。 需要使能的功能有：网络、显示、USB、SD卡、摄像头、yaffs。这些功能全部开启的话，内核大小将为4MB以上，而片内flash只有2MB，不模块化的话只能跑在SDRAM上，这回导致性能低下，所以调通设备驱动之后应该进行模块化，将关键部分编译进内核，内核塞进片内fl">
-<meta name="keywords" content="ucpc">
-<meta property="og:type" content="article">
-<meta property="og:title" content="uc-PC[5] Linux设备驱动配置">
-<meta property="og:url" content="http://yoursite.com/2018/03/07/ucpc5/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="hhuysqt">
+<meta property="og:url" content="http://yoursite.com/archives/2018/04/index.html">
 <meta property="og:site_name" content="hhuysqt">
-<meta property="og:description" content="uc-PC板子上跑的是Linux 4.13.3，使用设备树。内核不经压缩，就地运行（XIP，全称execute in place）。 需要使能的功能有：网络、显示、USB、SD卡、摄像头、yaffs。这些功能全部开启的话，内核大小将为4MB以上，而片内flash只有2MB，不模块化的话只能跑在SDRAM上，这回导致性能低下，所以调通设备驱动之后应该进行模块化，将关键部分编译进内核，内核塞进片内fl">
-<meta property="og:image" content="http://yoursite.com/2018/03/07/ucpc5/net-config.jpeg">
-<meta property="og:image" content="http://yoursite.com/2018/03/07/ucpc5/net-config2.jpeg">
-<meta property="og:image" content="http://yoursite.com/2018/03/07/ucpc5/net-config2.2.jpeg">
-<meta property="og:image" content="http://yoursite.com/2018/03/07/ucpc5/net-config3.jpeg">
-<meta property="og:image" content="http://yoursite.com/2018/03/07/ucpc5/scene3.jpeg">
-<meta property="og:image" content="http://yoursite.com/2018/03/07/ucpc5/drm.jpeg">
-<meta property="og:image" content="http://yoursite.com/2018/03/07/ucpc5/drm2.jpeg">
-<meta property="og:image" content="http://yoursite.com/2018/03/07/ucpc5/drm3.jpeg">
-<meta property="og:image" content="http://yoursite.com/2018/03/07/ucpc5/drm4.jpeg">
-<meta property="og:image" content="http://yoursite.com/2018/03/07/ucpc5/fb.jpeg">
-<meta property="og:image" content="http://yoursite.com/2018/03/07/ucpc5/usb.jpeg">
-<meta property="og:image" content="http://yoursite.com/2018/03/07/ucpc5/usb2.jpeg">
-<meta property="og:image" content="http://yoursite.com/2018/03/07/ucpc5/scene6.jpeg">
-<meta property="og:image" content="http://yoursite.com/2018/03/07/ucpc5/usb3.jpeg">
-<meta property="og:image" content="http://yoursite.com/2018/03/07/ucpc5/usb4.jpeg">
-<meta property="og:image" content="http://yoursite.com/2018/03/07/ucpc5/usb5.jpeg">
-<meta property="og:image" content="http://yoursite.com/2018/03/07/ucpc5/usb6.jpeg">
-<meta property="og:image" content="http://yoursite.com/2018/03/07/ucpc5/usb7.jpeg">
-<meta property="og:image" content="http://yoursite.com/2018/03/07/ucpc5/usb8.jpeg">
-<meta property="og:image" content="http://yoursite.com/2018/03/07/ucpc5/usb9.jpeg">
-<meta property="og:image" content="http://yoursite.com/2018/03/07/ucpc5/mmc.jpeg">
-<meta property="og:image" content="http://yoursite.com/2018/03/07/ucpc5/dcmi.jpeg">
-<meta property="og:image" content="http://yoursite.com/2018/03/07/ucpc5/dcmi2.jpeg">
-<meta property="og:image" content="http://yoursite.com/2018/03/07/ucpc5/dcmi3.jpeg">
-<meta property="og:image" content="http://yoursite.com/2018/03/07/ucpc5/scene5.jpeg">
-<meta property="og:image" content="http://yoursite.com/2018/03/07/ucpc5/yaffs.jpeg">
-<meta property="og:image" content="http://yoursite.com/2018/03/07/ucpc5/yaffs2.jpeg">
-<meta property="og:updated_time" content="2018-04-24T14:35:42.905Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="uc-PC[5] Linux设备驱动配置">
-<meta name="twitter:description" content="uc-PC板子上跑的是Linux 4.13.3，使用设备树。内核不经压缩，就地运行（XIP，全称execute in place）。 需要使能的功能有：网络、显示、USB、SD卡、摄像头、yaffs。这些功能全部开启的话，内核大小将为4MB以上，而片内flash只有2MB，不模块化的话只能跑在SDRAM上，这回导致性能低下，所以调通设备驱动之后应该进行模块化，将关键部分编译进内核，内核塞进片内fl">
-<meta name="twitter:image" content="http://yoursite.com/2018/03/07/ucpc5/net-config.jpeg">
+<meta name="twitter:title" content="hhuysqt">
   
     <link rel="alternative" href="/atom.xml" title="hhuysqt" type="application/atom+xml">
   
@@ -174,392 +141,60 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-ucpc5" class="article article-type-post " itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
+            
   
-    <h1 class="article-title" itemprop="name">
-      uc-PC[5] Linux设备驱动配置
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2018" class="archive-year">2018</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      	<div class="article-meta">
+	      	<a href="/2018/04/26/bcmf1/" class="archive-article-date">
+  	<time datetime="2018-04-26T02:58:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-26</time>
+</a>
+        </div>
+    	 
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2018/04/26/bcmf1/">bcmf[1] SDIO-WiFi-phy选型</a>
     </h1>
   
 
-        
-        <a href="/2018/03/07/ucpc5/" class="archive-article-date">
-  	<time datetime="2018-03-07T01:21:49.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>uc-PC板子上跑的是Linux 4.13.3，使用设备树。内核不经压缩，<strong>就地运行</strong>（XIP，全称execute in place）。</p>
-<p>需要使能的功能有：网络、显示、USB、SD卡、摄像头、yaffs。这些功能全部开启的话，内核大小将为4MB以上，而片内flash只有2MB，不模块化的话只能跑在SDRAM上，这回导致性能低下，所以调通设备驱动之后应该进行模块化，将关键部分编译进内核，内核塞进片内flash，从而提高性能。</p>
-<p>以下将只描述它们如何配置，而不涉及具体驱动的软件架构。</p>
-<ul>
-<li>配置之前，应该设置环境变量：<strong>ARCH=arm CROSS_COMPILE=arm-none-eabi-</strong>（其他编译工具链设置也类似），不然的话会按照host的架构去配置。</li>
-<li>配置时一般用<code>make menuconfig</code>，如果装了qt的话还可以用<code>make xconfig</code>；后者可以用鼠标操作，全屏的话看到的信息量更多。</li>
-<li>搜索某一个配置时，不用加<code>CONFIG_</code>前缀，而且不用管大小写。</li>
-<li>某一个配置没有显示出来，是因为它依赖的配置还没有使能；这时就要耐着性子去一个个翻找。。。</li>
-</ul>
-<p><em>（手机请横屏看代码）</em><br><a id="more"></a></p>
-<h3 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h3><ul>
-<li><a href="#1、网络">1、网络</a><ul>
-<li><a href="#1-1、上位机搭建NFS服务器">1-1、上位机搭建NFS服务器</a></li>
-<li><a href="#1-2、内核配置">1-2、内核配置</a></li>
-<li><a href="#1-3、nfs作为根文件系统">1-3、nfs作为根文件系统</a></li>
-<li><a href="#1-4、ping">1-4、ping</a></li>
-</ul>
-</li>
-<li><a href="#2、显示">2、显示</a><ul>
-<li><a href="#2-1、使用内核中的DRM驱动">2-1、使用内核中的DRM驱动</a></li>
-<li><a href="#2-2、仅使用simple-fb">2-2、仅使用simple-fb</a></li>
-</ul>
-</li>
-<li><a href="#3、USB主机">3、USB主机</a><ul>
-<li><a href="#3-1、基本配置">3-1、基本配置</a></li>
-<li><a href="#3-2、添加简单设备：USB串口">3-2、添加简单设备：USB串口</a></li>
-<li><a href="#3-3、添加U盘驱动">3-3、添加U盘驱动</a></li>
-<li><a href="#3-4、添加键盘驱动">3-4、添加键盘驱动</a></li>
-</ul>
-</li>
-<li><a href="#4、SD卡">4、SD卡</a><ul>
-<li><a href="#4-1、方便起见，直接换能用的代码">4-1、直接换emcraft的驱动</a></li>
-<li><a href="#4-2、挂载SD卡">4-2、挂载SD卡</a></li>
-</ul>
-</li>
-<li><a href="#5、摄像头">5、摄像头</a><ul>
-<li><a href="#5-1、基本配置">5-1、基本配置</a></li>
-<li><a href="#5-2、v4l2应用程序测试">5-2、v4l2应用程序测试</a></li>
-</ul>
-</li>
-<li><a href="#6、yaffs2">6、yaffs2</a><ul>
-<li><a href="#6-1、打补丁">6-1、打补丁</a></li>
-<li><a href="6-2、yaffs作为根文件系统">6-2、yaffs作为根文件系统</a></li>
-</ul>
-</li>
-</ul>
-<h3 id="1、网络"><a href="#1、网络" class="headerlink" title="1、网络"></a>1、网络</h3><p>Linux内核实现了相当完整而庞大的网络协议栈——对于单片机来说实在过于庞大；并且，协议栈部分是必须编译进内核而不能模块化的，因此这一块只能放置于片内flash中；而且，只在defconfig的基础上使能网络的话，内核就超过了2MB了。因此在调通板子上的驱动之前，内核都只能在SDRAM上面就地运行。。参考前文bootloader的配置。</p>
-<p>下面实现基本的网络功能：获取IP、跑通nfs。诸如DNS之类的暂时不弄。</p>
-<h4 id="1-1、上位机搭建NFS服务器"><a href="#1-1、上位机搭建NFS服务器" class="headerlink" title="1-1、上位机搭建NFS服务器"></a>1-1、上位机搭建NFS服务器</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt install nfs-common</span><br></pre></td></tr></table></figure>
-<p>我的nfs目录是<code>/home/hyq/nfs</code>，为此修改配置文件<code>/etc/exports</code>：</p>
-<pre><code>/home/hyq/nfs *(rw,sync,no_root_squash,no_subtree_check)
-</code></pre><p>重启服务以生效：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo /etc/init.d/nfs-kernel-server restart</span><br></pre></td></tr></table></figure></p>
-<h5 id="一件小事："><a href="#一件小事：" class="headerlink" title="一件小事："></a>一件小事：</h5><p>有时候调板子是这种情况：电脑要连校园网WiFi来科学上网（因为有ipv6），板子连着一个不上网的路由器，电脑又需要通过网线来连那个路由器来访问板子。这时候电脑如果不插网线就能上网，插了就上不了网了。这是因为默认的路由指向了以太网。需要通过<code>route</code>命令来将路由改到WiFi上。首先查看路由表：</p>
-<pre><code>$ route
-内核 IP 路由表
-目标       网关         子网掩码   标志 跃点  引用 使用 接口
-default   OpenWrt.lan  0.0.0.0   UG  100   0    0   enp2s0
-...
-</code></pre><p>我电脑的以太网接口是enp2s0，WiFi接口是wlp1s0（别的电脑可能分别是eth0和wlan0）。default到了enp2s0，将其路由到wlp1s0：</p>
-<pre><code>$ sudo route del default
-$ sudo route add default gw &lt;只连WiFi时候的网关&gt; wlp1s0
-</code></pre><p>此时默认就路由到WiFi上了。此时或许还可能上不了网但是能ping外网。此时就要在<code>/etc/resolv.conf</code>里面改DNS，比方说改为114.114.114.114，然后就可以上网了。</p>
-<h4 id="1-2、内核配置"><a href="#1-2、内核配置" class="headerlink" title="1-2、内核配置"></a>1-2、内核配置</h4><p>在第一层次的配置中使能<code>Networking support</code>，然后在其下<code>Networking options</code>下面使能<code>TCP/IP networking</code>，我只留了这些配置：<br><img src="/2018/03/07/ucpc5/net-config.jpeg" alt="最小网络配置"></p>
-<p>并且添加网卡驱动：分别需要MAC和phy的驱动。在<code>Device Drivers</code>-&gt;<code>Network device support</code>-&gt;<code>Ethernet driver support</code>下面选择STM32的MAC。<br><img src="/2018/03/07/ucpc5/net-config2.jpeg" alt="MAC配置"></p>
-<p>phy的驱动可以选择默认的<code>CONFIG_FIXED_PHY</code>，也可以选择SMSC的phy，都可以成功驱动LAN8720A。在<code>Device Drivers</code>-&gt;<code>Network device support</code>-&gt;<code>PHY Device support and infrastructure</code>下选择。<br><img src="/2018/03/07/ucpc5/net-config2.2.jpeg" alt="网卡配置"></p>
-<p>然后修改设备树：<br>首先在<code>stm32f429.dtsi</code>里的pinctrl节点下增加一个RMII引脚的配置，并且在ethernet节点下面添加mac地址；mac地址可以随便设置，只要不跟局域网里面的设备重合就行了：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">/ &#123;</span><br><span class="line">    ...</span><br><span class="line">    soc &#123;</span><br><span class="line">        ...</span><br><span class="line">        pinctrl: pin-controller &#123;</span><br><span class="line">            ...</span><br><span class="line"></span><br><span class="line">            <span class="comment">// RMII引脚复用的配置</span></span><br><span class="line">            ethernet_rmii: rmii@<span class="number">0</span> &#123;</span><br><span class="line">                pins &#123;</span><br><span class="line">                    pinmux = &lt;STM32F429_PB12_FUNC_ETH_MII_TXD0_ETH_RMII_TXD0&gt;,</span><br><span class="line">                        &lt;STM32F429_PB13_FUNC_ETH_MII_TXD1_ETH_RMII_TXD1&gt;,</span><br><span class="line">                        &lt;STM32F429_PB11_FUNC_ETH_MII_TX_EN_ETH_RMII_TX_EN&gt;,</span><br><span class="line">                        ...</span><br><span class="line">                    slew-rate = &lt;<span class="number">3</span>&gt;;</span><br><span class="line">                &#125;;</span><br><span class="line">            &#125;;</span><br><span class="line">            ...</span><br><span class="line">        &#125;;</span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ethernet节点</span></span><br><span class="line">        mac: ethernet@<span class="number">40028000</span> &#123;</span><br><span class="line">            <span class="comment">// 添加mac地址</span></span><br><span class="line">            mac-address = [C0 B1 <span class="number">3</span>D <span class="number">88</span> <span class="number">88</span> <span class="number">89</span>];</span><br><span class="line">            <span class="comment">// 其他属性照旧</span></span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>然后在<code>stm32f429-disco.dts</code>里补充设置ethernet节点：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&amp;mac &#123;</span><br><span class="line">    status = <span class="string">"okay"</span>;</span><br><span class="line">    pinctrl<span class="number">-0</span>   = &lt;&amp;ethernet_rmii&gt;;</span><br><span class="line">    pinctrl-names = <span class="string">"default"</span>;</span><br><span class="line">    phy-mode    = <span class="string">"rmii"</span>;</span><br><span class="line">    snps,reset-gpio = &lt;&amp;gpioh <span class="number">2</span> GPIO_ACTIVE_HIGH&gt;;</span><br><span class="line">    snps,reset-active-low;</span><br><span class="line">    snps,reset-delays-us = &lt;<span class="number">0</span> <span class="number">10000</span> <span class="number">100000</span>&gt;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>这些设置的来源是<a href="https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bindings/net/stm32-dwmac.txt" target="_blank" rel="noopener">Documentation/devicetree/bindings/net/stm32-dwmac.txt</a>。这里并不需要像stm32429i-eval评估板设置的那么繁琐，只需要设置哪一套引脚、RMII模式，以及phy芯片的reset引脚即可。</p>
-<h5 id="源码里的小bug"><a href="#源码里的小bug" class="headerlink" title="源码里的小bug"></a>源码里的小bug</h5><p>stm32的MAC初始化是<code>drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c</code>的<code>stm32_dwmac_init()</code>，它根据配置将外设设置为MII模式或RMII模式。<a href="https://elixir.bootlin.com/linux/latest/source/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c#L42" target="_blank" rel="noopener">原代码第42行左右</a>RMII模式寄存器设置错误。本网卡只有RMII模式，而stm32429i-eval的网卡工作在MII模式，估计因此他们没查出这个bug。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-  val = (plat_dat-&gt;interface == PHY_INTERFACE_MODE_MII) ? <span class="number">0</span> : <span class="number">1</span>;</span><br><span class="line">+  val = (plat_dat-&gt;interface == PHY_INTERFACE_MODE_MII) ? <span class="number">0</span> : MII_PHY_SEL_MASK;</span><br></pre></td></tr></table></figure></p>
-<h5 id="启动的printk"><a href="#启动的printk" class="headerlink" title="启动的printk"></a>启动的printk</h5><pre><code>[    3.430000] libphy: Fixed MDIO Bus: probed
-[    3.470000] stm32-dwmac 40028000.ethernet: PTP uses main clock
-[    3.480000] stm32-dwmac 40028000.ethernet: no reset control found
-[    3.480000] stmmac - user ID: 0x10, Synopsys ID: 0x35
-[    3.490000] stm32-dwmac 40028000.ethernet: Ring mode enabled
-[    3.500000] stm32-dwmac 40028000.ethernet: DMA HW capability register supported
-[    3.510000] stm32-dwmac 40028000.ethernet: Enhanced/Alternate descriptors
-[    3.510000] stm32-dwmac 40028000.ethernet: Enabled extended descriptors
-[    3.520000] stm32-dwmac 40028000.ethernet: RX Checksum Offload Engine supported
-[    3.530000] stm32-dwmac 40028000.ethernet: COE Type 2
-[    3.530000] stm32-dwmac 40028000.ethernet: TX Checksum insertion supported
-[    3.540000] stm32-dwmac 40028000.ethernet: Wake-Up On Lan supported
-[    3.550000] stm32-dwmac 40028000.ethernet: Enable RX Mitigation via HW Watchdog Timer
-[    4.200000] libphy: stmmac: probed
-...
-[    4.330000] stm32_rtc 40002800.rtc: setting system clock to 2000-01-01 03:07:42 UTC (946696062)
-[    4.540000] SMSC LAN8710/LAN8720 stmmac-0:00: attached PHY driver [SMSC LAN8710/LAN8720] (mii_bus:phy_addr=stmmac-0:00, irq=-1)
-[    4.600000] stmmac_init_dma_engine, reset addr: 40028000
-[    4.600000] stm32-dwmac 40028000.ethernet eth0: IEEE 1588-2008 Advanced Timestamp supported
-[    6.930000] stm32-dwmac 40028000.ethernet eth0: Link is Up - 100Mbps/Full - flow control rx/tx
-</code></pre><h4 id="1-3、nfs作为根文件系统"><a href="#1-3、nfs作为根文件系统" class="headerlink" title="1-3、nfs作为根文件系统"></a>1-3、nfs作为根文件系统</h4><p>首先电脑的nfs目录下面得有完整的rootfs；可以暂时先从网上<a href="https://elinux.org/File:Stm32_mini_rootfs.cpio.bz2" target="_blank" rel="noopener">下载一个可用的rootfs</a>，然后解压到那里。</p>
-<p>然后配置内核以使能NFS；<strong>并且需要配置<code>ROOT_NFS</code></strong>：在<code>File systems</code>-&gt;<code>Network File Systems</code>下面即可配置。<br><img src="/2018/03/07/ucpc5/net-config3.jpeg" alt="nfs配置"></p>
-<p>最后在<a href="https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/stm32f429-disco.dts" target="_blank" rel="noopener">stm32f429-disco.dts</a>里面添加内核参数。现在的风格是，kernel command line加在设备树的chosen节点下面，而不是uboot传tags。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">/ &#123;</span><br><span class="line">    chosen &#123;</span><br><span class="line">        bootargs = &quot;root=/dev/nfs rw &quot;</span><br><span class="line">          &quot;ip=192.168.2.123:192.168.2.1:::stm32:eth0:on &quot;</span><br><span class="line">          &quot;nfsroot=192.168.2.202:/home/hyq/nfs&quot;;</span><br><span class="line">    &#125;;</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>其中，<code>ip</code>可以设置为<code>ip=dhcp</code>，也可以像上述那样设置一个固定的地址；<code>nfsroot</code>对应到上位机的ip地址和nfs目录。</p>
-<h4 id="1-4、ping"><a href="#1-4、ping" class="headerlink" title="1-4、ping"></a>1-4、ping</h4><p>因为没有DNS，所以不能ping百度之类的域名，只能ping IP地址。而且，如果内核参数是<code>ip=dhcp</code>的话，可以ping通外网；如果只是一个固定地址就只能ping局域网里面的东西。。下面ping的是114.114.114.114这个DNS服务器：<br><img src="/2018/03/07/ucpc5/scene3.jpeg" alt="ping外网IP地址"></p>
-<h3 id="2、显示"><a href="#2、显示" class="headerlink" title="2、显示"></a>2、显示</h3><p>主流内核中STM32的LTDC驱动居然放在<a href="https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/stm/" target="_blank" rel="noopener">drivers/gpu/drm/stm/</a>目录下面。。。想必ST认为它的DMA2D可以算是一个gpu了，于是就要用内核里面的DRM架构了。。实在志不在小。。而emcraft的uclinux中stm32显示驱动还仅仅放在<a href="https://github.com/robutest/uclinux/blob/master/drivers/video/stm32fb.c" target="_blank" rel="noopener">drivers/video/</a>目录下面。</p>
-<p>对于单片机来说，使用DRM架构的一大缺点是它实在太庞大了，塞不进片内flash，只能模块化以跑在SDRAM里，因而性能低下；因此应该选用尽量简单的驱动以避免这一点。</p>
-<h4 id="2-1、使用内核中的DRM驱动"><a href="#2-1、使用内核中的DRM驱动" class="headerlink" title="2-1、使用内核中的DRM驱动"></a>2-1、使用内核中的DRM驱动</h4><p>内核配置：开启DRM：<br><img src="/2018/03/07/ucpc5/drm.jpeg" alt="DRM"></p>
-<p>还要开启STM32的DRM支持：<br><img src="/2018/03/07/ucpc5/drm2.jpeg" alt="STM32 DRM"></p>
-<p>还要开启一个panel。这里为简单起见，选择simple-panel<br><img src="/2018/03/07/ucpc5/drm3.jpeg" alt="panel"></p>
-<p>DRM架构需要有一个panel，即外接的那个液晶屏控制器。有些RGB的lcd也要用诸如I2C接口去配置一些奇怪的参数。板子上直接将RGB用DAC转化成VGA信号了，所以选择一个“哑”的panel，即CONFIG_PANEL_SIMPLE。在<a href="https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/panel/panel-simple.c" target="_blank" rel="noopener">drivers/gpu/drm/panel/panel-simple.c</a>里面实现了一大堆LCD，它们只需要开关背光灯就行了。于是在里面找一个想要的尺寸——比如标准VGA信号的640x480——的屏幕，这里选择了et057090dhu，然后稍微改一下那些时钟配置，适合60HZ的VGA：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">drm_display_mode</span> <span class="title">edt_et057090dhu_mode</span> = &#123;</span></span><br><span class="line">    .clock = <span class="number">31468</span>,</span><br><span class="line">    .hdisplay =    <span class="number">640</span>,</span><br><span class="line">    .hsync_start = <span class="number">640</span> + <span class="number">16</span>,</span><br><span class="line">    .hsync_end =   <span class="number">640</span> + <span class="number">16</span> + <span class="number">96</span>,</span><br><span class="line">    .htotal =      <span class="number">640</span> + <span class="number">16</span> + <span class="number">96</span> + <span class="number">48</span>,</span><br><span class="line">    .vdisplay =    <span class="number">480</span>,</span><br><span class="line">    .vsync_start = <span class="number">480</span> + <span class="number">10</span>,</span><br><span class="line">    .vsync_end =   <span class="number">480</span> + <span class="number">10</span> + <span class="number">2</span>,</span><br><span class="line">    .vtotal =      <span class="number">480</span> + <span class="number">10</span> + <span class="number">2</span> + <span class="number">33</span>,</span><br><span class="line">    .vrefresh = <span class="number">60</span>,</span><br><span class="line">    .flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>设备树需要增加panel-rgb节点，并且有两个endpoint相互指引。改写如下：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">/&#123;</span><br><span class="line">    panel_rgb: panel-rgb &#123;</span><br><span class="line">        compatible = <span class="string">"edt,et057090dhu"</span>;</span><br><span class="line">        status = <span class="string">"okay"</span>;</span><br><span class="line">        port &#123;</span><br><span class="line">            panel_in_rgb: endpoint &#123;</span><br><span class="line">                <span class="comment">// 链接到下面的ltdc_out_rgb节点</span></span><br><span class="line">                remote-endpoint = &lt;&amp;ltdc_out_rgb&gt;;</span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;;</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line">&amp;ltdc &#123;</span><br><span class="line">    status = <span class="string">"okay"</span>;</span><br><span class="line">    pinctrl<span class="number">-0</span> = &lt;&amp;ltdc_pins&gt;;</span><br><span class="line">    pinctrl-names = <span class="string">"default"</span>;</span><br><span class="line">    dma-ranges;</span><br><span class="line">    port &#123;</span><br><span class="line">        ltdc_out_rgb: endpoint &#123;</span><br><span class="line">            <span class="comment">// 链接到上面的panel_in_rgb节点</span></span><br><span class="line">            remote-endpoint = &lt;&amp;panel_in_rgb&gt;;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>为了启用tty终端，还需要选择<code>CONFIG_FRAMEBUFFER_CONSOLE</code>：<br><img src="/2018/03/07/ucpc5/drm4.jpeg" alt="fbterm"></p>
-<p>接上显示器，启动之后，就可以看到它在屏幕上慢悠悠地printk()了。。</p>
-<h5 id="一个小问题"><a href="#一个小问题" class="headerlink" title="一个小问题"></a>一个小问题</h5><p>内核初始化结束后，会统一将未用到的外设的时钟关掉；但是这个ltdc的驱动并没有向内核注册时钟，于是它最后就被关掉了。。。于是在<a href="https://elixir.bootlin.com/linux/latest/source/drivers/clk/clk-stm32f4.c#L143" target="_blank" rel="noopener">drivers/clk/clk-stm32f4.c</a>里为ltdc时钟添加<code>CLK_IGNORE_UNUSED</code>的属性。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">stm32f4_gate_data</span> </span></span><br><span class="line"><span class="class">    <span class="title">stm32f429_gates</span>[] __<span class="title">initconst</span> = &#123;</span></span><br><span class="line">	...</span><br><span class="line">    &#123; STM32F4_RCC_APB2ENR, <span class="number">26</span>, <span class="string">"ltdc"</span>, <span class="string">"apb2_div"</span>,</span><br><span class="line">      CLK_IGNORE_UNUSED &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<h4 id="2-2、仅使用simple-fb"><a href="#2-2、仅使用simple-fb" class="headerlink" title="2-2、仅使用simple-fb"></a>2-2、仅使用simple-fb</h4><p>这是最简单的方法：bootloader里面初始化显示器，然后给内核传参framebuffer的地址，从而不用那个庞大的DRM架构。初始化部分在bootloader里已讲述。</p>
-<p>在<code>Device Drivers</code>-&gt;<code>Graphics support</code>-&gt;<code>Frame buffer Devices</code>下找到<code>Simple framebuffer support</code>：<br><img src="/2018/03/07/ucpc5/fb.jpeg" alt="simple-fb"></p>
-<p>在设备树的chosen节点下增加一个framebuffer节点：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">/ &#123;</span><br><span class="line">    chosen &#123;</span><br><span class="line">        framebuffer0: framebuffer@<span class="number">83f</span>00000 &#123;</span><br><span class="line">            compatible = <span class="string">"simple-framebuffer"</span>;</span><br><span class="line">            reg = &lt;<span class="number">0x83f00000</span> (<span class="number">640</span> * <span class="number">480</span> * <span class="number">2</span>)&gt;;</span><br><span class="line">            width = &lt;<span class="number">640</span>&gt;;</span><br><span class="line">            height = &lt;<span class="number">480</span>&gt;;</span><br><span class="line">            stride = &lt;(<span class="number">640</span> * <span class="number">2</span>)&gt;;</span><br><span class="line">            format = <span class="string">"r5g6b5"</span>;</span><br><span class="line">            clocks = &lt;&amp;rcc <span class="number">1</span> CLK_LCD&gt;;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>其中reg属性是framebuffer的地址，其余属性顾名思义。</p>
-<p>显示驱动就可以塞进内核从而跑在片内flash里了。启动之后明显感到刷屏速度增加了数倍。</p>
-<h3 id="3、USB主机"><a href="#3、USB主机" class="headerlink" title="3、USB主机"></a>3、USB主机</h3><p>STM32F429有两个USB 2.0，一个是全速USB，一个是全速、高速USB，二者片内集成了全速的phy，而后者需要外接phy芯片才能实现高速USB。为简单起见，uc-PC只引出了两个全速USB。虽然它们的寄存器组都非常相似，而且它们都使用Linux内核中相同的驱动，但是它们的表现不太一样。高速USB工作在全速USB下会有点不爽。</p>
-<h4 id="3-1、基本配置"><a href="#3-1、基本配置" class="headerlink" title="3-1、基本配置"></a>3-1、基本配置</h4><p>跟很多SOC一样，stm32的很多外设都是Designware的IP，所以驱动比较通用；在<a href="https://elixir.bootlin.com/linux/latest/source/drivers/usb/dwc2/params.c#L149" target="_blank" rel="noopener">drivers/usb/dwc2</a>里面见到stm32的USB驱动竟诸如树莓派（BCM2835）之类的USB驱动并列时，不必惊讶。内核配置在<code>Device Drivers</code>-&gt;<code>USB support</code>下面找到<code>DesignWare USB2 DRD Core Support</code>：<br><img src="/2018/03/07/ucpc5/usb.jpeg" alt="stm32 dw usb"></p>
-<p>设备树里面添加两个USB节点：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&amp;usbotg_hs &#123;</span><br><span class="line">    compatible = <span class="string">"st,stm32f4x9-fsotg"</span>;</span><br><span class="line">    dr_mode = <span class="string">"host"</span>;</span><br><span class="line">    pinctrl<span class="number">-0</span> = &lt;&amp;usbotg_fs_pins_b&gt;;</span><br><span class="line">    pinctrl-names = <span class="string">"default"</span>;</span><br><span class="line">    status = <span class="string">"okay"</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">&amp;usbotg_fs &#123;</span><br><span class="line">    compatible = <span class="string">"st,stm32f4x9-fsotg"</span>;</span><br><span class="line">    dr_mode = <span class="string">"host"</span>;</span><br><span class="line">    pinctrl<span class="number">-0</span> = &lt;&amp;usbotg_fs_pins_a&gt;;</span><br><span class="line">    pinctrl-names = <span class="string">"default"</span>;</span><br><span class="line">    status = <span class="string">"okay"</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>但是按照默认代码，高速USB启动时候有错：</p>
-<pre><code>[4.320000] dwc2 40040000.usb: dwc2_core_reset() HANG! Soft Reset GRSTCTL=80000001
-</code></pre><p>这是因为，dwc的USB HS在配置之前需要复位：通过置位GRSTCTL的第0位，然后等待硬件清零。stm32的USB HS默认是外接PHY芯片的高速模式，软件复位时候需要等PHY芯片。但是板子只有内置PHY。选择内置PHY需要置位GUSBCFG的第6位。</p>
-<p><a href="https://elixir.bootlin.com/linux/latest/source/drivers/usb/dwc2/platform.c#L418" target="_blank" rel="noopener">drivers/usb/dwc2/platform.c:dwc2_driver_probe()</a>函数中，首先软件复位，然后在后面的<a href="https://elixir.bootlin.com/linux/latest/source/drivers/usb/dwc2/hcd.c#L136" target="_blank" rel="noopener">drivers/usb/dwc2/hcd.c:dwc2_fs_phy_init()</a>才设置为内置PHY。前面的软件复位等的是外部PHY，于是卡死，无论后面再怎么设置内置PHY。因此需要在前面先将其设置为全速USB模式：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 第418行前面，先设置为全速USB模式</span></span><br><span class="line"><span class="comment">// 其实严格来说应该用writel接口的。。。</span></span><br><span class="line">*(<span class="keyword">uint32_t</span>*)<span class="number">0x4004000c</span> |= <span class="number">0x00000040</span>;</span><br><span class="line">msleep(<span class="number">1</span>);</span><br><span class="line">dwc2_core_reset_and_force_dr_mode(hsotg);</span><br></pre></td></tr></table></figure></p>
-<p>然后就能启动了。虽然下面的printk还是有点问题，但是启动之后这个USB是没问题的，姑且就不管它了。</p>
-<pre><code>[4.950000] dwc2 40040000.usb: dwc2_wait_for_mode: Couldn&apos;t set host mode
-[4.960000] dwc2 40040000.usb: DWC OTG Controller
-[4.960000] dwc2 40040000.usb: new USB bus registered, assigned bus number 1
-[4.970000] dwc2 40040000.usb: irq 50, io mem 0x40040000
-[5.010000] hub 1-0:1.0: USB hub found
-[5.020000] hub 1-0:1.0: 1 port detected
-</code></pre><h4 id="3-2、添加简单设备：USB串口"><a href="#3-2、添加简单设备：USB串口" class="headerlink" title="3-2、添加简单设备：USB串口"></a>3-2、添加简单设备：USB串口</h4><p>直接添加驱动就可以了，比方说PL2303驱动：<br><img src="/2018/03/07/ucpc5/usb2.jpeg" alt="pl2303驱动配置"></p>
-<p>启动后插上PL2303串口，就可以有<strong>/dev/ttyUSB0</strong>了：<br><img src="/2018/03/07/ucpc5/scene6.jpeg" alt="pl2303插入板子"></p>
-<p>（其实USB hub是相当通用的233）</p>
-<h4 id="3-3、添加U盘驱动"><a href="#3-3、添加U盘驱动" class="headerlink" title="3-3、添加U盘驱动"></a>3-3、添加U盘驱动</h4><p>需要先在<code>Device Drivers</code>-&gt;<code>SCSI device support</code>里面使能SCSI以及SCSI disk：<br><img src="/2018/03/07/ucpc5/usb3.jpeg" alt="SCSI"></p>
-<p>然后在<code>Device Drivers</code>-&gt;<code>USB support</code>下面使能USB Mass Storage：<br><img src="/2018/03/07/ucpc5/usb4.jpeg" alt="USB storage"></p>
-<p>还要有一个文件系统：比方说fatfs，在<code>File systems</code>-&gt;<code>DOS/FAT/NT Filesystems</code>下面：<br><img src="/2018/03/07/ucpc5/usb5.jpeg" alt="VFAT"></p>
-<p>而且还需要有一个字符编码，即所谓的”Native language support”，不然U盘会挂载失败。这里选用”NLS ISO 8859-1”：<br><img src="/2018/03/07/ucpc5/usb6.jpeg" alt="nls"></p>
-<p>插入U盘后就可以有以下printk：</p>
-<pre><code>[ 49.210000] usb 2-1: new full-speed USB device number 2 using dwc2
-[ 49.460000] usb 2-1: not running at top speed; connect to a high speed hub
-[ 49.480000] usb 2-1: New USB device found, idVendor=14cd, idProduct=1212
-[ 49.490000] usb 2-1: New USB device strings: Mfr=1, Product=3, SerialNumber=2
-[ 49.500000] usb 2-1: Product: Mass Storage Device
-[ 49.510000] usb 2-1: Manufacturer: Generic
-[ 49.520000] usb 2-1: SerialNumber: 121220130416
-[112.900000] SCSI subsystem initialized
-[112.990000] usb-storage 2-1:1.0: USB Mass Storage device detected
-[113.010000] scsi host0: usb-storage 2-1:1.0
-[113.020000] usbcore: registered new interface driver usb-storage
-[114.080000] scsi 0:0:0:0: Direct-Access     Mass     Storage Device   1.00 PQ: 0 ANSI: 0 CCS
-[120.110000] sd 0:0:0:0: [sda] 15523840 512-byte logical blocks: (7.95 GB/7.40 GiB)
-[120.130000] sd 0:0:0:0: [sda] Write Protect is off
-[120.140000] sd 0:0:0:0: [sda] Mode Sense: 03 00 00 00
-[120.160000] sd 0:0:0:0: [sda] No Caching mode page found
-[120.170000] sd 0:0:0:0: [sda] Assuming drive cache: write through
-[120.200000] random: crng init done
-[120.210000]  sda: sda1 sda2
-[120.230000] sd 0:0:0:0: [sda] Attached SCSI removable disk
-</code></pre><p>可见它已经识别到/dev/sda1、/dev/sda2了。这个U盘里是树莓派的rootfs，其中第一个分区是fat格式，可以挂载来看看：</p>
-<pre><code>/ # mount -t vfat /dev/sda1 /mnt/
-[  233.320000] FAT-fs (sda1): Volume was not properly unmounted. Some data may be corrupt. Please run fsck.
-/ # ls mnt
-bcm2709-rpi-2-b.dtb  fixup.dat            start.elf
-bcm2710-rpi-3-b.dtb  fixup_cd.dat         start_cd.elf
-bootcode.bin         fixup_db.dat         start_db.elf
-capture              fixup_x.dat          start_x.elf
-cmdline.txt          kernel7.img
-config.txt           overlays
-/ # 
-</code></pre><h4 id="3-4、添加键盘驱动"><a href="#3-4、添加键盘驱动" class="headerlink" title="3-4、添加键盘驱动"></a>3-4、添加键盘驱动</h4><p>键盘驱动也相当通用，直接配置它即可。在<code>Device Drivers</code>-&gt;<code>HID support</code>里面选择<code>Generic HID driver</code>，并且在<code>USB HID drivers</code>下面还要选<code>USB HID transport layer</code>：<br><img src="/2018/03/07/ucpc5/usb7.jpeg" alt="usb键盘"></p>
-<p><img src="/2018/03/07/ucpc5/usb8.jpeg" alt="usb键盘"></p>
-<p>然后插上一个<strong>无线键盘</strong>（一定要无线键盘或者机械键盘，普通的有线键盘不行。。），就可以有下面的printk：</p>
-<pre><code>[  830.670000] usb 2-1: new full-speed USB device number 3 using dwc2
-[  830.930000] usb 2-1: New USB device found, idVendor=24ae, idProduct=2010
-[  830.940000] usb 2-1: New USB device strings: Mfr=1, Product=2, SerialNumber=0
-[  830.950000] usb 2-1: Product: Rapoo 2.4G Wireless Device
-[  830.960000] usb 2-1: Manufacturer: RAPOO
-[  831.000000] input: RAPOO Rapoo 2.4G Wireless Device as /devices/platform/soc/50000000.usb/usb2/2-1/2-1:1.0/0003:24AE:2010.0001/input/input0
-[  831.010000] hid-generic 0003:24AE:2010.0001: input,hidraw0: USB HID v1.10 Mouse [RAPOO Rapoo 2.4G Wireless Device] on usb-50000000.usb-1/input0
-[  831.080000] input: RAPOO Rapoo 2.4G Wireless Device as /devices/platform/soc/50000000.usb/usb2/2-1/2-1:1.1/0003:24AE:2010.0002/input/input1
-[  831.160000] hid-generic 0003:24AE:2010.0002: input,hiddev96,hidraw1: USB HID v1.10 Device [RAPOO Rapoo 2.4G Wireless Device] on usb-50000000.usb-1/input1
-[  831.210000] input: RAPOO Rapoo 2.4G Wireless Device as /devices/platform/soc/50000000.usb/usb2/2-1/2-1:1.2/0003:24AE:2010.0003/input/input2
-[  831.290000] hid-generic 0003:24AE:2010.0003: input,hidraw2: USB HID v1.10 Keyboard [RAPOO Rapoo 2.4G Wireless Device] on usb-50000000.usb-1/input2
-</code></pre><p>此时敲击键盘，屏幕上的终端将会有显示：<br><img src="/2018/03/07/ucpc5/usb9.jpeg" alt="键盘orz"></p>
-<p>其实Linux的input事件是全局性的，因此只要驱动配好了，就有反应了。</p>
-<h5 id="为啥不能用普通的有线键盘？"><a href="#为啥不能用普通的有线键盘？" class="headerlink" title="为啥不能用普通的有线键盘？"></a>为啥不能用普通的有线键盘？</h5><p>stm32的USB在Linux下的驱动有个很大的问题：它不识别低速设备。。。整天枚举失败。。。这估计是stm32跑Linux的性能太低了，以至于设备跑得比stm32都要快，于是就说设备不接受地址云云。。而低端的有线键盘都是低速设备，于是枚举失败。。</p>
-<pre><code>[ 1506.090000] usb 2-1: new low-speed USB device number 6 using dwc2
-[ 1506.310000] usb 2-1: device descriptor read/64, error -71
-</code></pre><h3 id="4、SD卡"><a href="#4、SD卡" class="headerlink" title="4、SD卡"></a>4、SD卡</h3><p>emcraft的4.2内核中，SD卡驱动直接用arm通用的驱动”arm,primecell”，这个compatible在<a href="https://elixir.bootlin.com/linux/latest/source/drivers/of/platform.c#L376" target="_blank" rel="noopener">drivers/of/platform.c</a>里面匹配，并生成一个amba总线。另外它在drivers/mmc/host/mmci.c里面实现了一个variant_stm32f4，从而接入Linux的mmc驱动栈中。</p>
-<p>按理说主流的Linux 4.13内核也是可以这么干的，但是这里的drivers/mmc/host/mmci.c的数据结构跟前者并不完全相同，而且逻辑处理也不同了。这导致SD卡整天不能识别。。</p>
-<h4 id="4-1、方便起见，直接换能用的代码"><a href="#4-1、方便起见，直接换能用的代码" class="headerlink" title="4-1、方便起见，直接换能用的代码"></a>4-1、方便起见，直接换能用的代码</h4><p>将emcraft的mmci.c、mmci.h复制过来直接用。。。<br>内核配置：选择<code>ARM AMBA Multimedia Card Interface support</code>以及<code>MMC block device driver</code>：<br><img src="/2018/03/07/ucpc5/mmc.jpeg" alt="mmc配置"></p>
-<p>设备树增加mmc节点，基本照抄emcraft的，不过并没用DMA，因为性能比较低下，DMA很容易下溢死掉：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">sdio:sdi@<span class="number">40012</span>C00 &#123;</span><br><span class="line">    compatible = <span class="string">"arm,primecell"</span>;</span><br><span class="line">    reg = &lt;<span class="number">0x40012C00</span> <span class="number">0x400</span>&gt;;</span><br><span class="line">    interrupts = &lt;<span class="number">49</span>&gt;;</span><br><span class="line">    max-frequency = &lt;<span class="number">25000000</span>&gt;;</span><br><span class="line">    bus-width = &lt;<span class="number">4</span>&gt;;</span><br><span class="line">    voltage-ranges = &lt;<span class="number">3200</span> <span class="number">3300</span> <span class="number">3300</span> <span class="number">3400</span>&gt;;</span><br><span class="line">    clocks = &lt;&amp;rcc <span class="number">0</span> <span class="number">171</span>&gt;;</span><br><span class="line">    clock-names = <span class="string">"apb_pclk"</span>;</span><br><span class="line">    arm,primecell-periphid = &lt;<span class="number">0x40480180</span>&gt;;</span><br><span class="line">    status = <span class="string">"disabled"</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line">&amp;sdio &#123;</span><br><span class="line">    status = <span class="string">"okay"</span>;</span><br><span class="line">    pinctrl-names = <span class="string">"default"</span>;</span><br><span class="line">    pinctrl<span class="number">-0</span> = &lt;&amp;sdio_pins&gt;;</span><br><span class="line">    cd-gpio = &lt;&amp;gpioh <span class="number">15</span> GPIO_ACTIVE_LOW&gt;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>其中<code>cd-gpio</code>是卡识别的GPIO。</p>
-<h4 id="4-2、挂载SD卡"><a href="#4-2、挂载SD卡" class="headerlink" title="4-2、挂载SD卡"></a>4-2、挂载SD卡</h4><p>插卡后，将有以下的printk：</p>
-<pre><code>[ 5492.300000] mmc0: host does not support reading read-only switch, assuming write-enable
-[ 5492.310000] mmc0: new SD card at address 0001
-[ 5492.320000] mmcblk0: mmc0:0001  971 MiB 
-[ 5492.340000]  mmcblk0: p1 p2
-/ # ls /dev/mmcblk0*
-/dev/mmcblk0    /dev/mmcblk0p1  /dev/mmcblk0p2
-/ # 
-</code></pre><p>此时就可以正常挂载它了。不过有时候会出现EIO错误；发出EIO的地方是<a href="https://elixir.bootlin.com/linux/latest/source/drivers/mmc/host/mmci.c#L961" target="_blank" rel="noopener">mmci.c：mmci_data_irq</a>第995行左右的 if (status &amp; MCI_RXOVERRUN)，这是<strong>SDIO的FIFO溢出了</strong>，说明主控取数据太慢了。。解决的办法是<strong>开硬件流控制</strong>，当sdio发现fifo溢出时候会卡一下时钟，免得sd卡跑的太快。这就需要在variant_stm32f4里面加一个控制位：</p>
-<pre><code>.clkreg_enable          = MCI_ST_UX500_HWFCEN,
-</code></pre><p>这是SDIO_CLKCR的第14位。</p>
-<p>有时候也会有EILSEQ错误，也是在<a href="https://elixir.bootlin.com/linux/latest/source/drivers/mmc/host/mmci.c#L949" target="_blank" rel="noopener">mmci.c：mmci_data_irq</a>里面发出的，<strong>起因是CRC错误</strong>，这可能是因为走线不太好或者接触不良啥的。于是<strong>降低时钟频率</strong>：调高SDIO_CLKCR的低8位分频数，于是variant_stm32f4的clkreg_enable变成：</p>
-<pre><code>.clkreg_enable          = MCI_ST_UX500_HWFCEN | 0x00000006,
-</code></pre><p>然后就没错了。。。</p>
-<h3 id="5、摄像头"><a href="#5、摄像头" class="headerlink" title="5、摄像头"></a>5、摄像头</h3><p>Linux里面集成了STM32的DCMI驱动，直接用就行了。</p>
-<h4 id="5-1、基本配置"><a href="#5-1、基本配置" class="headerlink" title="5-1、基本配置"></a>5-1、基本配置</h4><p>在<code>Device Drivers</code>-&gt;<code>Multimedia support</code>-&gt;<code>V4L platform devices</code>里面使能DCMI的驱动：<br><img src="/2018/03/07/ucpc5/dcmi.jpeg" alt="STM32 DCMI"></p>
-<p>然后添加摄像头驱动。记得要<strong>先取消掉<code>Autoselect ancillary drivers</code>的选项</strong>，下面才有一系列的摄像头驱动可选：<br><img src="/2018/03/07/ucpc5/dcmi2.jpeg" alt="摄像头驱动"></p>
-<p>不妨添加OV2640的驱动。这是一个200万像素的摄像头，可以输出RGB、YUV、JPEG格式的照片。<br><img src="/2018/03/07/ucpc5/dcmi3.jpeg" alt="OV2640驱动"></p>
-<p>然后设备树中，<strong>在I2C节点下面</strong>添加OV2640的节点：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">&amp;i2c1 &#123;</span><br><span class="line">    status = <span class="string">"okay"</span>;</span><br><span class="line"></span><br><span class="line">    ov2640: camera@<span class="number">30</span> &#123;</span><br><span class="line">        compatible = <span class="string">"ovti,ov2640"</span>;</span><br><span class="line">        reg = &lt;<span class="number">0x30</span>&gt;;</span><br><span class="line">        clocks = &lt;&amp;clk_ext_camera&gt;;</span><br><span class="line">        clock-names = <span class="string">"xvclk"</span>;</span><br><span class="line">        status = <span class="string">"okay"</span>;</span><br><span class="line">        port &#123;</span><br><span class="line">            <span class="comment">// 指向下面的dcmi_0 endpoint</span></span><br><span class="line">            ov2640_0: endpoint &#123;</span><br><span class="line">                remote-endpoint = &lt;&amp;dcmi_0&gt;;</span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">&amp;dcmi &#123;</span><br><span class="line">    status = <span class="string">"okay"</span>;</span><br><span class="line"></span><br><span class="line">    port &#123;</span><br><span class="line">        dcmi_0: endpoint &#123;</span><br><span class="line">            <span class="comment">// 指向上面的ov2640 endpoint</span></span><br><span class="line">            remote-endpoint = &lt;&amp;ov2640_0&gt;;</span><br><span class="line">            bus-width = &lt;<span class="number">8</span>&gt;;</span><br><span class="line">            hsync-active = &lt;<span class="number">0</span>&gt;;</span><br><span class="line">            vsync-active = &lt;<span class="number">0</span>&gt;;</span><br><span class="line">            pclk-sample = &lt;<span class="number">1</span>&gt;;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>配置基本上照抄stm32429i-eval的配置。</p>
-<p>启动之后可以看到摄像头的printk：</p>
-<pre><code>[    5.600000] stm32f4-i2c 40005400.i2c: STM32F4 I2C driver registered
-[    5.760000] Linux video capture interface: v2.00
-[    5.870000] stm32-dcmi 50050000.dcmi: Probe done
-[    5.970000] ov2640 0-0030: ov2640 Product ID 26:42 Manufacturer ID 7f:a2
-[    5.990000] i2c i2c-0: OV2640 Probed
-</code></pre><h4 id="5-2、v4l2应用程序测试"><a href="#5-2、v4l2应用程序测试" class="headerlink" title="5-2、v4l2应用程序测试"></a>5-2、v4l2应用程序测试</h4><p>v4l2有个官方测试程序<a href="https://linuxtv.org/downloads/v4l-dvb-apis/uapi/v4l/capture.c.html" target="_blank" rel="noopener">capture.c</a>，它将摄像头数据写入文件中。可以改写一下，将裸RGB数据写到/dev/fb0中，那么就可以在显示器上看到摄像头的数据了。比方说这样写：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 先打开/dev/fb0</span></span><br><span class="line">fp = fopen(<span class="string">"/dev/fb0"</span>, <span class="string">"w"</span>);</span><br><span class="line">framebuffer = <span class="built_in">malloc</span>(<span class="number">640</span>*<span class="number">480</span>*<span class="number">2</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在主循环里面将数据写入framebuffer</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">process_image</span><span class="params">(<span class="keyword">const</span> <span class="keyword">void</span> *p, <span class="keyword">int</span> size)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">short</span> *fb = framebuffer, *src = p;</span><br><span class="line">    <span class="keyword">if</span> (out_buf) &#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> y = <span class="number">0</span>; y &lt; <span class="number">240</span>; y++)</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> x = <span class="number">0</span>; x &lt; <span class="number">320</span>; x++)</span><br><span class="line">                fb[y*<span class="number">2</span>*<span class="number">640</span> + x*<span class="number">2</span>] = src[y*<span class="number">320</span> + x];</span><br><span class="line">        fseek(fp, <span class="number">0</span>, SEEK_SET);</span><br><span class="line">        fwrite(fb, <span class="number">640</span>*<span class="number">480</span>*<span class="number">2</span>, <span class="number">1</span>, fp);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    fflush(<span class="built_in">stderr</span>);</span><br><span class="line">    <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"."</span>);</span><br><span class="line">    fflush(<span class="built_in">stdout</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>编译之后，使用<code>.capture -o -f -c 10</code>，即是获取10张照片并写入framebuffer。可以在显示器上看到照片：<br><img src="/2018/03/07/ucpc5/scene5.jpeg" alt="摄像头测试"></p>
-<p>不过由于STM32的DMA最多只能搬运64k个单位的数据，以32字为单位的话最多就是256kb大小的数据。于是摄像头只能设置为320x240大小。并且由于应用程序在SDRAM上跑，性能低下，以至于两秒钟才能出一张图片。。。而且SDRAM的带宽太小，拍照时还会时常说DMA下溢orz。。。据ST的手册推荐的话，应该利用DMA的双缓冲特性从而突破64k的限制，不过内核中并没有实现这一点。</p>
-<h3 id="6、yaffs2"><a href="#6、yaffs2" class="headerlink" title="6、yaffs2"></a>6、yaffs2</h3><p>yaffs已经是一个相当老的文件系统了。。。它在几十上百MB的SLC上面跑到很欢快，但是并不太适用于MLC、TLC之类的几GB以上的大容量nand flash。不过对于uc-PC来说已经足够了。yaffs2适应于大页（2kb）的nand flash，yaffs适应于小页（512B）的nand flash。yaffs2声称它可工作在yaffs模式下面从而向前适应（但是我实验结果发现它并不如此）。</p>
-<p>yaffs可以<a href="https://yaffs.net/get-yaffs" target="_blank" rel="noopener">从它官网上下载</a>。</p>
-<h4 id="6-1、打补丁"><a href="#6-1、打补丁" class="headerlink" title="6-1、打补丁"></a>6-1、打补丁</h4><p>根据它的<a href="http://www.aleph1.co.uk/gitweb/?p=yaffs2.git;a=blob;f=README-linux;h=93cf4a14ce41deadff15868587ab48aa28701d95;hb=1f3d64d1d804fef6715126dead54bf30b176c67e" target="_blank" rel="noopener">README-linux</a>，使用以下命令去给内核打补丁：</p>
-<pre><code>./patch-ker.sh  c m &lt;内核目录&gt;
-</code></pre><p>然后内核配置时候就可以有yaffs的选项了：<br><img src="/2018/03/07/ucpc5/yaffs.jpeg" alt="yaffs配置"></p>
-<p>yaffs2已经可以支持4.9的内核了。不过在4.13内核上编译有问题，提示CURRENT_TIME这个宏未定义。发现这是因为Linux打算解决y2038的千年虫问题，需要改用别的计时方式。我直接用了current_kernel_time()代替了。</p>
-<p>接下来要在内核里面添加nand flash的驱动。为方便起见，使用platform-nand驱动，即<code>CONFIG_MTD_NAND_PLATFORM</code>：<br><img src="/2018/03/07/ucpc5/yaffs2.jpeg" alt="platform nand驱动"></p>
-<p>仿照<a href="https://elixir.bootlin.com/linux/v4.13.3/source/arch/arm/mach-omap1/board-h2.c" target="_blank" rel="noopener">arch/arm/mach-omap1/board-h2.c</a>，在<a href="https://elixir.bootlin.com/linux/v4.13.3/source/arch/arm/mach-stm32/board-dt.c" target="_blank" rel="noopener">arch/arm/mach-stm32/board-dt.c</a>里面定义分区表以及驱动信息。</p>
-<p>试探性的定义了三个分区：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 分区表 */</span></span><br><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">mtd_partition</span> <span class="title">stm32_nand_partitions</span>[] = &#123;</span></span><br><span class="line">    &#123;</span><br><span class="line">        .name       = <span class="string">"first"</span>,</span><br><span class="line">        .offset     = <span class="number">0</span>,</span><br><span class="line">        .size       = <span class="number">128</span> * <span class="number">1024</span>,</span><br><span class="line">        .mask_flags = MTD_WRITEABLE,	<span class="comment">/* force read-only */</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        .name       = <span class="string">"second"</span>,</span><br><span class="line">        .offset     = MTDPART_OFS_APPEND,</span><br><span class="line">        .size       = <span class="number">256</span> * <span class="number">1024</span>,</span><br><span class="line">        .mask_flags = MTD_WRITEABLE,	<span class="comment">/* force read-only */</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        .name       = <span class="string">"rootfs"</span>,</span><br><span class="line">        .offset     = MTDPART_OFS_APPEND,</span><br><span class="line">        .size       = <span class="number">120</span> * SZ_1M,</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>然后是platform data：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">platform_nand_data</span> <span class="title">stm32_nand_platdata</span> = &#123;</span></span><br><span class="line">    .chip = &#123;</span><br><span class="line">    	<span class="comment">// 分区表</span></span><br><span class="line">        .nr_partitions = ARRAY_SIZE(stm32_nand_partitions),</span><br><span class="line">        .partitions = stm32_nand_partitions,</span><br><span class="line">    &#125;,</span><br><span class="line">    .ctrl = &#123;</span><br><span class="line">    	<span class="comment">// 读写驱动程序</span></span><br><span class="line">        .cmd_ctrl  = fmc_send_cmd,</span><br><span class="line">        .dev_ready = fmc_read_rb,</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>接着是platform device：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">platform_device</span> <span class="title">stm32_nand_device</span> = &#123;</span></span><br><span class="line">    .name = <span class="string">"gen_nand"</span>,</span><br><span class="line">    .dev  = &#123;</span><br><span class="line">        .platform_data = &amp;stm32_nand_platdata,</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>最后，在模块构造函数里面注册platform device：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">void</span> __<span class="function">init <span class="title">board_stm32_ucpc_init</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    printk(<span class="string">"STM32 UCPC: nand platform device"</span>);</span><br><span class="line">    platform_add_devices(stm32_devices, ARRAY_SIZE(stm32_devices));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>启动之后，可以看到识别到三个分区：</p>
-<pre><code>[    0.970000] nand: device found, Manufacturer ID: 0xec, Chip ID: 0xf1
-[    0.980000] nand: Samsung NAND 128MiB 3,3V 8-bit
-[    0.980000] nand: 128 MiB, SLC, erase size: 128 KiB, page size: 2048, OOB size: 64
-[    0.990000] Scanning device for bad blocks
-[    1.090000] Creating 3 MTD partitions on &quot;gen_nand.0&quot;:
-[    1.100000] 0x000000000000-0x000000020000 : &quot;first&quot;
-[    1.120000] 0x000000020000-0x000000060000 : &quot;second&quot;
-[    1.150000] 0x000000060000-0x000007860000 : &quot;rootfs&quot;
-</code></pre><h4 id="6-2、yaffs作为根文件系统"><a href="#6-2、yaffs作为根文件系统" class="headerlink" title="6-2、yaffs作为根文件系统"></a>6-2、yaffs作为根文件系统</h4><p>查看dmesg，可以看到有<code>Creating xxx MTD partitions on xxx</code>的信息。根据它出现的<strong>时间先后顺序</strong>，这些块设备依次形成<code>/dev/mtdblock0</code>、<code>/dev/mtdblock1</code>、<code>/dev/mtdblock2</code>等等。将含有rootfs的mtd分区传参给内核。</p>
-<p>但是在这之前先得将rootfs烧录进nand flash。我使用了最简单的方法：先uboot通过tftp启动一个跑在SDRAM上的内核，挂载mtd分区<strong>以及nfs</strong>，然后从nfs上面拷贝rootfs到mtd分区里面。。。然后改写kernel command line，将mtd分区作为rootfs传参。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
+        <div class="article-info info-on-right">
+          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ucpc</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">bcm-wifi</a>
         		</li>
       		
 		</ul>
 	</div>
 
-      
+          
 
-      
-
-      
-        
-<div class="share-btn share-icons tooltip-left">
-  <div class="tooltip tooltip-east">
-    <span class="tooltip-item">
-      <a href="javascript:;" class="share-sns share-outer">
-        <i class="icon icon-share"></i>
-      </a>
-    </span>
-    <span class="tooltip-content">
-      <div class="share-wrap">
-        <div class="share-icons">
-          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
-            <i class="icon icon-weibo"></i>
-          </a>
-          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
-            <i class="icon icon-weixin"></i>
-          </a>
-          <a class="qq share-sns" href="javascript:;" data-type="qq">
-            <i class="icon icon-qq"></i>
-          </a>
-          <a class="douban share-sns" href="javascript:;" data-type="douban">
-            <i class="icon icon-douban"></i>
-          </a>
-          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
-            <i class="icon icon-qzone"></i>
-          </a>
-          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
-            <i class="icon icon-facebook"></i>
-          </a>
-          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
-            <i class="icon icon-twitter"></i>
-          </a>
-          <a class="google share-sns" href="javascript:;" data-type="google">
-            <i class="icon icon-google"></i>
-          </a>
         </div>
-      </div>
-    </span>
-  </div>
-</div>
-
-<div class="page-modal wx-share js-wx-box">
-    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/03/07/ucpc5/" alt="微信分享二维码">
-    </div>
-</div>
-
-<div class="mask js-mask"></div>
-      
-      <div class="clearfix"></div>
-    </div>
+        <div class="clearfix"></div>
+    </header>
   </div>
 </article>
-
-  
-<nav id="article-nav">
-  
-    <a href="/2018/03/13/ucpc6/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          uc-PC[6] 构建rootfs
-        
-      </div>
-    </a>
   
   
-    <a href="/2018/03/01/ucpc4/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">uc-PC[4] 小议“设备树”</div>
-      <i class="icon-circle-right"></i>
-    </a>
-  
-</nav>
-
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-  
-  
+    </div></section>
   
 
-  
-
-  
-
-  
+    
 
 
           </div>
@@ -582,8 +217,8 @@ config.txt           overlays
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: true,
-		isArchive: false,
+		isPost: false,
+		isArchive: true,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
