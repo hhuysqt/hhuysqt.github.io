@@ -143,6 +143,90 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-bcmf2" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/04/27/bcmf2/">bcmf[2] 驱动：初始化</a>
+    </h1>
+  
+
+        
+        <a href="/2018/04/27/bcmf2/" class="archive-article-date">
+  	<time datetime="2018-04-27T03:57:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-27</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>本文总结BCM43438的初始化流程，初始化成功的标志是连上WiFi。</p>
+<p>参考WICED SDK、NuttX，以及Linux的源码，它们的流程略有不同。Linux的驱动面面俱到；WICED的驱动虽只针对物联网设备，却写得相当冗杂；nuttx的驱动则相当简洁恰好能用。</p>
+<ul>
+<li>WICED可从<a href="https://community.cypress.com/community/wiced-wifi" target="_blank" rel="noopener">Cypress官网</a>上下载，注册个账号就好了。这份软件架构简直是<strong>一切以WICED为中心</strong>，有bootloader、dct（Device Configuration Table）、OTA（Over The Air）等自创的元素，如果用它支持的平台如stm32的话，那可以非常迅速地出成果，然而如果要移植到别的CPU架构的话它并不太友好。。</li>
+<li>NuttX可从<a href="https://bitbucket.org/nuttx/nuttx/src/master/" target="_blank" rel="noopener">bitbucket/nuttx</a>上git clone一份，或者从<a href="http://sourceforge.net/projects/nuttx/files/" target="_blank" rel="noopener">SourceForge</a>下载代码包。SourceForge上面的7.24及以前的驱动有问题，我在bitbucket上提交了<a href="https://bitbucket.org/nuttx/nuttx/commits/144e335b85fed8852e259f80181d6914b93dc659" target="_blank" rel="noopener">这份commit</a>。bitbucket在墙内访问相当不稳定。。</li>
+<li>Linux可以直接访问<a href="https://elixir.bootlin.com/linux/v4.13.3/source" target="_blank" rel="noopener">Bootlin的Linux Cross Reference</a>。在Linux内核中，博通<strong>SDIO接口的</strong>网卡驱动是<code>brcmfmac</code>，归类到<code>brcm80211</code>，这是博通官方提供的驱动，需要non-free的固件。<code>b43</code>的驱动是社区通过一些逆向工程实现的，只支持老版的PCIe网卡。。</li>
+</ul>
+<p>初始化过程纯粹就是面向过程的代码，因此以下通过罗列它们的流程来进行分析。</p>
+<p>固件这玩意儿想必是厂商喜闻乐见的东西——在你编写的程序中安插黑盒子，而你又无可奈何。</p>
+        
+          <a class="article-more-a" href="/2018/04/27/bcmf2/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">bcm-wifi</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/04/27/bcmf2/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-bcmf1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -164,7 +248,13 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>物联网硬件联网的方案很多，其中WiFi相当诱人。如果说传感器分布于野外，那WiFi不一定适用，但是在室内就不同了：WiFi技术成熟，带宽大，而且很多家庭都有的路由器，就是现成的网关，功能性的东西可以迅速实现（当然也要考虑别的质量属性，比如安全性等等）。</p>
-<p>最近正在给pulpino移植AP6212的驱动，pulpino又跑不了Linux，AP6xxx的非Linux资料又几乎没有，参考手册又没有，就一堆数据手册；碰壁许久，总算有点感想和发现，遂记录几篇文章。</p>
+<p>最近正在给pulpino移植AP6212的驱动，pulpino又跑不了Linux，AP6xxx的非Linux资料又几乎没有，参考手册又没有，就一堆数据手册；碰壁许久，总算有点感想和发现，遂记录几篇文章：</p>
+<ul>
+<li>一、<a href="#目录">芯片选型</a></li>
+<li>二、<a href="2018/04/27/bcmf2/">初始化BCM43438</a></li>
+<li>三、<a href="#">与固件交互：bdc和cdc</a></li>
+</ul>
+<p>下面讨论的都是<strong>低端的网卡</strong>，相对于集群、数据中心啥的而言的话是，非常非常低端的东西；做大工程不行，但是做一些比较hack的东西还是绰绰有余的。</p>
         
           <a class="article-more-a" href="/2018/04/26/bcmf1/#more">more >></a>
         
@@ -820,79 +910,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2018/02/26/hardfault/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-gdb调试技巧" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/02/25/gdb调试技巧/">gdb调试stm32的技巧</a>
-    </h1>
-  
-
-        
-        <a href="/2018/02/25/gdb调试技巧/" class="archive-article-date">
-  	<time datetime="2018-02-24T16:08:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-25</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>很多人开发C程序就像写脚本那样，查错，靠的是眼睛看；但是作为系统开发程序员，bug单纯靠看是查不出来的，于是就用printf，于是每一次查错都不可避免要机械地写printf、编译、烧写、运行，没有IDE的时候烧写、运行还不太方便。如果能在命令行下面设断点、单步调试什么的，想必是极好的。</p>
-<p>有时候开发一些程序还不得不在Ubuntu下弄，比方说国外的不少开源项目像px4、openmv之类的，又比方说Linux、nuttx之类的系统开发，等等。当然诸如Eclipse之类的IDE配置一下也能聊胜于无，但是配置它们的复杂度不亚于在命令行下面弄，而且连接板子、开gdb server这些工序只能在命令行下完成；好处是调试时候能用鼠标操作。</p>
-<p>其实，命令行下面用gdb调试，熟悉基本命令之后，用起来相当顺手；在TUI模式下面调试，视觉效果不亚于使用IDE。</p>
-<h2 id="需要安装的软件"><a href="#需要安装的软件" class="headerlink" title="需要安装的软件"></a>需要安装的软件</h2><h3 id="gdb"><a href="#gdb" class="headerlink" title="gdb"></a>gdb</h3><p>包管理装就行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install gdb-arm-none-eabi</span><br></pre></td></tr></table></figure></p>
-<p>当然也可以选用别的，比方说</p>
-<ul>
-<li><a href="https://sourcery.mentor.com/GNUToolchain/package6503/public/arm-uclinuxeabi/arm-2010q1-189-arm-uclinuxeabi-i686-pc-linux-gnu.tar.bz2" target="_blank" rel="noopener">arm-uclinuxeabi-2010q1</a>里面就有arm-uclinuxeabi-gdb。不过这个的TUI有问题。</li>
-<li>SourceForge的uclinux下载页面（崩掉了）</li>
-</ul>
-        
-          <a class="article-more-a" href="/2018/02/25/gdb调试技巧/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/02/25/gdb调试技巧/">展开全文 >></a>
         </p>
       
 

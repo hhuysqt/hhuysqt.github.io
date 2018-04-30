@@ -28,7 +28,7 @@
 <meta property="og:image" content="http://yoursite.com/2018/04/26/bcmf1/wiced.jpeg">
 <meta property="og:image" content="http://yoursite.com/2018/04/26/bcmf1/bcm43438.jpeg">
 <meta property="og:image" content="http://yoursite.com/2018/04/26/bcmf1/ap6212sch.jpeg">
-<meta property="og:updated_time" content="2018-04-27T03:54:09.992Z">
+<meta property="og:updated_time" content="2018-04-30T12:52:12.796Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="bcmf[1] SDIO-WiFi-phy选型">
 <meta name="twitter:description" content="物联网硬件联网的方案很多，其中WiFi相当诱人。如果说传感器分布于野外，那WiFi不一定适用，但是在室内就不同了：WiFi技术成熟，带宽大，而且很多家庭都有的路由器，就是现成的网关，功能性的东西可以迅速实现（当然也要考虑别的质量属性，比如安全性等等）。 最近正在给pulpino移植AP6212的驱动，pulpino又跑不了Linux，AP6xxx的非Linux资料又几乎没有，参考手册又没有，就一堆">
@@ -181,7 +181,13 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>物联网硬件联网的方案很多，其中WiFi相当诱人。如果说传感器分布于野外，那WiFi不一定适用，但是在室内就不同了：WiFi技术成熟，带宽大，而且很多家庭都有的路由器，就是现成的网关，功能性的东西可以迅速实现（当然也要考虑别的质量属性，比如安全性等等）。</p>
-<p>最近正在给pulpino移植AP6212的驱动，pulpino又跑不了Linux，AP6xxx的非Linux资料又几乎没有，参考手册又没有，就一堆数据手册；碰壁许久，总算有点感想和发现，遂记录几篇文章。</p>
+<p>最近正在给pulpino移植AP6212的驱动，pulpino又跑不了Linux，AP6xxx的非Linux资料又几乎没有，参考手册又没有，就一堆数据手册；碰壁许久，总算有点感想和发现，遂记录几篇文章：</p>
+<ul>
+<li>一、<a href="#目录">芯片选型</a></li>
+<li>二、<a href="2018/04/27/bcmf2/">初始化BCM43438</a></li>
+<li>三、<a href="#">与固件交互：bdc和cdc</a></li>
+</ul>
+<p>下面讨论的都是<strong>低端的网卡</strong>，相对于集群、数据中心啥的而言的话是，非常非常低端的东西；做大工程不行，但是做一些比较hack的东西还是绰绰有余的。</p>
 <a id="more"></a>
 <h3 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h3><ul>
 <li><a href="#1、WiFi模块闲谈">1、WiFi模块闲谈</a><ul>
@@ -223,6 +229,7 @@
 <p><img src="/2018/04/26/bcmf1/ap6xxx.jpeg" alt="ap6xxx"></p>
 <p>AP6xxx模块引脚基本兼容，可集成的功能有2.4G WiFi、5G WiFi、蓝牙、FM收音机、GPS等等，功能不同，价格由几块钱到二三十块钱不等。有一份<a href="https://wenku.baidu.com/view/cca5080089eb172dec63b752.html" target="_blank" rel="noopener">神奇的选型表</a>，以及<a href="https://wenku.baidu.com/view/eeb823f19b89680203d82532.html" target="_blank" rel="noopener">兼容性设计</a>；这两份文档貌似只能在百度文库上才能搜到。AP6212十几块钱一个，同时支持2.4G WiFi、蓝牙、收音机，用的芯片是<a href="http://www.cypress.com/file/298076/download" target="_blank" rel="noopener">BCM43438</a>，上面列举的几款开发板的WiFi其实都是一回事。<br><img src="/2018/04/26/bcmf1/ap6212.jpeg" alt="ap6212"></p>
 <p>稍高端的板子用AP6335，有双频WiFi；也有一些开发板或许出于成本考虑用了AP6181，它只有WiFi，还只是2.4G的，据说野火即将推出的I.MX RT1052开发板用的就是这个。</p>
+<p>瑞芯微也推出过基于博通家WiFi的模块，比如<a href="http://www.haoyuelectronics.com/service/RK3066/Datasheet/RK903%20datasheet_V1.2_20120309.pdf" target="_blank" rel="noopener">RK903</a>基于BCM4330，RK901基于BCM4329等。</p>
 <h4 id="1-2、Realtek家的SDIO-WiFi"><a href="#1-2、Realtek家的SDIO-WiFi" class="headerlink" title="1-2、Realtek家的SDIO-WiFi"></a>1-2、Realtek家的SDIO-WiFi</h4><p>值得一提的是这<strong>著名的RTL8723BS</strong>，一款WiFi+蓝牙模块。著名之处在于，它被广泛用于Win8、Win10或安卓系统的山寨平板电脑、电视盒子、电视棒里面，有人专门回收这些废旧板子，拆机带板拿去卖，rtl8723bs模块一块多一个。。。它应用太广泛了，以至于很多世界各地的极客们花费心思去实现其Linux驱动，这份驱动最终<a href="https://github.com/anthonywong/rtl8723bs" target="_blank" rel="noopener">merge到4.12版本内核的staging目录下面了</a>。</p>
 <p><a href="https://licheepizero.us/" target="_blank" rel="noopener">荔枝派zero</a>就弄了这么一个WiFi模块。<br><img src="/2018/04/26/bcmf1/licheepizero.jpeg" alt="licheepizero"></p>
 <p>Realtek的SDIO模块基本上只提供Windows的驱动，Linux驱动还比较野生。我有一个电视棒刷了Arch Linux，用内核的RTL8723BS驱动，上网速度相当的慢。。。<br><img src="/2018/04/26/bcmf1/rtl8723bs.jpeg" alt="rtl8723bs"></p>
@@ -349,6 +356,15 @@
 
   
 <nav id="article-nav">
+  
+    <a href="/2018/04/27/bcmf2/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          bcmf[2] 驱动：初始化
+        
+      </div>
+    </a>
   
   
     <a href="/2018/03/13/ucpc6/" id="article-nav-older" class="article-nav-link-wrap">

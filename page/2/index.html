@@ -143,6 +143,79 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-gdb调试技巧" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/02/25/gdb调试技巧/">gdb调试stm32的技巧</a>
+    </h1>
+  
+
+        
+        <a href="/2018/02/25/gdb调试技巧/" class="archive-article-date">
+  	<time datetime="2018-02-24T16:08:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-25</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>很多人开发C程序就像写脚本那样，查错，靠的是眼睛看；但是作为系统开发程序员，bug单纯靠看是查不出来的，于是就用printf，于是每一次查错都不可避免要机械地写printf、编译、烧写、运行，没有IDE的时候烧写、运行还不太方便。如果能在命令行下面设断点、单步调试什么的，想必是极好的。</p>
+<p>有时候开发一些程序还不得不在Ubuntu下弄，比方说国外的不少开源项目像px4、openmv之类的，又比方说Linux、nuttx之类的系统开发，等等。当然诸如Eclipse之类的IDE配置一下也能聊胜于无，但是配置它们的复杂度不亚于在命令行下面弄，而且连接板子、开gdb server这些工序只能在命令行下完成；好处是调试时候能用鼠标操作。</p>
+<p>其实，命令行下面用gdb调试，熟悉基本命令之后，用起来相当顺手；在TUI模式下面调试，视觉效果不亚于使用IDE。</p>
+<h2 id="需要安装的软件"><a href="#需要安装的软件" class="headerlink" title="需要安装的软件"></a>需要安装的软件</h2><h3 id="gdb"><a href="#gdb" class="headerlink" title="gdb"></a>gdb</h3><p>包管理装就行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install gdb-arm-none-eabi</span><br></pre></td></tr></table></figure></p>
+<p>当然也可以选用别的，比方说</p>
+<ul>
+<li><a href="https://sourcery.mentor.com/GNUToolchain/package6503/public/arm-uclinuxeabi/arm-2010q1-189-arm-uclinuxeabi-i686-pc-linux-gnu.tar.bz2" target="_blank" rel="noopener">arm-uclinuxeabi-2010q1</a>里面就有arm-uclinuxeabi-gdb。不过这个的TUI有问题。</li>
+<li>SourceForge的uclinux下载页面（崩掉了）</li>
+</ul>
+        
+          <a class="article-more-a" href="/2018/02/25/gdb调试技巧/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/02/25/gdb调试技巧/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-cross-compiler" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     

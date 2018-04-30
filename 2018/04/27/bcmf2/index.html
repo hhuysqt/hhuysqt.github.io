@@ -6,14 +6,24 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives | hhuysqt</title>
+  <title>bcmf[2] 驱动：初始化 | hhuysqt</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="hhuysqt">
-<meta property="og:url" content="http://yoursite.com/archives/index.html">
+  <meta name="description" content="本文总结BCM43438的初始化流程，初始化成功的标志是连上WiFi。 参考WICED SDK、NuttX，以及Linux的源码，它们的流程略有不同。Linux的驱动面面俱到；WICED的驱动虽只针对物联网设备，却写得相当冗杂；nuttx的驱动则相当简洁恰好能用。  WICED可从Cypress官网上下载，注册个账号就好了。这份软件架构简直是一切以WICED为中心，有bootloader、dct（">
+<meta name="keywords" content="bcm-wifi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="bcmf[2] 驱动：初始化">
+<meta property="og:url" content="http://yoursite.com/2018/04/27/bcmf2/index.html">
 <meta property="og:site_name" content="hhuysqt">
+<meta property="og:description" content="本文总结BCM43438的初始化流程，初始化成功的标志是连上WiFi。 参考WICED SDK、NuttX，以及Linux的源码，它们的流程略有不同。Linux的驱动面面俱到；WICED的驱动虽只针对物联网设备，却写得相当冗杂；nuttx的驱动则相当简洁恰好能用。  WICED可从Cypress官网上下载，注册个账号就好了。这份软件架构简直是一切以WICED为中心，有bootloader、dct（">
+<meta property="og:image" content="http://yoursite.com/2018/04/27/bcmf2/sdio.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/04/27/bcmf2/cmd5253.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/04/27/bcmf2/fwlayout.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/04/27/bcmf2/photon.jpeg">
+<meta property="og:updated_time" content="2018-04-30T12:50:26.031Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hhuysqt">
+<meta name="twitter:title" content="bcmf[2] 驱动：初始化">
+<meta name="twitter:description" content="本文总结BCM43438的初始化流程，初始化成功的标志是连上WiFi。 参考WICED SDK、NuttX，以及Linux的源码，它们的流程略有不同。Linux的驱动面面俱到；WICED的驱动虽只针对物联网设备，却写得相当冗杂；nuttx的驱动则相当简洁恰好能用。  WICED可从Cypress官网上下载，注册个账号就好了。这份软件架构简直是一切以WICED为中心，有bootloader、dct（">
+<meta name="twitter:image" content="http://yoursite.com/2018/04/27/bcmf2/sdio.jpeg">
   
     <link rel="alternative" href="/atom.xml" title="hhuysqt" type="application/atom+xml">
   
@@ -141,36 +151,295 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-bcmf2" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      bcmf[2] 驱动：初始化
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/04/27/bcmf2/" class="archive-article-date">
+
+        
+        <a href="/2018/04/27/bcmf2/" class="archive-article-date">
   	<time datetime="2018-04-27T03:57:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-27</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/04/27/bcmf2/">bcmf[2] 驱动：初始化</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>本文总结BCM43438的初始化流程，初始化成功的标志是连上WiFi。</p>
+<p>参考WICED SDK、NuttX，以及Linux的源码，它们的流程略有不同。Linux的驱动面面俱到；WICED的驱动虽只针对物联网设备，却写得相当冗杂；nuttx的驱动则相当简洁恰好能用。</p>
+<ul>
+<li>WICED可从<a href="https://community.cypress.com/community/wiced-wifi" target="_blank" rel="noopener">Cypress官网</a>上下载，注册个账号就好了。这份软件架构简直是<strong>一切以WICED为中心</strong>，有bootloader、dct（Device Configuration Table）、OTA（Over The Air）等自创的元素，如果用它支持的平台如stm32的话，那可以非常迅速地出成果，然而如果要移植到别的CPU架构的话它并不太友好。。</li>
+<li>NuttX可从<a href="https://bitbucket.org/nuttx/nuttx/src/master/" target="_blank" rel="noopener">bitbucket/nuttx</a>上git clone一份，或者从<a href="http://sourceforge.net/projects/nuttx/files/" target="_blank" rel="noopener">SourceForge</a>下载代码包。SourceForge上面的7.24及以前的驱动有问题，我在bitbucket上提交了<a href="https://bitbucket.org/nuttx/nuttx/commits/144e335b85fed8852e259f80181d6914b93dc659" target="_blank" rel="noopener">这份commit</a>。bitbucket在墙内访问相当不稳定。。</li>
+<li>Linux可以直接访问<a href="https://elixir.bootlin.com/linux/v4.13.3/source" target="_blank" rel="noopener">Bootlin的Linux Cross Reference</a>。在Linux内核中，博通<strong>SDIO接口的</strong>网卡驱动是<code>brcmfmac</code>，归类到<code>brcm80211</code>，这是博通官方提供的驱动，需要non-free的固件。<code>b43</code>的驱动是社区通过一些逆向工程实现的，只支持老版的PCIe网卡。。</li>
+</ul>
+<p>初始化过程纯粹就是面向过程的代码，因此以下通过罗列它们的流程来进行分析。</p>
+<p>固件这玩意儿想必是厂商喜闻乐见的东西——在你编写的程序中安插黑盒子，而你又无可奈何。</p>
+<a id="more"></a>
+<h3 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h3><ul>
+<li><a href="#1、SDIO卡简述">1、SDIO卡简述</a></li>
+<li><a href="#2、BCM43438-bringup">2、BCM43438-bringup</a><ul>
+<li><a href="#2-1、枚举SDIO卡">2-1、枚举SDIO卡</a></li>
+<li><a href="#2-2、使能Function">2-2、使能Function</a></li>
+<li><a href="#2-3、传输固件">2-3、传输固件</a><ul>
+<li><a href="#2-3-1、nvram的配置">2-3-1、nvram的配置</a></li>
+<li><a href="#2-3-2、下载固件之前">2-3-2、下载固件之前</a></li>
+<li><a href="#2-3-3、下载固件">2-3-3、下载固件</a></li>
+<li><a href="#2-3-4、等待固件初始化时钟">2-3-4、等待固件初始化时钟</a></li>
+<li><a href="#2-3-5、然后收尾">2-3-5、然后收尾</a></li>
+</ul>
+</li>
+<li><a href="#2-4、与固件交互进行初始化">2-4、与固件交互进行初始化</a><ul>
+<li><a href="#2-4-1、初始化参数">2-4-1、初始化参数</a></li>
+<li><a href="#2-4-2、连接WiFi">2-4-2、连接WiFi</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#3、板子试验">3、板子试验</a><ul>
+<li><a href="#3-1、跑WICED">3-1、跑WICED</a></li>
+<li><a href="#3-2、跑nuttx">3-2、跑nuttx</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="1、SDIO卡简述"><a href="#1、SDIO卡简述" class="headerlink" title="1、SDIO卡简述"></a>1、SDIO卡简述</h3><p>BCM43438是一个SDIO卡。<code>SDIO卡</code>跟<code>SD卡</code>虽然都用了SDIO接口，但是二者不可混为一谈。</p>
+<ul>
+<li>SD卡是SD memory card，驱动通用；</li>
+<li>SDIO卡就是为IO而准备的，为此使用了<a href="https://www.sdcard.org/developers/overview/sdio/sdio_spec/Simplified_SDIO_Card_Spec.pdf" target="_blank" rel="noopener">扩展的SDIO规范</a>。</li>
+<li>如果卡中既有存储，又有IO，则被称为combo卡。</li>
+</ul>
+<p>SDIO卡具有IO空间，通过<code>CMD52</code>和<code>CMD53</code>这两条的指令读写其中的数据：</p>
+<ul>
+<li>CMD52，单字节IO读写，数据只通过CMD引脚传输；</li>
+<li>CMD53，多字节IO读写，数据通过DATA[3:0]传输，非常适合传输<strong>大批量数据</strong>；</li>
+</ul>
+<p>IO空间里有多个<code>Function</code>，一个Function就是一块独立的IO空间：<br><img src="/2018/04/27/bcmf2/sdio.jpeg" alt="sdio function"></p>
+<ul>
+<li>第0个Function叫<code>CIA（common IO area）</code>，其中包含了多个寄存器组，基本上只在初始化时候才会用到：<ul>
+<li><strong>CCCR（Card Common Control Registers）</strong>，功能诸如开关其他Function、开关中断等等；</li>
+<li><strong>FBR（Function Basic Registers）</strong>，其中有设置该Function的block size的寄存器，还有指向下面CIS区域的指针；</li>
+<li><strong>CIS（Card Information Structure）</strong>，除了SDIO specification里面有介绍外，没找到其他资料，而且WICED和nuttx里代码里面也没有用到。。</li>
+</ul>
+</li>
+<li>另外最多支持7个Function，里面的寄存器由厂商自己定义。BCM43438有两个Function：<ul>
+<li>Function1叫<code>Backplane</code>，来源于<a href="https://bcm-v4.sipsolutions.net/Backplane/" target="_blank" rel="noopener">Sonics Silicon Backplane（SSB）</a>，是可以访问整个SOC的地址空间的总线。不过只有老版的网卡使用SSB总线，新版网卡（包括我们的BCM43438）<a href="https://www.kernel.org/doc/readme/drivers-bcma-README" target="_blank" rel="noopener">则使用AXI总线</a>，二者的接口并不同，只是名称沿用了下来。</li>
+<li>Function2叫<code>WLAN</code>，与固件交互时候使用，传输控制命令以及数据。</li>
+</ul>
+</li>
+</ul>
+<p>IO空间的编号、寄存器地址编码到CMD52、CMD53命令中，从而进行读写操作。<br><img src="/2018/04/27/bcmf2/cmd5253.jpeg" alt="cmd52,53"></p>
+<h3 id="2、BCM43438-bringup"><a href="#2、BCM43438-bringup" class="headerlink" title="2、BCM43438-bringup"></a>2、BCM43438-bringup</h3><p>博通家SDIO接口的网卡初始化流程比较通用，下面罗列出要做的事情，WICED、nuttx、Linux里的执行顺序略有不同，说明初始化流程并不是唯一的。</p>
+<ul>
+<li>Linux中涉及到的bcmfmac里的文件有:<strong>chip.c</strong>、<strong>sdio.c</strong>、<strong>firmware.c</strong></li>
+<li>WICED里主要就是WICED/WWD/internal/bus_protocols/SDIO/ <strong>wwd_bus_protocol.c</strong></li>
+<li>Nuttx则主要是drivers/wireless/ieee80211/ <strong>bcmf_sdio.c</strong></li>
+</ul>
+<h4 id="2-1、枚举SDIO卡"><a href="#2-1、枚举SDIO卡" class="headerlink" title="2-1、枚举SDIO卡"></a>2-1、枚举SDIO卡</h4><ul>
+<li>WICED：WICED/platform/MCU/xxxxxxxx/WWD/WWD_SDIO.c: <strong>host_platform_sdio_enumerate()</strong>，是平台相关的部分；</li>
+<li>Nuttx：drivers/wireless/ieee80211/mmc_sdio.c: <strong>sdio_probe()</strong>， 最终调用平台相关的代码；</li>
+<li>Linux：在mmc层，<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/mmc/core/core.c#L2477" target="_blank" rel="noopener">drivers/mmc/core/core.c:mmc_rescan_try_freq()</a>。mmc层的入口可以说是插卡时候的中断进程<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/mmc/core/slot-gpio.c#L33" target="_blank" rel="noopener">mmc_gpio_cd_irqt()</a>（它之前<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/mmc/core/slot-gpio.c#L142" target="_blank" rel="noopener">被request成threaded的irq</a>）。</li>
+</ul>
+<p>它们的流程都一样：</p>
+<ul>
+<li>发送<code>CMD5</code>，没回应就按照SD存储卡初始化流程走，若有回应则是SDIO卡；</li>
+<li>发送<code>CMD3</code>，让卡返回一个自己生成的<strong>RCA(Relative Card Address)</strong>；</li>
+<li>将刚才的RCA作为参数，发送<code>CMD7</code>，从而选中那张卡；</li>
+</ul>
+<h4 id="2-2、使能Function"><a href="#2-2、使能Function" class="headerlink" title="2-2、使能Function"></a>2-2、使能Function</h4><ul>
+<li>WICED：WICED/WWD/internal/bus_protocols/SDIO/wwd_bus_protocol.c: <strong>wwd_bus_init()</strong></li>
+<li>Nuttx：drivers/wireless/ieee80211/bcmf_sdio.c: <strong>bcmf_probe()和bcmf_businitialize()</strong></li>
+<li>Linux：drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c: <a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c#L1038" target="_blank" rel="noopener">brcmf_sdiod_probe()</a>，被sdio_driver的probe函数调用。</li>
+</ul>
+<p>首先初始化Function0、1的寄存器。一部分通用寄存器在SDIO specification里讲述，其他的寄存器没有资料。</p>
+<ul>
+<li>使能Backplane即F1（写F0的CCCR_IOEN寄存器）。</li>
+<li>设置4位总线宽度（写F0的CCCR_BICTL寄存器）。另外主机也要设置为4bit，并可以提高时钟速度。</li>
+<li>设置各个Function的block size（写F0的CCCR_FNx_BLKSIZE0、1、2，每个Function各两个寄存器）。它都设为64了，虽然数据手册上说Function0的最大只有32。。。</li>
+<li>使能Function1、2的中断（写F0的CCCR_INTEN寄存器）。</li>
+<li>在Function1中，使能“ALP（Active Low-Power）”时钟（写F1的CHIPCLKCSR寄存器，BCM定义的）。</li>
+</ul>
+<p>使能了F1之后可以随时读F1的<code>0x18000000</code>地址处读到设备ID号，在Linux的brcmfmac的驱动中，该地址处的结构体为<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/net/wireless/broadcom/brcm80211/include/chipcommon.h#L24" target="_blank" rel="noopener">struct chipregs</a>，第一个元素是chipid。而WICED和nuttx的驱动里面没发现这种结构体——它们都用的是一大堆宏定义的寄存器地址。不同的模块chipid可见Linux内核的drivers/net/wireless/broadcom/brcm80211/include/ <a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/net/wireless/broadcom/brcm80211/include/brcm_hw_ids.h" target="_blank" rel="noopener">brcm_hw_ids.h</a>，其中BCM43438的ID是<strong>十进制的43430</strong>。</p>
+<p><em>0x18000000这个地址在brcmfmac里被命名为<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/net/wireless/broadcom/brcm80211/include/soc.h#L20" target="_blank" rel="noopener">SI_ENUM_BASE</a>，在老版SSB驱动里被命名为<a href="https://elixir.bootlin.com/linux/v4.13.3/source/include/linux/ssb/ssb_regs.h#L12" target="_blank" rel="noopener">SSB_ENUM_BASE</a>。brcmfmac里SSB总线、AXI总线分别实现了，体现了bcm网卡内部总线的发展历史。。。</em></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">总线</th>
+<th style="text-align:left">chipid最高8位</th>
+<th style="text-align:left">接口前缀</th>
+<th style="text-align:left">头文件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">SSB</td>
+<td style="text-align:left">0</td>
+<td style="text-align:left">brcmf_chip_sb_</td>
+<td style="text-align:left"><a href="https://elixir.bootlin.com/linux/v4.13.3/source/include/linux/ssb/ssb_regs.h" target="_blank" rel="noopener">linux/ssb/ssb_regs.h</a></td>
+</tr>
+<tr>
+<td style="text-align:left">AXI</td>
+<td style="text-align:left">1</td>
+<td style="text-align:left">brcmf_chip_ai_</td>
+<td style="text-align:left"><a href="https://elixir.bootlin.com/linux/v4.13.3/source/include/linux/bcma/bcma_regs.h" target="_blank" rel="noopener">linux/bcma/bcma_regs.h</a></td>
+</tr>
+</tbody>
+</table>
+<h4 id="2-3、传输固件"><a href="#2-3、传输固件" class="headerlink" title="2-3、传输固件"></a>2-3、传输固件</h4><p>固件有三种：</p>
+<ul>
+<li>两三百kb的大固件</li>
+<li>一两kb的nvram</li>
+<li>几kb的clm blob，<strong>这不是必需品</strong></li>
+</ul>
+<p>在这个阶段首先传前两个固件。大固件从F1的RAM首地址开始放，nvram放在RAM末尾倒数4个字节之前，RAM最后4个字节是编码之后的nvram大小。<br><img src="/2018/04/27/bcmf2/fwlayout.jpeg" alt="fwlayout"></p>
+<h4 id="2-3-1、nvram的配置"><a href="#2-3-1、nvram的配置" class="headerlink" title="2-3-1、nvram的配置"></a>2-3-1、nvram的配置</h4><p>nvram是一个字符串数组，目的在于调试时候设置一些参数，它们最终要烧写到BCM43438的OTP（One Time Programable）存储器里面的。BCM固件收到nvram之后会与OTP空间对比，同名的参数配置以OTP为准。因此实际操作中为了保持一些灵活性，大家都不会把nvram里面所有的东西都写入OTP里面。详细的参数设置可以参考Cypress的这份文档：<a href="http://www.cypress.com/file/298131/download" target="_blank" rel="noopener">AN214807</a>：OTP Programming and NVRAM Development in SDIO Mode。</p>
+<ul>
+<li>WICED：在<strong>platforms/XXXXXXXXXX/wifi_nvram_image.h</strong>中定义的数组。</li>
+<li>NuttX：在configs目录下板级配置中定义的数组，如<strong>configs/photon/src/stm32_wlan_firmware.c</strong>。</li>
+<li>Linux：通用固件<a href="https://github.com/kszaq/brcmfmac_sdio-firmware-aml/tree/master/firmware/brcm/nvram_ap6212a.txt" target="_blank" rel="noopener">nvram_ap6212a.txt</a><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#AP6212A_NVRAM_V1.0.1_20160606</span><br><span class="line"># 2.4 GHz, 20 MHz BW mode</span><br><span class="line"></span><br><span class="line"># The following parameter values are just placeholders, need to be updated.</span><br><span class="line">manfid=0x2d0</span><br><span class="line">prodid=0x0726</span><br><span class="line">vendid=0x14e4</span><br><span class="line">devid=0x43e2</span><br><span class="line">boardtype=0x0726</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>其中需要留意的参数有：</p>
+<ul>
+<li><code>macaddr</code>，设置MAC地址。其实现在买到的AP6xxx模块的OTP里面都已经有这个参数了，除非直接订购的是BCM43438芯片。</li>
+<li><code>xtalfreq</code>，设置晶振的频率，单位为kHz。有些板子用的是37.4M晶振，有些用的是26M晶振。<strong>一定要设对，否则后面PLL时钟起不来</strong>。</li>
+</ul>
+<p>需要特别注意的是，<strong>最终</strong>下载到芯片里的东西必然是WICED、nuttx里面的那种风格的数组，每一个<code>xxxx=xxxx</code>的字符串<strong>键值对之后都有一个0字符</strong>，而不是Linux的配置文件那种风格。Linux的nvram.txt是经过处理才下载的，详见drivers/net/wireless/broadcom/brcm80211/brcmfmac/ <a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/net/wireless/broadcom/brcm80211/brcmfmac/firmware.c" target="_blank" rel="noopener">firmware.c</a>。它使用状态机进行词法分析，滤除注释，然后<strong>brcmf_fw_add_defaults()</strong>，添加0字符。</p>
+<h4 id="2-3-2、下载固件之前"><a href="#2-3-2、下载固件之前" class="headerlink" title="2-3-2、下载固件之前"></a>2-3-2、下载固件之前</h4><p>首先需要disable芯片的Cores，包括Cortex M3的核，还有内存控制器的核。</p>
+<p>另外BCM43438需要<strong>取消SRAM bank 3的remap</strong>。Linux写在drivers/net/wireless/broadcom/brcm80211/brcmfmac/ chip.c:<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.c#L1196" target="_blank" rel="noopener">brcmf_chip_cm3_set_passive()</a>处；WICED则是WICED/WWD/internal/chips/xxxxx/ wwd_chip_specific_functions.c: <strong>wwd_chip_specific_socsram_init()</strong>。nuttx目前只是单纯在下载固件之前判断了一下。</p>
+<h4 id="2-3-3、下载固件"><a href="#2-3-3、下载固件" class="headerlink" title="2-3-3、下载固件"></a>2-3-3、下载固件</h4><p>根据不同的ID可以选择不同的固件。</p>
+<ul>
+<li>Linux：在<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c#L601" target="_blank" rel="noopener">brcmfmac/sdio.c</a>里定义一堆固件名称，从而可以在<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/net/wireless/broadcom/brcm80211/brcmfmac/firmware.c#L550" target="_blank" rel="noopener">brcmf_fw_get_firmwares()</a>处从文件系统里request_firmware。sdio.c中传入callback函数<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c#L3992" target="_blank" rel="noopener">brcmf_sdio_firmware_callback()</a>，随后brcmf_sdio_firmware_callback()，传输大固件以及nvram。</li>
+<li>WICED：层层调用到WICED/WWD/internal/bus_protocols/ wwd_bus_common.c: <strong>download_resource()</strong>，然后使用 <em>host_platform_resource_read_direct()</em> 或者<em>host_platform_resource_read_<strong><strong>in</strong></strong>direct()</em>函数，从片内flash或者片外flash里面读取固件，然后<strong>wwd_bus_transfer_bytes()</strong>下载到BCM芯片内。因为WICED运行时的平台单一，所以它并不考虑通过不同ID号选择不同的固件。</li>
+<li>nuttx：在drivers/wireless/ieee80211/bcmf_sdio.c: <strong>bcmf_chipinitialize()</strong>里通过ID号switch case一个芯片，随后drivers/wireless/ieee80211/bcmf_core.c: <strong>bcmf_core_upload_firmware()</strong>，然后<strong>bcmf_upload_binary()</strong>。目前nuttx的固件直接写为一个巨大的uint8_t数组。。。比如photon的固件，在configs/photon/src/ <strong>stm32_wlan_firmware.c</strong>里。</li>
+</ul>
+<h4 id="2-3-4、等待固件初始化时钟"><a href="#2-3-4、等待固件初始化时钟" class="headerlink" title="2-3-4、等待固件初始化时钟"></a>2-3-4、等待固件初始化时钟</h4><ul>
+<li>Linux：brcmfmac/sdio.c:<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c#L752" target="_blank" rel="noopener">brcmf_sdio_htclk()</a>，有个循环；</li>
+<li>WICED：WICED/WWD/internal/bus_protocols/SDIO/wwd_bus_protocol.c: <strong>wwd_bus_sdio_download_firmware()</strong>，下载了firmware和nvram之后有个循环；</li>
+<li>NuttX：drivers/wireless/ieee80211/bcmf_sdio.c: <strong>bcmf_sdio_bus_sleep(false)</strong>，这有个循环。下完固件，设置中断的时候才调用它。</li>
+</ul>
+<p>做法就是循环读F1的CHIPCLKCSR寄存器的第7位，命名为High Throughput Clock Available。这一步经常会不过关，原因可能是：</p>
+<ul>
+<li>大固件不对，比方说将BCM43438-A0的固件下到了A1的芯片上面了。</li>
+<li>nvram不对，可能直接将Linux的哪个txt下进去了，可能是xtalfreq不对，可能是别的东西。。。</li>
+<li>板子问题，晶振不起振，等等。</li>
+<li>等待的时间不够长，可能板子焊的不太好，要多等一会儿才能available。</li>
+</ul>
+<p>如果这一步过关了，说明这个固件或许可以用，后面或许就轻松了不少。。</p>
+<h4 id="2-3-5、然后收尾"><a href="#2-3-5、然后收尾" class="headerlink" title="2-3-5、然后收尾"></a>2-3-5、然后收尾</h4><ul>
+<li>使能F2、F2的中断</li>
+<li>初始化save-restore功能。并不是所有固件都支持sr功能。<ul>
+<li>WICED：WICED/WWD/internal/chips/xxxxx/ wwd_chip_specific_functions.c: <strong>wwd_chip_specific_init()</strong></li>
+<li>Linux：brcmf_sdio_firmware_callback()之后<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c#L4063" target="_blank" rel="noopener">brcmf_sdio_sr_init()</a></li>
+<li>Nuttx：我照着WICED的代码在bcmf_sdio.c里面添加了bcmf_sdio_sr_init()。之前虽然没有，但是据说也能用。。</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-4、与固件交互进行初始化"><a href="#2-4、与固件交互进行初始化" class="headerlink" title="2-4、与固件交互进行初始化"></a>2-4、与固件交互进行初始化</h3><p>与固件交互，用的是Function2即WLAN，Linux、nuttx里将该功能注释为“frame transfer”。在Function2传输的数据要符合BCM定义的一套协议，分为两层：</p>
+<ul>
+<li>上层：bdc、cdc<ul>
+<li>bdc用于传输数据包，接入IP协议栈的底部。</li>
+<li>cdc用于传输控制命令，有ioctl和iovar之分。控制命令包括开关WiFi、查询或设置MAC地址等等。也可以说属于带外传输的范畴。</li>
+</ul>
+</li>
+<li>下层：sdpcm，用于包装bdc、cdc。</li>
+</ul>
+<p>具体实现部分下一篇博客将讨论。这里仅讨论初始化阶段需要做的东西。</p>
+<ul>
+<li>Nuttx：drivers/wireless/ieee80211/<strong>bcmf_driver.c</strong></li>
+<li>WICED：WICED/WWD/internal/<strong>wwd_management.c</strong></li>
+<li>Linux：brcmfmac/<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c#L107" target="_blank" rel="noopener">brcmf_c_preinit_dcmds()</a>。之前在brcmfmac/sdio.c:<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c#L4086" target="_blank" rel="noopener">callback里调用brcmf_bus_started()</a>，然后层层调用到它。</li>
+</ul>
+<p>这阶段就是发送一些ioctl、iovar去查询一些信息，以及设置一些东西。<br><code>ioctl</code>是一些整数指令号，可以附带一些参数；<br><code>iovar</code>是字符串命令，也可以附带一些参数。</p>
+<h4 id="2-4-1、初始化参数"><a href="#2-4-1、初始化参数" class="headerlink" title="2-4-1、初始化参数"></a>2-4-1、初始化参数</h4><ul>
+<li>查询该固件的版本。发送名为<code>&quot;ver&quot;</code>的iovar，返回一个字符串。比方说它会返回”wl0: Jun 19 2016 22:40:09 version 7.45.45.17 (r644353) FWID 01-dbaba83”</li>
+<li>查询MAC地址。发送名为<code>&quot;cur_etheraddr&quot;</code>的iovar，返回6字节的MAC地址（返回的buffer不一定只有6字节，其他的都没用）</li>
+<li>关闭所谓的TX glomming：<code>&quot;bus:txglom&quot;</code>的iovar</li>
+<li>开启APSTA模式：<code>&quot;apsta&quot;</code>的iovar</li>
+<li>设置A-MPDU的参数。amsdu、ampdu的概念可参考<a href="http://www.cnblogs.com/aixin0813/p/3195664.html" target="_blank" rel="noopener">这篇博客</a>。<code>ampdu_</code>为前缀的一系列iovar</li>
+<li>设置国家和地区：<code>&quot;country&quot;</code>的iovar</li>
+<li><strong>注册事件</strong>，使用<code>&quot;event_msgs&quot;</code>，参数是一个一百多位的位图，每一位代表一个事件，置一则代表主机打算相应这个事件。Linux在brcmfmac/fweh.h里定义为<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.h#L32" target="_blank" rel="noopener">enum brcmf_fweh_event_code</a>，nuttx在bcmf_ioctl.h里定义为<strong>enum wl_event_num_t</strong>，WICED在WICED/WWD/include/wwd_events.h里定义为<strong>enum wwd_event_num_t</strong>。</li>
+<li><strong>WiFi up</strong>，发送<code>WLC_UP</code>的ioctl，编号是2。ifup这个命令在Linux和nuttx里都有，if的全称应该是interface，比方说<code>ifup wlan0</code>；它底层就是发送了WLC_UP指令。</li>
+</ul>
+<h4 id="2-4-2、连接WiFi"><a href="#2-4-2、连接WiFi" class="headerlink" title="2-4-2、连接WiFi"></a>2-4-2、连接WiFi</h4><p>就是join一个Access Point（AP），一个AP一般有一个名字叫SSID，以及密码（当然也有隐藏的WiFi和开放的WiFi）。对于Linux和nuttx来说决定要连接WiFi的是应用程序而不是内核，需要调用ioctl来陷入内核从而进行操作。</p>
+<ul>
+<li>Linux：drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c:<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c#L1951" target="_blank" rel="noopener">brcmf_cfg80211_connect()</a></li>
+<li>WICED：WICED/WWD/internal/<strong>wwd_wifi_join()</strong></li>
+<li>NuttX：drivers/wireless/ieee80211/bcmf_driver.c:<strong>bcmf_wl_set_ssid()</strong>，它在ioctl(SIOCSIWESSID)时候被调用。</li>
+</ul>
+<p>流程如下：</p>
+<ul>
+<li>设置wireless mode为infra或adhoc，使用ioclt为<code>WLC_SET_INFRA</code>（WICED &amp; nuttx）或<code>BRCMF_C_SET_INFRA</code>（Linux）；</li>
+<li>设置WPA授权方式的版本号，使用iovar<code>&quot;bsscfg:sup_wpa&quot;</code>；</li>
+<li>设置授权方式，如WPA、WPA2。使用ioctl为<code>WLC_SET_WPA_AUTH</code>；</li>
+<li>设置加密方式，如WEP、TKIP、CCMP（其核心算法是AES）等。使用ioctl为<code>WLC_SET_WSEC</code>和<code>WLC_SET_AUTH</code>；</li>
+<li>设置WiFi密码，使用ioctl为<code>WLC_SET_WSEC_PMK</code>，参数就是密码字符串；</li>
+<li>设置WiFi名，使用ioctl为<code>WLC_SET_SSID</code>（WICED &amp; nuttx）或<code>BRCMF_C_SET_SSID</code>（Linux），参数是WiFi SSID字符串。</li>
+<li>随后就等待路由器的授权信息。。。</li>
+</ul>
+<p>连接上路由器，并不代表获得了IP地址。IP可以静态设置，也可以动态分配（DHCP）。但这些已经不属于MAC层的范畴了，正常的操作系统都会配备相应的应用程序来完成这些功能。</p>
+<h3 id="3、板子试验"><a href="#3、板子试验" class="headerlink" title="3、板子试验"></a>3、板子试验</h3><p>只讨论WICED和nuttx的板子。</p>
+<ul>
+<li>WICED开发板选用<code>BCM94343WWCD1-EVB</code>，主控是STM32F411VEH6，WiFi芯片是BCM4343W。板子带有一片SPI flash，BCM的固件就存放在那里。</li>
+<li>Redbear提供了<a href="https://github.com/redbear/WICED-SDK" target="_blank" rel="noopener">WICED 6.1的补丁</a>，直接复制到SDK目录下面就行了。</li>
+<li>Photon和Redbear都可以跑nuttx，Redbear需要稍作移植，主要是填充BCM43438的固件，毕竟43362和43438的驱动相当通用。</li>
+</ul>
+<h4 id="3-1、跑WICED"><a href="#3-1、跑WICED" class="headerlink" title="3-1、跑WICED"></a>3-1、跑WICED</h4><p>安装了WICED SDK之后，在<code>43xxx_Wi-Fi</code>目录下面make。这份SDK提供了make程序从而不必使用系统的make程序。可以直接make它自带的例程，例程都放在apps目录的子目录下面：</p>
+<pre><code>apps/
+├── demo
+│   ├── aliyun_mns
+│   ├── apollo
+│   ├── appliance
+│   └── ...
+├── snip
+│   ├── scan
+│   ├── https_server
+│   ├── tcp_client
+│   └── ...
+├── test
+│   └── ...
+├── waf
+│   ├── bootloader
+│   └── ...
+└── wwd
+    ├── ping
+    ├── scan
+    └── ...
+</code></pre><p>make后接的target这样设置：<code>&lt;例程目录&gt;.&lt;例程名称&gt;-&lt;板子名称&gt;</code>。比方说要跑apps/snip/scan里面的例程：</p>
+<ul>
+<li>./make snip.scan-BCM94343WWCD1 # 对于BCM94343W开发板</li>
+<li>./make snip.scan-RB_DUO # 打了补丁之后可用的Redbear开发板</li>
+</ul>
+<p>值得一试的例程除了scan，还有tcp_client，后者需要在主机上跑一个Python程序，板子连接主机之后不断发送hello数据。</p>
+<h4 id="3-2、跑nuttx"><a href="#3-2、跑nuttx" class="headerlink" title="3-2、跑nuttx"></a>3-2、跑nuttx</h4><p>目前nuttx有photon开发板的现成配置。nuttx的编译方式是，内核和apps目录分开，在内核目录下面用<code>tools/configure.sh</code>来配置板子。比方说photon：</p>
+<ul>
+<li>./tools/configure.sh photon/wlan</li>
+</ul>
+<p>然后更改.config文件中的<code>CONFIG_NSH_WAPI_SSID</code>为WiFi名，<code>CONFIG_NSH_WAPI_PASSPHRASE</code>为WiFi密码。其他按照默认配置，编译出来的nuttx.bin可用直接用photon的bootloader进行烧写、启动。</p>
+<ul>
+<li>sudo dfu-util -d 2b04:d006 -a 0 -s 0x08020000 -D nuttx.bin</li>
+</ul>
+<p>复位之后，板子会自动连上WiFi。在路由器中找板子的ip地址，然后通过telnet来访问板子的nsh。</p>
+<pre><code>$ telnet 192.168.2.102
+Trying 192.168.2.102...
+Connected to 192.168.2.102.
+Escape character is &apos;^]&apos;
 
-        <div class="article-info info-on-right">
-          
+NuttShell (NSH) NuttX-7.24
+nsh&gt;
+</code></pre><p>对于Redbear，则可以依葫芦画瓢地增加板级配置文件，也能达到这个效果。<br><img src="/2018/04/27/bcmf2/photon.jpeg" alt="photon"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -182,353 +451,105 @@
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/04/27/bcmf2/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/04/26/bcmf1/" class="archive-article-date">
-  	<time datetime="2018-04-26T02:58:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-26</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2018/04/26/bcmf1/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">bcmf[1] SDIO-WiFi-phy选型</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/04/26/bcmf1/">bcmf[1] SDIO-WiFi-phy选型</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">bcm-wifi</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/03/13/ucpc6/" class="archive-article-date">
-  	<time datetime="2018-03-13T12:57:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-13</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/03/13/ucpc6/">uc-PC[6] 构建rootfs</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ucpc</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/03/07/ucpc5/" class="archive-article-date">
-  	<time datetime="2018-03-07T01:21:49.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-07</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/03/07/ucpc5/">uc-PC[5] Linux设备驱动配置</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ucpc</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/03/01/ucpc4/" class="archive-article-date">
-  	<time datetime="2018-03-01T07:33:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-01</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/03/01/ucpc4/">uc-PC[4] 小议“设备树”</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ucpc</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/03/01/ucpc3/" class="archive-article-date">
-  	<time datetime="2018-02-28T16:23:39.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-01</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/03/01/ucpc3/">uc-PC[3] 板子验证与bootloader移植</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ucpc</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/27/ucpc2/" class="archive-article-date">
-  	<time datetime="2018-02-27T12:26:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-27</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/27/ucpc2/">uc-PC[2] 硬件设计</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ucpc</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/27/ucpc1/" class="archive-article-date">
-  	<time datetime="2018-02-27T06:04:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-27</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/27/ucpc1/">uc-PC[1] ucLinux or Linux?</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ucpc</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/26/ucpc0/" class="archive-article-date">
-  	<time datetime="2018-02-26T06:41:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-26</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/26/ucpc0/">uc-PC[0] 序言</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ucpc</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/26/hardfault/" class="archive-article-date">
-  	<time datetime="2018-02-26T06:13:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-26</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/26/hardfault/">调试hardfault</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="extend next" rel="next" href="/archives/page/2/">Next &raquo;</a>
-    </nav>
   
 
 
@@ -552,8 +573,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
