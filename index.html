@@ -143,6 +143,83 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-bcmf3" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/04/30/bcmf3/">bcmf[3] 与固件交互：bcdc和sdpcm</a>
+    </h1>
+  
+
+        
+        <a href="/2018/04/30/bcmf3/" class="archive-article-date">
+  	<time datetime="2018-04-30T12:56:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-30</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>与固件交互时，数据包往下传到SDIO网卡之前，还需要对它进行两层包装，简单说：<code>IP协议栈</code>数据包包装为<code>bdc</code>数据包，<code>控制命令</code>则包装为<code>cdc</code>数据包；bdc、cdc在Linux中统称为bcdc；bcdc再进一步包装为<code>sdpcm</code>数据包，进而通过SDIO发送给网卡。而博通只有SDIO的网卡才多包一层sdpcm，USB、PCIE接口的网卡都没有这样做。</p>
+<p>Linux、nuttx、WICED它们在sdpcm这一层都用了一个线程，专门包装发送、接收解析这些sdpcm数据包。单线程+中断的模型未必不可以，但是若接收数据包时处于SDIO中断上下文，而接收的时候也得利用SDIO的中断去收数据，这就是自己嵌套自己的不愉快的事情了。于是在RTOS上，该线程便使用信号量去指示是否有事情发生，在Linux上则直接使用work queue去处理这种事情。</p>
+        
+          <a class="article-more-a" href="/2018/04/30/bcmf3/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">bcm-wifi</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/04/30/bcmf3/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-bcmf2" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -844,72 +921,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2018/02/26/ucpc0/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-hardfault" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/02/26/hardfault/">调试hardfault</a>
-    </h1>
-  
-
-        
-        <a href="/2018/02/26/hardfault/" class="archive-article-date">
-  	<time datetime="2018-02-26T06:13:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-26</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>对于搞Cortex M系列mcu开发的人来说，hardfault这种鬼东西，不遇到还好，倘若不幸遇到了，复位一下，瞎调一下，左右修补，或许碰巧就消除了。但是靠人品毕竟不是长久之计。下面记录我调试hardfault的一些简单的经验。</p>
-<h2 id="hardfault来源"><a href="#hardfault来源" class="headerlink" title="hardfault来源"></a>hardfault来源</h2><p>Cortex M3、M4的向量表中，3号异常是<code>HardFault</code>；接下来三个异常是<code>MemFault</code>、<code>BusFault</code>、<code>UsageFault</code>。发生了hardfault，基本是因为后面三个异常<code>上访</code>来的。<br><img src="/2018/02/26/hardfault/exceptiontable.jpeg" alt="向量表"><br><a href="http://infocenter.arm.com/help/topic/com.arm.doc.dui0553a/DUI0553A_cortex_m4_dgug.pdf" target="_blank" rel="noopener">手册</a>上的向量表</p>
-        
-          <a class="article-more-a" href="/2018/02/26/hardfault/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/02/26/hardfault/">展开全文 >></a>
         </p>
       
 

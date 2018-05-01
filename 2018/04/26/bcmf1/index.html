@@ -28,7 +28,7 @@
 <meta property="og:image" content="http://yoursite.com/2018/04/26/bcmf1/wiced.jpeg">
 <meta property="og:image" content="http://yoursite.com/2018/04/26/bcmf1/bcm43438.jpeg">
 <meta property="og:image" content="http://yoursite.com/2018/04/26/bcmf1/ap6212sch.jpeg">
-<meta property="og:updated_time" content="2018-04-30T12:52:12.796Z">
+<meta property="og:updated_time" content="2018-04-30T14:01:40.777Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="bcmf[1] SDIO-WiFi-phy选型">
 <meta name="twitter:description" content="物联网硬件联网的方案很多，其中WiFi相当诱人。如果说传感器分布于野外，那WiFi不一定适用，但是在室内就不同了：WiFi技术成熟，带宽大，而且很多家庭都有的路由器，就是现成的网关，功能性的东西可以迅速实现（当然也要考虑别的质量属性，比如安全性等等）。 最近正在给pulpino移植AP6212的驱动，pulpino又跑不了Linux，AP6xxx的非Linux资料又几乎没有，参考手册又没有，就一堆">
@@ -270,6 +270,7 @@
 <p>并不是每个大固件都需要配上一个clm blob，但是有些资源里面有。值得一提的是，WICED里面的43438和4343W的大固件其实是完全一样的，说明仅就WiFi而言二者是完全一致的。。</p>
 <h4 id="2-3、已公开的软件资源"><a href="#2-3、已公开的软件资源" class="headerlink" title="2-3、已公开的软件资源"></a>2-3、已公开的软件资源</h4><ul>
 <li>Linux内核下的驱动<br>在Linux下，Broadcom开源的网卡驱动有两类：<code>brcmfmac</code>和<code>brcmsmac</code>，前者是“brcm Full MAC”，后者是“brcm Soft MAC”。Soft MAC说的是比较老的PCIE接口的网卡，需要软件实现整个MAC层；Full MAC说的是SDIO、USB接口的网卡，网卡实现了MAC。详见<a href="https://wiki.archlinux.org/index.php/Broadcom_wireless" target="_blank" rel="noopener">Arch wiki上的描述</a>以及<a href="http://linuxwireless.sipsolutions.net/en/users/Drivers/brcm80211/index.html" target="_blank" rel="noopener">Linux Wireless</a>里面对bcm驱动的描述。</li>
+<li><a href="https://wireless.wiki.kernel.org/en/users/drivers/brcm80211" target="_blank" rel="noopener">Linux wireless wiki</a>收集了Linux无线模块驱动的一些基本信息。</li>
 <li><a href="https://community.cypress.com/community/wiced-wifi" target="_blank" rel="noopener">WICED SDK</a>里面的驱动，功能全面，但是冗余度高。</li>
 <li><a href="http://sourceforge.net/projects/nuttx/files/" target="_blank" rel="noopener">NuttX</a>里的代码。前两年<a href="http://nuttx.org/Documentation/NuttX.html#stm32f205x" target="_blank" rel="noopener">有黑客将nuttx移植到Photon上了</a>，附带了移植了brcmfmac的驱动。我提交了<a href="https://bitbucket.org/nuttx/nuttx/commits/144e335b85fed8852e259f80181d6914b93dc659" target="_blank" rel="noopener">这份commit</a>，修改了一些原有的bug。</li>
 </ul>

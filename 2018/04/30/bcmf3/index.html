@@ -6,14 +6,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives | hhuysqt</title>
+  <title>bcmf[3] 与固件交互：bcdc和sdpcm | hhuysqt</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="hhuysqt">
-<meta property="og:url" content="http://yoursite.com/archives/page/2/index.html">
+  <meta name="description" content="与固件交互时，数据包往下传到SDIO网卡之前，还需要对它进行两层包装，简单说：IP协议栈数据包包装为bdc数据包，控制命令则包装为cdc数据包；bdc、cdc在Linux中统称为bcdc；bcdc再进一步包装为sdpcm数据包，进而通过SDIO发送给网卡。而博通只有SDIO的网卡才多包一层sdpcm，USB、PCIE接口的网卡都没有这样做。 Linux、nuttx、WICED它们在sdpcm这一层">
+<meta name="keywords" content="bcm-wifi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="bcmf[3] 与固件交互：bcdc和sdpcm">
+<meta property="og:url" content="http://yoursite.com/2018/04/30/bcmf3/index.html">
 <meta property="og:site_name" content="hhuysqt">
+<meta property="og:description" content="与固件交互时，数据包往下传到SDIO网卡之前，还需要对它进行两层包装，简单说：IP协议栈数据包包装为bdc数据包，控制命令则包装为cdc数据包；bdc、cdc在Linux中统称为bcdc；bcdc再进一步包装为sdpcm数据包，进而通过SDIO发送给网卡。而博通只有SDIO的网卡才多包一层sdpcm，USB、PCIE接口的网卡都没有这样做。 Linux、nuttx、WICED它们在sdpcm这一层">
+<meta property="og:image" content="http://yoursite.com/2018/04/30/bcmf3/cdc.jpeg">
+<meta property="og:updated_time" content="2018-05-01T14:28:56.504Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hhuysqt">
+<meta name="twitter:title" content="bcmf[3] 与固件交互：bcdc和sdpcm">
+<meta name="twitter:description" content="与固件交互时，数据包往下传到SDIO网卡之前，还需要对它进行两层包装，简单说：IP协议栈数据包包装为bdc数据包，控制命令则包装为cdc数据包；bdc、cdc在Linux中统称为bcdc；bcdc再进一步包装为sdpcm数据包，进而通过SDIO发送给网卡。而博通只有SDIO的网卡才多包一层sdpcm，USB、PCIE接口的网卡都没有这样做。 Linux、nuttx、WICED它们在sdpcm这一层">
+<meta name="twitter:image" content="http://yoursite.com/2018/04/30/bcmf3/cdc.jpeg">
   
     <link rel="alternative" href="/atom.xml" title="hhuysqt" type="application/atom+xml">
   
@@ -141,133 +148,233 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-bcmf3" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      bcmf[3] 与固件交互：bcdc和sdpcm
+    </h1>
+  
+
+        
+        <a href="/2018/04/30/bcmf3/" class="archive-article-date">
+  	<time datetime="2018-04-30T12:56:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-30</time>
+</a>
+        
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>与固件交互时，数据包往下传到SDIO网卡之前，还需要对它进行两层包装，简单说：<code>IP协议栈</code>数据包包装为<code>bdc</code>数据包，<code>控制命令</code>则包装为<code>cdc</code>数据包；bdc、cdc在Linux中统称为bcdc；bcdc再进一步包装为<code>sdpcm</code>数据包，进而通过SDIO发送给网卡。而博通只有SDIO的网卡才多包一层sdpcm，USB、PCIE接口的网卡都没有这样做。</p>
+<p>Linux、nuttx、WICED它们在sdpcm这一层都用了一个线程，专门包装发送、接收解析这些sdpcm数据包。单线程+中断的模型未必不可以，但是若接收数据包时处于SDIO中断上下文，而接收的时候也得利用SDIO的中断去收数据，这就是自己嵌套自己的不愉快的事情了。于是在RTOS上，该线程便使用信号量去指示是否有事情发生，在Linux上则直接使用work queue去处理这种事情。</p>
+<a id="more"></a>
+<h3 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h3><ul>
+<li><a href="#1、bcdc层">1、bcdc层</a><ul>
+<li><a href="#1-1、cdc协议">1-1、cdc协议</a></li>
+<li><a href="#1-2、bdc协议">1-2、bdc协议</a></li>
+</ul>
+</li>
+<li><a href="#2、sdpcm数据结构">2、sdpcm数据结构</a></li>
+<li><a href="#3、这两层的实现">3、这两层的实现</a></li>
+</ul>
+<h3 id="1、bcdc层"><a href="#1、bcdc层" class="headerlink" title="1、bcdc层"></a>1、bcdc层</h3><p><code>cdc</code>用于发送、接收命令，比如查询固件版本号、查询设置MAC地址、开关连接WiFi、注册事件等等；这些功能一般都调用ioctl去执行，属于<code>带外数据</code>；<br><code>bdc</code>上面则直接接的是IP协议栈，上层就是socket的read、write，属于<code>带内数据</code>；</p>
+<h4 id="1-1、cdc协议"><a href="#1-1、cdc协议" class="headerlink" title="1-1、cdc协议"></a>1-1、cdc协议</h4><p>控制命令分为<code>ioctl</code>和<code>iovar</code>两种；二者都带有cdc头部，其数据结构如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">struct bcmf_cdc_header &#123;</span><br><span class="line">    uint32_t cmd;    /* 命令编号 */</span><br><span class="line">    uint32_t len;    /* 命令长度 */</span><br><span class="line">    uint32_t flags;  /* 标志位 */</span><br><span class="line">    uint32_t status; /* 返回状态 */</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>发送ioctl，将命令编号填入cmd字段，cdc头之后紧接着数据。</p>
+<ul>
+<li>linux里的cmd编号以<code>BRCMF_C_</code>为前缀，见<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil.h" target="_blank" rel="noopener">fwil.h</a></li>
+<li>nuttx和WICED的cmd宏定义命名都是一样的，以<code>WLC_</code>为前缀。nuttx见drivers/wireless/ieee80211/ <strong>bcmf_ioctl.h</strong>第723行之后，WICED则在WICED/WWD/include/ <strong>wwd_wlioctl.h</strong>第899行之后。</li>
+</ul>
+<p>iovar是cmd为<code>WLC_SET_VAR</code>或<code>WLC_GET_VAR</code>的ioctl，cdc头之后跟着一个字符串，然后再跟着数据。这些字符串，nuttx和WICED都将其定义为一大堆以<code>IOVAR_STR_</code>开头的宏定义；而Linux则是直接写的字符串，散落在<a href="https://elixir.bootlin.com/linux/v4.13.3/ident/brcmf_fil_iovar_data_get" target="_blank" rel="noopener">cfg80211.c、common.c等文件里面</a>。</p>
+<h4 id="1-2、bdc协议"><a href="#1-2、bdc协议" class="headerlink" title="1-2、bdc协议"></a>1-2、bdc协议</h4><p>bdc头只有四个字节：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">struct bcmf_bdc_header &#123;</span><br><span class="line">  uint8_t flags;       /* bdc标志位 */</span><br><span class="line">  uint8_t priority;    /* 优先级 */</span><br><span class="line">  uint8_t flags2;      /* 网卡模式 */</span><br><span class="line">  uint8_t data_offset; /* bdc头部之后跳过的4字节个数 */</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>flags字段填<code>0x20</code>是bdc协议的标志位</li>
+<li>优先级其实不用管</li>
+<li>flags2是网卡此时工作模式，有station、access point、P2P这三种取值；正常情况下连WiFi就是station，开热点就是access point。</li>
+<li>data_offset这个字段说的是<strong>4字节的倍数</strong>。之所以是“4”据说是因为bdc头部长度为4，为了考虑扩展和对齐，bdc头后面会跳过data_offset个bdc头大小的数据</li>
+</ul>
+<p>bdc层还包装了<code>事件帧</code>，共有<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.h#L32" target="_blank" rel="noopener">一百多个事件</a>，包括扫描到WiFi、路由器的授权信号、接入点的游走（roaming）等等；这些事件就是之前用cdc注册的事件，却交给bdc去处理。。。</p>
+<h3 id="2、sdpcm数据结构"><a href="#2、sdpcm数据结构" class="headerlink" title="2、sdpcm数据结构"></a>2、sdpcm数据结构</h3><p>在bcdc包前面补上一个sdpcm头即可。对于这个头，Linux中有一段这样的注释<em>（横屏看）</em>：</p>
+<pre><code>/**
+* brcmfmac sdio bus specific header
+* This is the lowest layer header wrapped on the packets transmitted between
+* host and WiFi dongle which contains information needed for SDIO core and
+* firmware
+*
+* It consists of 3 parts: hardware header, hardware extension header and
+* software header
+* hardware header (frame tag) - 4 bytes
+* Byte 0~1: Frame length
+* Byte 2~3: Checksum, bit-wise inverse of frame length
+* hardware extension header - 8 bytes
+* Tx glom mode only, N/A for Rx or normal Tx
+* Byte 0~1: Packet length excluding hw frame tag
+* Byte 2: Reserved
+* Byte 3: Frame flags, bit 0: last frame indication
+* Byte 4~5: Reserved
+* Byte 6~7: Tail padding length
+* software header - 8 bytes
+* Byte 0: Rx/Tx sequence number
+* Byte 1: 4 MSB Channel number, 4 LSB arbitrary flag
+* Byte 2: Length of next data frame, reserved for Tx
+* Byte 3: Data offset
+* Byte 4: Flow control bits, reserved for Tx
+* Byte 5: Maximum Sequence number allowed by firmware for Tx, N/A for Tx packet
+* Byte 6~7: Reserved
+*/
+</code></pre><p>Linux里填充sdpcm头时就是一个个字节地数的。。。详见<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c#L1443" target="_blank" rel="noopener">brcmf_sdio_hdpack()</a>。正常发送bdc、cdc时候并不需要“hardware extension header”，所以就是两部分：4字节的大小和8字节的software header。</p>
+<p>在WICED中将这翻译为如下的数据结构：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">typedef struct</span><br><span class="line">&#123;</span><br><span class="line">    uint8_t sequence;</span><br><span class="line">    uint8_t channel_and_flags;</span><br><span class="line">    uint8_t next_length;</span><br><span class="line">    uint8_t header_length;</span><br><span class="line">    uint8_t wireless_flow_control;</span><br><span class="line">    uint8_t bus_data_credit;</span><br><span class="line">    uint8_t _reserved[2];</span><br><span class="line">&#125; sdpcm_sw_header_t;</span><br><span class="line"></span><br><span class="line">typedef struct</span><br><span class="line">&#123;</span><br><span class="line">    uint16_t           frametag[2];</span><br><span class="line">    sdpcm_sw_header_t  sw_header;</span><br><span class="line">&#125; sdpcm_header_t;</span><br><span class="line"></span><br><span class="line">typedef struct</span><br><span class="line">&#123;</span><br><span class="line">    wwd_buffer_header_t    buffer_header;</span><br><span class="line">    sdpcm_header_t         sdpcm_header;</span><br><span class="line">&#125; sdpcm_common_header_t;</span><br></pre></td></tr></table></figure></p>
+<p>可以看到WICED跟Linux一样将sdpcm头拆成两部分：4字节的大小和8字节的software header。不过WICED自己添加了一个wwd_buffer_header_t，这是WICED自己的头，发送之前会去掉。随后，它定义了cdc、bdc的专用数据头：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">typedef struct</span><br><span class="line">&#123;</span><br><span class="line">    sdpcm_common_header_t  common;</span><br><span class="line">    sdpcm_cdc_header_t     cdc_header;</span><br><span class="line">&#125; sdpcm_control_header_t;</span><br><span class="line"></span><br><span class="line">typedef struct</span><br><span class="line">&#123;</span><br><span class="line">    sdpcm_common_header_t  common;</span><br><span class="line">    uint8_t                _padding[2];</span><br><span class="line">    sdpcm_bdc_header_t     bdc_header;</span><br><span class="line">&#125; sdpcm_data_header_t;</span><br></pre></td></tr></table></figure></p>
+<p>可见它认为bdc数据头是要多加两个字节的padding的。</p>
+<p>nuttx则更简单：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">struct bcmf_sdpcm_header &#123;</span><br><span class="line">    uint16_t size;</span><br><span class="line">    uint16_t checksum;</span><br><span class="line">    uint8_t  sequence;</span><br><span class="line">    uint8_t  channel;</span><br><span class="line">    uint8_t  next_length;</span><br><span class="line">    uint8_t  data_offset;</span><br><span class="line">    uint8_t  flow_control;</span><br><span class="line">    uint8_t  credit;</span><br><span class="line">    uint16_t padding;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>注意，nuttx的padding还是属于前面software header的最后的两字节，而且它发送bdc、cdc都用这个头，不像WICED发送bdc时候又再多补了两字节的padding。不过BCM芯片返回的bdc数据包的sdpcm头的确比cdc的sdpcm头多两个字节；但是只要数据段寻址时候用的是header_length（data_offset）字段，而不是简单粗暴地用sizeof，就不会出问题。</p>
+<p>以nuttx的数据结构为例，header里的字段如下：</p>
+<ul>
+<li><code>size</code>，这个包的长度，包含sdpcm头。</li>
+<li><code>checksum</code>，size逐位取反。。。</li>
+<li><code>sequence</code>，每发一个包时候递增1；每发一个包，芯片都会返回一个包，它们sequence编号相同。</li>
+<li><code>channel</code>，有control、data、event三种通道，其中event代表了异步事件，就是之前用cdc注册的一百多种事件之一。</li>
+<li><code>next_length</code>，在三份代码里面都直接置零而不去利用；或许说明BCM一开始设计这个头的时候，考虑将多个bdc、cdc包聚合（aggregate）为一个sdpcm包，有点类似A-MSDU和A-MPDU的想法，但是后来就直接简单地一个sdpcm包里只放一个bcdc包了。</li>
+<li><code>data_offset</code>，也可以解释为这个头部的长度。</li>
+<li><code>flow_control</code>，没用</li>
+<li><code>credit</code>，解释为max sequence，上面的<code>sequence</code>字段不能超过它。BCM芯片每返回一个包就更新一次credit。</li>
+<li><code>padding</code>，置零。（WICED里发送bdc包时候后面会在此基础上另外多增加两字节的padding。。。）</li>
+</ul>
+<h3 id="3、这两层的实现"><a href="#3、这两层的实现" class="headerlink" title="3、这两层的实现"></a>3、这两层的实现</h3><ul>
+<li>nuttx严格分层了：drivers/wireless/ieee80211/目录下的<strong>bcmf_cdc.c、bcmf_bdc.c、bcmf_sdpcm.c</strong></li>
+<li>Linux中bdc、cdc集中为drivers/net/wireless/broadcom/brcm80211/brcmfmac/ <a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcdc.c" target="_blank" rel="noopener">bcdc.c</a>，sdpcm则是<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c" target="_blank" rel="noopener">sdio.c</a></li>
+<li>WICED将bcdc、sdpcm都搅在一起：WICED/WWD/internal/ <strong>wwd_sdpcm.c</strong></li>
+</ul>
+<p>bcdc层跟sdpcm层的接口，三份代码都无一例外使用了<strong>函数指针</strong>。如果说Linux里是为了兼顾PCIE和USB接口的网卡的话，nuttx和WICED估计就是单纯地依葫芦画瓢吧。。。</p>
+<h4 id="3-1、nuttx"><a href="#3-1、nuttx" class="headerlink" title="3-1、nuttx"></a>3-1、nuttx</h4><p>发送数据或命令都是阻塞的，bdc、cdc都会等到收到回应才返回。</p>
+<p>发送接收线程：bcmf_sdio.c里有一个<code>bcmf_sdio_thread()</code>，循环地等待一个名叫<code>thread_signal</code>的信号量，发送数据、接收数据，都会发出信号量从而触发其行动。</p>
+<p>以发送一个iovar命令为例。cdc层给调用sdpcm层发送<code>thread_signal</code>之后，等待一个名为<code>control_timeout</code>的信号量；由中断程序触发bcmf_sdio_thread()去接收数据后，该线程发出<code>control_timeout</code>信号量，进而促使cdc层返回数据。<br><img src="/2018/04/30/bcmf3/cdc.jpeg" alt="cdc"></p>
+<h4 id="3-2、WICED"><a href="#3-2、WICED" class="headerlink" title="3-2、WICED"></a>3-2、WICED</h4><p>WICED的线程是wwd_thread.c:<code>wwd_thread_func()</code>，整个流程处理方式与nuttx很类似，只是做了一些冗余的操作。</p>
+<ul>
+<li>添加了WICED自己的头部，发送之前去掉。</li>
+<li>申请了sdpcm缓冲区之后填数据，数据前面为对齐而留白，然而最终发送之前又将整段数据往前面搬了。。。</li>
+</ul>
+<h4 id="3-3、Linux"><a href="#3-3、Linux" class="headerlink" title="3-3、Linux"></a>3-3、Linux</h4><p>Linux用的是work queue机制，由worker_thread内核线程统一执行。brcmfmac的workqueue是<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c#L3622" target="_blank" rel="noopener">brcmf_sdio_dataworker()</a>。除此之外整个流程其实相当相似，只是考虑到多核、乱序、大小字节序等情况而用了一些晦涩的接口，加了不少锁以及一些存储屏障，并且将函数分的更细致了，到处都是层层调用。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/26/hardfault/" class="archive-article-date">
-  	<time datetime="2018-02-26T06:13:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-26</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/26/hardfault/">调试hardfault</a>
-    </h1>
-  
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">bcm-wifi</a>
+        		</li>
+      		
+		</ul>
+	</div>
 
-        <div class="article-info info-on-right">
-          
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/04/30/bcmf3/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/25/gdb调试技巧/" class="archive-article-date">
-  	<time datetime="2018-02-24T16:08:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-25</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2018/04/27/bcmf2/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">bcmf[2] 驱动：初始化</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/25/gdb调试技巧/">gdb调试stm32的技巧</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/23/cross-compiler/" class="archive-article-date">
-  	<time datetime="2018-02-23T15:03:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-23</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/23/cross-compiler/">制作arm-uclinuxeabi的交叉编译工具链</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/22/uclinux-on-stm32f103/" class="archive-article-date">
-  	<time datetime="2018-02-22T15:30:11.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-22</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/22/uclinux-on-stm32f103/">uclinux on STM32F103ZET6</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/archives/">&laquo; Prev</a><a class="page-number" href="/archives/">1</a><span class="page-number current">2</span>
-    </nav>
   
 
 
@@ -291,8 +398,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

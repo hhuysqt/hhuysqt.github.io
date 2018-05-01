@@ -143,6 +143,72 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-hardfault" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/02/26/hardfault/">调试hardfault</a>
+    </h1>
+  
+
+        
+        <a href="/2018/02/26/hardfault/" class="archive-article-date">
+  	<time datetime="2018-02-26T06:13:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-26</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>对于搞Cortex M系列mcu开发的人来说，hardfault这种鬼东西，不遇到还好，倘若不幸遇到了，复位一下，瞎调一下，左右修补，或许碰巧就消除了。但是靠人品毕竟不是长久之计。下面记录我调试hardfault的一些简单的经验。</p>
+<h2 id="hardfault来源"><a href="#hardfault来源" class="headerlink" title="hardfault来源"></a>hardfault来源</h2><p>Cortex M3、M4的向量表中，3号异常是<code>HardFault</code>；接下来三个异常是<code>MemFault</code>、<code>BusFault</code>、<code>UsageFault</code>。发生了hardfault，基本是因为后面三个异常<code>上访</code>来的。<br><img src="/2018/02/26/hardfault/exceptiontable.jpeg" alt="向量表"><br><a href="http://infocenter.arm.com/help/topic/com.arm.doc.dui0553a/DUI0553A_cortex_m4_dgug.pdf" target="_blank" rel="noopener">手册</a>上的向量表</p>
+        
+          <a class="article-more-a" href="/2018/02/26/hardfault/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/02/26/hardfault/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-gdb调试技巧" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     

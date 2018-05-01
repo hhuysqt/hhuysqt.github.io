@@ -19,7 +19,7 @@
 <meta property="og:image" content="http://yoursite.com/2018/04/27/bcmf2/cmd5253.jpeg">
 <meta property="og:image" content="http://yoursite.com/2018/04/27/bcmf2/fwlayout.jpeg">
 <meta property="og:image" content="http://yoursite.com/2018/04/27/bcmf2/photon.jpeg">
-<meta property="og:updated_time" content="2018-04-30T12:50:26.031Z">
+<meta property="og:updated_time" content="2018-05-01T13:51:18.009Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="bcmf[2] 驱动：初始化">
 <meta name="twitter:description" content="本文总结BCM43438的初始化流程，初始化成功的标志是连上WiFi。 参考WICED SDK、NuttX，以及Linux的源码，它们的流程略有不同。Linux的驱动面面俱到；WICED的驱动虽只针对物联网设备，却写得相当冗杂；nuttx的驱动则相当简洁恰好能用。  WICED可从Cypress官网上下载，注册个账号就好了。这份软件架构简直是一切以WICED为中心，有bootloader、dct（">
@@ -197,6 +197,7 @@
 <li><a href="#2-4、与固件交互进行初始化">2-4、与固件交互进行初始化</a><ul>
 <li><a href="#2-4-1、初始化参数">2-4-1、初始化参数</a></li>
 <li><a href="#2-4-2、连接WiFi">2-4-2、连接WiFi</a></li>
+<li><a href="#2-4-5、错误">2-4-5、错误</a></li>
 </ul>
 </li>
 </ul>
@@ -382,6 +383,8 @@
 <li>随后就等待路由器的授权信息。。。</li>
 </ul>
 <p>连接上路由器，并不代表获得了IP地址。IP可以静态设置，也可以动态分配（DHCP）。但这些已经不属于MAC层的范畴了，正常的操作系统都会配备相应的应用程序来完成这些功能。</p>
+<h4 id="2-4-5、错误"><a href="#2-4-5、错误" class="headerlink" title="2-4-5、错误"></a>2-4-5、错误</h4><p>有时候BCM芯片会发一个很大的东西回来，是其内核寄存器的dump。Linux内核中对此命名为<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c#L339" target="_blank" rel="noopener">struct brcmf_trap_info</a>，并输出log信息。WICED和nuttx都假装没有这种问题。dump之后WiFi芯片将不会响应任何命令。。。</p>
+<p>这一般说明固件不配套，可能是发送了不合法的命令，也可能发了几条命令之后片子发现自己不能执行下去了，然后就dump，卡死。这时就要多试几个固件了。。。</p>
 <h3 id="3、板子试验"><a href="#3、板子试验" class="headerlink" title="3、板子试验"></a>3、板子试验</h3><p>只讨论WICED和nuttx的板子。</p>
 <ul>
 <li>WICED开发板选用<code>BCM94343WWCD1-EVB</code>，主控是STM32F411VEH6，WiFi芯片是BCM4343W。板子带有一片SPI flash，BCM的固件就存放在那里。</li>
@@ -514,6 +517,15 @@ nsh&gt;
 
   
 <nav id="article-nav">
+  
+    <a href="/2018/04/30/bcmf3/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          bcmf[3] 与固件交互：bcdc和sdpcm
+        
+      </div>
+    </a>
   
   
     <a href="/2018/04/26/bcmf1/" id="article-nav-older" class="article-nav-link-wrap">
