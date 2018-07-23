@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="hhuysqt">
 <meta property="og:description" content="与固件交互时，数据包往下传到SDIO网卡之前，还需要对它进行两层包装，简单说：IP协议栈数据包包装为bdc数据包，控制命令则包装为cdc数据包；bdc、cdc在Linux中统称为bcdc；bcdc再进一步包装为sdpcm数据包，进而通过SDIO发送给网卡。而博通只有SDIO的网卡才多包一层sdpcm，USB、PCIE接口的网卡都没有这样做。 Linux、nuttx、WICED它们在sdpcm这一层">
 <meta property="og:image" content="http://yoursite.com/2018/04/30/bcmf3/cdc.jpeg">
-<meta property="og:updated_time" content="2018-05-01T14:28:56.504Z">
+<meta property="og:updated_time" content="2018-05-29T10:17:33.196Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="bcmf[3] 与固件交互：bcdc和sdpcm">
 <meta name="twitter:description" content="与固件交互时，数据包往下传到SDIO网卡之前，还需要对它进行两层包装，简单说：IP协议栈数据包包装为bdc数据包，控制命令则包装为cdc数据包；bdc、cdc在Linux中统称为bcdc；bcdc再进一步包装为sdpcm数据包，进而通过SDIO发送给网卡。而博通只有SDIO的网卡才多包一层sdpcm，USB、PCIE接口的网卡都没有这样做。 Linux、nuttx、WICED它们在sdpcm这一层">
@@ -344,6 +344,15 @@
   
 <nav id="article-nav">
   
+    <a href="/2018/06/15/ubuntu-tablet/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          山寨平板上的ubuntu
+        
+      </div>
+    </a>
+  
   
     <a href="/2018/04/27/bcmf2/" id="article-nav-older" class="article-nav-link-wrap">
       <div class="article-nav-title">bcmf[2] 驱动：初始化</div>
@@ -489,6 +498,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">bcm-wifi</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">baytrail</a>
               </li>
              
               <li class="article-tag-list-item">

@@ -6,14 +6,24 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2018 | hhuysqt</title>
+  <title>山寨平板上的ubuntu | hhuysqt</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="hhuysqt">
-<meta property="og:url" content="http://yoursite.com/archives/2018/page/2/index.html">
+  <meta name="description" content="几百块钱的Windows寨板一般都是这样的配置：CPU是Intel的Baytrail z3735f，或者Cherrytrail z8300/z8350，都是不到2GHz的四核凌动x86，而后者的核显性能数倍于前者（虽然性能都不高，但还是属于吊打树莓派的那种）。内存一般是2GB，而z83xx可以上4GB，只是性能会有所降低。闪存一般是32GB的emmc flash，聊胜于无。外设方面就是触屏WiFi">
+<meta name="keywords" content="baytrail">
+<meta property="og:type" content="article">
+<meta property="og:title" content="山寨平板上的ubuntu">
+<meta property="og:url" content="http://yoursite.com/2018/06/15/ubuntu-tablet/index.html">
 <meta property="og:site_name" content="hhuysqt">
+<meta property="og:description" content="几百块钱的Windows寨板一般都是这样的配置：CPU是Intel的Baytrail z3735f，或者Cherrytrail z8300/z8350，都是不到2GHz的四核凌动x86，而后者的核显性能数倍于前者（虽然性能都不高，但还是属于吊打树莓派的那种）。内存一般是2GB，而z83xx可以上4GB，只是性能会有所降低。闪存一般是32GB的emmc flash，聊胜于无。外设方面就是触屏WiFi">
+<meta property="og:image" content="http://yoursite.com/2018/06/15/ubuntu-tablet/screenfetch.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/15/ubuntu-tablet/bluetooth.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/15/ubuntu-tablet/touchscreen.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/06/15/ubuntu-tablet/battery.jpeg">
+<meta property="og:updated_time" content="2018-07-23T09:46:38.477Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hhuysqt">
+<meta name="twitter:title" content="山寨平板上的ubuntu">
+<meta name="twitter:description" content="几百块钱的Windows寨板一般都是这样的配置：CPU是Intel的Baytrail z3735f，或者Cherrytrail z8300/z8350，都是不到2GHz的四核凌动x86，而后者的核显性能数倍于前者（虽然性能都不高，但还是属于吊打树莓派的那种）。内存一般是2GB，而z83xx可以上4GB，只是性能会有所降低。闪存一般是32GB的emmc flash，聊胜于无。外设方面就是触屏WiFi">
+<meta name="twitter:image" content="http://yoursite.com/2018/06/15/ubuntu-tablet/screenfetch.png">
   
     <link rel="alternative" href="/atom.xml" title="hhuysqt" type="application/atom+xml">
   
@@ -145,171 +155,301 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-ubuntu-tablet" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/26/ucpc0/" class="archive-article-date">
-  	<time datetime="2018-02-26T06:41:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-26</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/26/ucpc0/">uc-PC[0] 序言</a>
+    <h1 class="article-title" itemprop="name">
+      山寨平板上的ubuntu
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2018/06/15/ubuntu-tablet/" class="archive-article-date">
+  	<time datetime="2018-06-15T10:03:22.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-06-15</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>几百块钱的Windows寨板一般都是这样的配置：CPU是Intel的Baytrail z3735f，或者Cherrytrail z8300/z8350，都是不到2GHz的四核凌动x86，而后者的核显性能数倍于前者（虽然性能都不高，但还是属于吊打树莓派的那种）。内存一般是2GB，而z83xx可以上4GB，只是性能会有所降低。闪存一般是32GB的emmc flash，聊胜于无。外设方面就是触屏WiFi蓝牙SD卡USB云云。它们一般跑着win10或者win+Android双系统。</p>
+<p>对于树莓派一类玩家而言这些寨板吸引人的地方在于，价格便宜！x86的性能强！主频高内存大！WiFi！屏幕！然而虽然是x86的机器，它们并不能直接安装Ubuntu一类系统，原因在于：</p>
+<ul>
+<li>32位UEFI，因为32位的Windows占用空间小一些</li>
+<li>驱动非常不齐全</li>
+</ul>
+<p>以没经过处理的<code>Ubuntu-1404</code>为例，64位镜像因为机子UEFI是32位的而无法启动，32位镜像没有EFI启动文件也启动不了。强行给32位镜像补上EFI文件则可以顺利安装，然而电池、SD卡、触屏、WiFi、声卡、屏幕调光、按键、陀螺仪、摄像头之类的驱动统统没有，只有USB能用。。。</p>
+<p>要解决这两个问题势必要经过一些折腾。</p>
+<a id="more"></a>
+<h3 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h3><ul>
+<li><a href="#1、启动镜像">1、启动镜像</a><ul>
+<li><a href="#1-1、multi-arch">1-1、multi-arch</a></li>
+<li><a href="#1-2、linuxium的工具">1-2、linuxium的工具</a></li>
+<li><a href="#1-3、选择哪个桌面">1-3、选择哪个桌面</a></li>
+</ul>
+</li>
+<li><a href="#2、Linux驱动">2、Linux驱动</a><ul>
+<li><a href="#2-1、WiFi">2-1、WiFi</a></li>
+<li><a href="#2-2、蓝牙">2-2、蓝牙</a></li>
+<li><a href="#2-3、触屏">2-3、触屏</a></li>
+<li><a href="#2-4、声卡">2-4、声卡</a></li>
+<li><a href="#2-5、电池">2-5、电池</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="1、启动镜像"><a href="#1、启动镜像" class="headerlink" title="1、启动镜像"></a>1、启动镜像</h3><p>少数安卓双系统的机子用的是64位UEFI，因此可以直接启动64位镜像。然而大多数机子并不能直接启动Ubuntu镜像。虽然32位UEFI只可以运行32位的<code>.efi</code>，但是<code>multiarch</code>版的镜像的efi可以接着启动64位的程序，从而启动到grub并继续启动下去。</p>
+<h4 id="1-1、multi-arch"><a href="#1-1、multi-arch" class="headerlink" title="1-1、multi-arch"></a>1-1、multi-arch</h4><p>新版的Debian 9可以直接下载<a href="https://cdimage.debian.org/debian-cd/current/multi-arch/iso-cd/" target="_blank" rel="noopener">multi-arch</a>版本的镜像，它的关键是有<code>efi/boot/bootia32.efi</code>这个文件，从而可以用32位UEFI启动64位镜像。但是Debian装后只有基本系统，后续定制起来有点麻烦。</p>
+<p>有个野生的名叫<a href="https://sourceforge.net/projects/xjubuntu/files/" target="_blank" rel="noopener">XJUbuntu</a>的发行版定制了很多东西，其中有个玩家在他的台电X98 plus平板上定制Ubuntu 16.04，跑通了很多东西，制作了所谓<a href="https://xjesus.net/xjubuntu/xjubuntab-tablet-customizedcustomizable-distro-based-on-xubuntu-14-04-64-bits/" target="_blank" rel="noopener">XJUbuntuTAB</a>。但是这个镜像很大，定制的xfce桌面我也并不特别习惯，并且很多关键驱动如电池、触屏在我平板上都不行。</p>
+<p>如果要用原生Ubuntu，可以将<code>bootia32.efi</code>加到其中从而使其可以启动；</p>
+<ul>
+<li>如果用Debian multiarch的efi，还需要多改一些东西。<a href="https://askubuntu.com/questions/392719/32-bit-uefi-boot-support" target="_blank" rel="noopener">这篇问答</a>详细解释了如何操作。</li>
+<li>如果用<a href="https://github.com/hirotakaster/baytail-bootia32.efi" target="_blank" rel="noopener">这个efi</a>，直接丢到镜像中就好了。</li>
+</ul>
+<h4 id="1-2、linuxium的工具"><a href="#1-2、linuxium的工具" class="headerlink" title="1-2、linuxium的工具"></a>1-2、linuxium的工具</h4><p>Linuxium是个机顶盒、电视棒的Linux玩家，<a href="http://linuxiumcomau.blogspot.com" target="_blank" rel="noopener">他的博客</a>有很多非常有意思的东西。为了在x86的电视棒上跑Ubuntu，他开发了<a href="http://linuxiumcomau.blogspot.com/2017/06/customizing-ubuntu-isos-documentation.html" target="_blank" rel="noopener">isorespin.sh</a>这个脚本，功能非常多，包括：</p>
+<ul>
+<li>添加32位UEFI启动文件</li>
+<li>添加Apollo lake的必要文件（对于N3450系列的赛扬芯平板）</li>
+<li>更改Linux内核，从而添加驱动补丁</li>
+<li>新增软件包等，从而添加固件和驱动</li>
+<li>运行脚本</li>
+</ul>
+<p>其实这些都是<a href="https://help.ubuntu.com/community/LiveCDCustomization" target="_blank" rel="noopener">Ubuntu-LiveCD定制</a>的工作，只是Ubuntu的wiki上对于UEFI的定制说明太少了。</p>
+<p>利用<code>isorespin.sh</code>，可以为64位Ubuntu 18.04添加32位启动项：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ isorespin.sh -i ubuntu-18.04-desktop-amd64.iso</span><br></pre></td></tr></table></figure>
+<p>因为它需要mount镜像，所以它需要root权限。需要留意的是虽然它可以用<code>--atom</code>来添加特别的驱动，比方说rtl8723bs的WiFi和蓝牙。但是这都要梯子才能下载，命令行中sudo之后的代理有点问题，所以这些东西还是启动之后再安装吧。大概半个小时之后它会生成一个名叫<code>linuxium-ubuntu-18.04-desktop-amd64.iso</code>的镜像（大部分时间用在squashfs的解压和重新生成上）。</p>
+<h4 id="1-3、选择哪个桌面"><a href="#1-3、选择哪个桌面" class="headerlink" title="1-3、选择哪个桌面"></a>1-3、选择哪个桌面</h4><p>Ubuntu 17.10开始的官方发行版桌面为GNOME；但现在的GNOME 3问题在于太过耗资源了，刚启动就占了1个多GB，开两个gnome-terminal就快要炸了。轻量级的桌面有LXDE、XFCE等等，个人感觉XFCE稍微好看点。。。<br><img src="/2018/06/15/ubuntu-tablet/screenfetch.png" alt="screen"></p>
+<h3 id="2、Linux驱动"><a href="#2、Linux驱动" class="headerlink" title="2、Linux驱动"></a>2、Linux驱动</h3><p>越新版的内核，一些外设的驱动越有可能得到支持。比方说最新的Ubuntu 18.04，在我的<code>昂达V101W</code>上就能用<strong>SD卡、电池、背光调节、陀螺仪、开关机按钮</strong>了。其他的能折腾出来的驱动罗列如下。</p>
+<h4 id="2-1、WiFi"><a href="#2-1、WiFi" class="headerlink" title="2-1、WiFi"></a>2-1、WiFi</h4><p>一般网卡是rtl8723bs，它的驱动已经合并到linux 4.12的staging目录下面了，所以Ubuntu 18.04有它的驱动。但是网卡还需要一个固件，可以从<a href="https://github.com/hadess/rtl8723bs" target="_blank" rel="noopener">hadess的github</a>上下载。</p>
+<p>dmesg看到缺少这个固件：</p>
+<pre><code>$ dmesg | grep rtl8723
+...
+[  170.823731] rtl8723bs: acquire FW from file:rtlwifi/rtl8723bs_nic.bin
+[  170.823790] rtl8723bs mmc0:0001:1: Direct firmware load for rtlwifi/rtl8723bs_nic.bin failed with error -2
+...
+</code></pre><p>就把固件复制到<code>/lib/firmware/rtlwifi/</code>目录下面，重新加载驱动即可。</p>
+<pre><code>$ sudo cp rtl8723bs_nic.bin /lib/firmware/rtlwifi/
+$ sudo modprobe -r r8723bs
+$ sudo modprobe r8723bs
+$ dmesg | grep rtl8723
+...
+[  228.095947] rtl8723bs: acquire FW from file:rtlwifi/rtl8723bs_nic.bin
+...
+$ ifconfig wlan0
+wlan0: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500
+        inet 192.168.2.225  netmask 255.255.255.0  broadcast 192.168.2.255
+        inet6 fe80::74b5:1920:54c6:e8d  prefixlen 64  scopeid 0x20&lt;link&gt;
+        ether 8c:18:d9:1f:3e:fd  txqueuelen 1000  (以太网)
+        RX packets 579  bytes 705015 (705.0 KB)
+        RX errors 0  dropped 582  overruns 0  frame 0
+        TX packets 605  bytes 70957 (70.9 KB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+</code></pre><p>对于博通系列的SDIO网卡也一样是补上固件就能用了。博通的驱动比较通用，几乎支持所有的<code>AP6xxx</code>模块；它除了需要固件以为还需要配置文件，这些都可以在github上找到，比方说<a href="https://github.com/Asus-T100/firmware" target="_blank" rel="noopener">华硕T100的固件</a>。</p>
+<p>值得一提的是，<strong>Lubuntu 18.04</strong>的rtl8723bs则直接可用。</p>
+<h4 id="2-2、蓝牙"><a href="#2-2、蓝牙" class="headerlink" title="2-2、蓝牙"></a>2-2、蓝牙</h4><p>蓝牙一般都是通过串口，以HCI协议进行交互。老版内核会认出一个MMIO的串口（通常是<code>ttyS4</code>），由一个systemd守护进程（而不是内核驱动）通过这个串口下载蓝牙固件、初始化、与之交互，详见<a href="https://github.com/lwfinger/rtl8723bs_bt" target="_blank" rel="noopener">这个仓库</a>的<a href="https://github.com/lwfinger/rtl8723bs_bt/blob/master/start_bt.sh#L9" target="_blank" rel="noopener">start_bt.sh</a>。</p>
+<p>但是新版的内核引入了所谓<code>serdev</code>的概念，驱动事宜都由内核解决。这时串口就不仅仅是一个“字符设备”，而是一个“总线”了。这时它就不会将串口<code>/dev/ttySx</code>暴露给用户空间了。然而rtl8723bs的蓝牙驱动现在内核里面又没有，所以就需要一些内核补丁。</p>
+<ul>
+<li>可以用<a href="https://github.com/jwrdegoede/linux-sunxi/commit/bc904e3703940600ca66c65fcdb0a8cb01dff55d" target="_blank" rel="noopener">这个补丁</a>，它简单地加了一个判断，不要将OBDA8723设备注册为<code>serdev</code>，从而可以用之前的systemd守护进程。</li>
+<li>或者用<a href="https://www.spinics.net/lists/linux-bluetooth/msg75848.html" target="_blank" rel="noopener">这些补丁</a>就详细实现了HCI5协议以及rtl8723bs的驱动，进而不需要用户空间的systemd了。其实这些补丁来自于<a href="https://github.com/jwrdegoede/linux-sunxi/tree/master/drivers/bluetooth" target="_blank" rel="noopener">Linux-sunxi</a>，虽然说是全志的专用内核，但是也包含了很多新奇趣怪的驱动，比方说jwrdegoede这位兄弟貌似在搞GPD win掌机的驱动。。</li>
+</ul>
+<p>linux 4.17内核打了sunxi的补丁，加上蓝牙的固件和配置文件（<a href="https://github.com/lwfinger/rtl8723bs_bt" target="_blank" rel="noopener">lwfinger的仓库</a>里面有），蓝牙就可以愉快地跑了。</p>
+<pre><code>[    8.027854] Bluetooth: hci0: rtl: examining hci_ver=06 hci_rev=000b lmp_ver=06 lmp_subver=8723
+[    8.032153] Bluetooth: hci0: rom_version status=0 version=1
+[    8.032183] Bluetooth: hci0: rtl: loading rtl_bt/rtl8723bs_fw.bin
+[    8.033786] Bluetooth: hci0: rtl: loading rtl_bt/rtl8723bs_config-OBDA8723.bin
+[    8.064135] Bluetooth: hci0: cfg_sz 55, total size 24263
+</code></pre><p><img src="/2018/06/15/ubuntu-tablet/bluetooth.png" alt="bluetooth"></p>
+<h4 id="2-3、触屏"><a href="#2-3、触屏" class="headerlink" title="2-3、触屏"></a>2-3、触屏</h4><p>很多win或安卓平板用的触屏芯片都是gslx680，一个I2C接口的电容屏芯片。它也需要固件，根据电容屏的行列布线不同而需要不同的固件。好事情是驱动和固件都能找到。</p>
+<ul>
+<li><a href="https://github.com/onitake/gslx680-acpi" target="_blank" rel="noopener">gslx680-acpi</a>适用于ACPI平台，可以加入内核中。</li>
+<li><a href="https://github.com/onitake/gsl-firmware" target="_blank" rel="noopener">gsl-firmware</a>适用于不同的平板，如果没有支持的平板的话可用里面的工具自己生成。</li>
+</ul>
+<p>对于我的昂达V101W-V5平板来说，可以从<a href="http://cs.onda.cn/Tablet/ProductInfo.aspx?ProductId=328&amp;d=down" target="_blank" rel="noopener">昂达旧官网</a>上下载Windows驱动。找到<code>TP/SileadTouch.fw</code>这个固件，然后利用gsl-firmware的工具来生成适用的固件：</p>
+<pre><code>$ tools/unscramble SileadTouch.fw silead_ts.fw
+$ sudo cp silead_ts.fw /lib/firmware
+</code></pre><p>生成的固件直接丢在<code>/lib/firmware/</code>目录下面就行了。这时启动之后就可以用触屏了。</p>
+<pre><code>[    6.736112] gslx680 i2c-MSSL1680:00: gsl_ts_probe: got a device named MSSL1680:00 at address 0x40, IRQ 23, flags 0x0
+[    6.768964] byt_gpio INT33FC:02: [Firmware Bug]: pin 21 forcibly re-configured as GPIO
+[    6.770426] input: Silead GSLx680 Touchscreen as /devices/platform/80860F41:03/i2c-3/i2c-MSSL1680:00/input/input4
+</code></pre><p><img src="/2018/06/15/ubuntu-tablet/touchscreen.jpg" alt="touchscreen"></p>
+<p>启动之后可以使用<code>xinput_calibrator</code>进行更细致的微调。</p>
+<p><strong>另外要想加一些手势操作比方说长按右键、两根手指、三根手指、滑动等等，可以用<code>touchegg</code>来配置。</strong></p>
+<h4 id="2-4、声卡"><a href="#2-4、声卡" class="headerlink" title="2-4、声卡"></a>2-4、声卡</h4><p>Windows平板用的声卡一般都是<code>alc5640</code>，对于新版内核来说也是这样，有驱动没固件没配置文件。</p>
+<ul>
+<li>固件可以直接用<a href="https://github.com/Asus-T100/firmware" target="_blank" rel="noopener">华硕T100的固件</a>，添加到<code>/lib/firmware/intel/</code>目录下面。</li>
+<li>配置文件用<a href="https://github.com/plbossart/UCM/tree/master/bytcr-rt5640" target="_blank" rel="noopener">这份UCM</a>，需要复制到<code>/usr/share/alsa/ucm/bytcr-rt5640/</code>目录下面。</li>
+<li>另外还需要用<code>alsa</code>的工具来配置默认输出。</li>
+</ul>
+<p>linuxium用<a href="http://linuxiumcomau.blogspot.com/2017/10/fixing-broken-hdmi-audio.html" target="_blank" rel="noopener">这些方法</a>弄好了Intel计算棒的HDMI音频输出，同样道理也可以弄好普通声卡输出。</p>
+<p>首先查看有哪些音频设备：</p>
+<pre><code>$ aplay -l
+**** PLAYBACK 硬體裝置清單 ****
+card 0: Audio [Intel HDMI/DP LPE Audio], device 0: HdmiLpeAudio [Intel HDMI/DP LPE Audio]
+子设备: 1/1
+子设备 #0: subdevice #0
+card 0: Audio [Intel HDMI/DP LPE Audio], device 1: HdmiLpeAudio [Intel HDMI/DP LPE Audio]
+子设备: 1/1
+子设备 #0: subdevice #0
+card 1: bytcrrt5640 [bytcr-rt5640], device 0: 1 []
+子设备: 1/1
+子设备 #0: subdevice #0
+card 1: bytcrrt5640 [bytcr-rt5640], device 1: Deep-Buffer Audio (*) []
+子设备: 1/1
+子设备 #0: subdevice #0
+</code></pre><p>可见<code>card 1</code>那里有两个<code>bytcr-rt5640</code>设备。试着用<code>card1,device0</code>来播放测试音频：</p>
+<pre><code>$ aplay -D plughw:1,0 /usr/share/sounds/alsa/Front_Left.wav
+正在播放 WAVE &apos;/usr/share/sounds/alsa/Front_Left.wav&apos; : Signed 16 bit Little Endian, 频率48000Hz， Mono
+</code></pre><p>不出意外可以听到扬声器说出“front left”这句话来。</p>
+<p>然后我们就要修改<code>/etc/pulse/default.pa</code>来设置默认音频设备了。找到加载<code>module-alsa-sink</code>这一行，取消注释，并加上<code>device=hw:1,0</code></p>
+<pre><code>load-module module-alsa-sink device=hw:1,0
+</code></pre><p>然后把下面一段的“Automatically load driver modules”的那几行都注释掉。</p>
+<p>重启，就可以有声音了。然而只是扬声器有效，耳机并不行，想必是ucm文件没有这份配置。</p>
+<p>一些踩坑记录：</p>
+<ul>
+<li>如果没有固件，则声卡不能成功初始化</li>
+<li>如果没有ucm文件，则dmesg中会不断刷屏说“byt-rt5640 byt-rt5640: ASoC: CPU DAI baytrail-pcm-audio not registered”</li>
+<li>如果没有修改<code>/etc/pulse/default.pa</code>，那么在登录之前就有声音，进桌面就没声音。</li>
+</ul>
+<h4 id="2-5、电池"><a href="#2-5、电池" class="headerlink" title="2-5、电池"></a>2-5、电池</h4><p>平板用的电源管理芯片一般是<code>AXP288</code>，它能输出多路直流电源并管理锂电池，通过I2C接口来配置和读取信息。在老板内核里面没有axp288驱动，于是Icenowy大神就写了一个systemd来生成一个<a href="https://github.com/Icenowy/axpd" target="_blank" rel="noopener">测试电源</a>，并利用<code>i2cget</code>来读取AXP288的寄存器，从而得到电量、是否充电之类的信息。</p>
+<p>新版内核就有AXP288驱动了，在不少平板上都可以愉快使用，但是在我之前收的一块拆机主板上电量读取总是为0。翻<a href="http://download.bbs.ickey.cn/201707/cfe88ee7ef01eed7a4586ce340165da0.pdf" target="_blank" rel="noopener">手册</a>发现，电量输出有两个可能的寄存器，一个是<code>0xB9</code>，一个是<code>0xE4</code>，前者通过电流积分来算容量，后者则根据电压来估计容量，一般情况下读前者就行了。Linux驱动中读电量的fuel_gauge_get_property()函数读取的是<a href="https://elixir.bootlin.com/linux/v4.17/source/drivers/power/supply/axp288_fuel_gauge.c#L500" target="_blank" rel="noopener">前面的那个寄存器</a>寄存器，而这块板子读出来就是0，只能读后面的寄存器。于是修改如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@@ -498,7 +498,7 @@</span><br><span class="line"> 			val-&gt;intval = 0;</span><br><span class="line"> 		break;</span><br><span class="line"> 	case POWER_SUPPLY_PROP_CAPACITY:</span><br><span class="line">-		ret = fuel_gauge_reg_readb(info, AXP20X_FG_RES);</span><br><span class="line">+		ret = fuel_gauge_reg_readb(info, AXP288_FG_OCV_CAP_REG);</span><br><span class="line"> 		if (ret &lt; 0)</span><br><span class="line"> 			goto fuel_gauge_read_err;</span><br></pre></td></tr></table></figure></p>
+<p>这些情况在拆机主板上可能比较常见，因为长时间没电池可能导致AXP288的计数器出了问题。</p>
+<p><img src="/2018/06/15/ubuntu-tablet/battery.jpeg" alt="battery"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ucpc</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">baytrail</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/06/15/ubuntu-tablet/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/26/hardfault/" class="archive-article-date">
-  	<time datetime="2018-02-26T06:13:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-26</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2018/04/30/bcmf3/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">bcmf[3] 与固件交互：bcdc和sdpcm</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/26/hardfault/">调试hardfault</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/25/gdb调试技巧/" class="archive-article-date">
-  	<time datetime="2018-02-24T16:08:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-25</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/25/gdb调试技巧/">gdb调试stm32的技巧</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/23/cross-compiler/" class="archive-article-date">
-  	<time datetime="2018-02-23T15:03:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-23</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/23/cross-compiler/">制作arm-uclinuxeabi的交叉编译工具链</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/02/22/uclinux-on-stm32f103/" class="archive-article-date">
-  	<time datetime="2018-02-22T15:30:11.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-22</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/02/22/uclinux-on-stm32f103/">uclinux on STM32F103ZET6</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/archives/2018/">&laquo; Prev</a><a class="page-number" href="/archives/2018/">1</a><span class="page-number current">2</span>
-    </nav>
+  <div id="gitment-ctn"></div> 
+<link rel="stylesheet" href="//imsun.github.io/gitment/style/default.css">
+<script src="//imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+var gitment = new Gitment({
+  id: "http://yoursite.com/2018/06/15/ubuntu-tablet/",
+  owner: 'hhuysqt',
+  repo: 'hhuysqt.github.io',
+  oauth: {
+    client_id: 'f3accf3be337dcd6d61d',
+    client_secret: 'af75b9e501d76dc85f1f0417d7307419df49aeec',
+  },
+})
+gitment.render('gitment-ctn')
+</script>
   
 
 
@@ -333,8 +473,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

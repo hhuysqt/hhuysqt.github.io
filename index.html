@@ -147,6 +147,89 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-ubuntu-tablet" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/06/15/ubuntu-tablet/">山寨平板上的ubuntu</a>
+    </h1>
+  
+
+        
+        <a href="/2018/06/15/ubuntu-tablet/" class="archive-article-date">
+  	<time datetime="2018-06-15T10:03:22.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-06-15</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>几百块钱的Windows寨板一般都是这样的配置：CPU是Intel的Baytrail z3735f，或者Cherrytrail z8300/z8350，都是不到2GHz的四核凌动x86，而后者的核显性能数倍于前者（虽然性能都不高，但还是属于吊打树莓派的那种）。内存一般是2GB，而z83xx可以上4GB，只是性能会有所降低。闪存一般是32GB的emmc flash，聊胜于无。外设方面就是触屏WiFi蓝牙SD卡USB云云。它们一般跑着win10或者win+Android双系统。</p>
+<p>对于树莓派一类玩家而言这些寨板吸引人的地方在于，价格便宜！x86的性能强！主频高内存大！WiFi！屏幕！然而虽然是x86的机器，它们并不能直接安装Ubuntu一类系统，原因在于：</p>
+<ul>
+<li>32位UEFI，因为32位的Windows占用空间小一些</li>
+<li>驱动非常不齐全</li>
+</ul>
+<p>以没经过处理的<code>Ubuntu-1404</code>为例，64位镜像因为机子UEFI是32位的而无法启动，32位镜像没有EFI启动文件也启动不了。强行给32位镜像补上EFI文件则可以顺利安装，然而电池、SD卡、触屏、WiFi、声卡、屏幕调光、按键、陀螺仪、摄像头之类的驱动统统没有，只有USB能用。。。</p>
+<p>要解决这两个问题势必要经过一些折腾。</p>
+        
+          <a class="article-more-a" href="/2018/06/15/ubuntu-tablet/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">baytrail</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/06/15/ubuntu-tablet/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-bcmf3" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -875,85 +958,6 @@
 
 
   
-    <article id="post-ucpc0" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/02/26/ucpc0/">uc-PC[0] 序言</a>
-    </h1>
-  
-
-        
-        <a href="/2018/02/26/ucpc0/" class="archive-article-date">
-  	<time datetime="2018-02-26T06:41:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-26</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>研究系统，宜先抽筋剥骨以详其经脉，然后搭出骨架，使其生筋，让其长肉，覆之以皮肤，并让气息充实其中，从而让其鲜活起来，方能叫吃透这个系统。</p>
-<p>玩嵌入式，就是在创造麻雀虽小五脏俱全的系统。茶余饭后，我一直在兴致勃勃地挖掘单片机的潜能，就如让一把大提琴拉出三把琴的和声，令一架管风琴弹出整个乐队的合奏。</p>
-<p>做uc-PC，就是让它逐长筋肉，五脏俱全。</p>
-<h3 id="它是一个完整的电脑"><a href="#它是一个完整的电脑" class="headerlink" title="它是一个完整的电脑"></a>它是一个完整的电脑</h3><p>虽是单片机开发板，但它有着与诸如树莓派、杨梅派、香蕉派、橙子派等相似的接口，插上显示器和键盘，然后假装是一台电脑。</p>
-        
-          <a class="article-more-a" href="/2018/02/26/ucpc0/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ucpc</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/02/26/ucpc0/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1052,6 +1056,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">bcm-wifi</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">baytrail</a>
               </li>
              
               <li class="article-tag-list-item">

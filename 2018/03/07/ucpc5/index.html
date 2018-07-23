@@ -42,7 +42,7 @@
 <meta property="og:image" content="http://yoursite.com/2018/03/07/ucpc5/scene5.jpeg">
 <meta property="og:image" content="http://yoursite.com/2018/03/07/ucpc5/yaffs.jpeg">
 <meta property="og:image" content="http://yoursite.com/2018/03/07/ucpc5/yaffs2.jpeg">
-<meta property="og:updated_time" content="2018-04-24T14:35:42.905Z">
+<meta property="og:updated_time" content="2018-05-29T10:17:33.308Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="uc-PC[5] Linux设备驱动配置">
 <meta name="twitter:description" content="uc-PC板子上跑的是Linux 4.13.3，使用设备树。内核不经压缩，就地运行（XIP，全称execute in place）。 需要使能的功能有：网络、显示、USB、SD卡、摄像头、yaffs。这些功能全部开启的话，内核大小将为4MB以上，而片内flash只有2MB，不模块化的话只能跑在SDRAM上，这回导致性能低下，所以调通设备驱动之后应该进行模块化，将关键部分编译进内核，内核塞进片内fl">
@@ -673,6 +673,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">bcm-wifi</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">baytrail</a>
               </li>
              
               <li class="article-tag-list-item">
