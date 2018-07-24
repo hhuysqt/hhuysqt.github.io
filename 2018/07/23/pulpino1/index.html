@@ -6,14 +6,24 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>hhuysqt</title>
+  <title>pulpino[1] nuttx：bring up | hhuysqt</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="hhuysqt">
-<meta property="og:url" content="http://yoursite.com/page/2/index.html">
+  <meta name="description" content="PULPino是PULP的一个子项目，PULP全称“Parallel Ultra Low Power”，是一个RISC-V项目，旨在搭建低功耗的多核嵌入式SOC。PULPino是一个单核的单片机的架构，CPU内核除了实现RISCV的I、M、C指令集之外还扩展了一些类似于DSP的指令集，使其计算性能超过了ARM Cortex M4、硅片面积更小、功耗更低。。。 PULPino的例程用cmake来管理">
+<meta name="keywords" content="nuttx,pulpino,riscv">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pulpino[1] nuttx：bring up">
+<meta property="og:url" content="http://yoursite.com/2018/07/23/pulpino1/index.html">
 <meta property="og:site_name" content="hhuysqt">
+<meta property="og:description" content="PULPino是PULP的一个子项目，PULP全称“Parallel Ultra Low Power”，是一个RISC-V项目，旨在搭建低功耗的多核嵌入式SOC。PULPino是一个单核的单片机的架构，CPU内核除了实现RISCV的I、M、C指令集之外还扩展了一些类似于DSP的指令集，使其计算性能超过了ARM Cortex M4、硅片面积更小、功耗更低。。。 PULPino的例程用cmake来管理">
+<meta property="og:image" content="http://yoursite.com/2018/07/23/pulpino1/nuttx1.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/07/23/pulpino1/vectortable.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/07/23/pulpino1/taskswitch.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/07/23/pulpino1/nsh.jpeg">
+<meta property="og:updated_time" content="2018-07-24T16:16:51.461Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hhuysqt">
+<meta name="twitter:title" content="pulpino[1] nuttx：bring up">
+<meta name="twitter:description" content="PULPino是PULP的一个子项目，PULP全称“Parallel Ultra Low Power”，是一个RISC-V项目，旨在搭建低功耗的多核嵌入式SOC。PULPino是一个单核的单片机的架构，CPU内核除了实现RISCV的I、M、C指令集之外还扩展了一些类似于DSP的指令集，使其计算性能超过了ARM Cortex M4、硅片面积更小、功耗更低。。。 PULPino的例程用cmake来管理">
+<meta name="twitter:image" content="http://yoursite.com/2018/07/23/pulpino1/nuttx1.jpeg">
   
     <link rel="alternative" href="/atom.xml" title="hhuysqt" type="application/atom+xml">
   
@@ -145,34 +155,311 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-ucpc1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-pulpino1" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/02/27/ucpc1/">uc-PC[1] ucLinux or Linux?</a>
+    <h1 class="article-title" itemprop="name">
+      pulpino[1] nuttx：bring up
     </h1>
   
 
         
-        <a href="/2018/02/27/ucpc1/" class="archive-article-date">
-  	<time datetime="2018-02-27T06:04:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-27</time>
+        <a href="/2018/07/23/pulpino1/" class="archive-article-date">
+  	<time datetime="2018-07-23T13:19:06.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-07-23</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>这是一个笼统的说法：Linux要有MMU才能跑，没有MMU的只能跑uclinux。但事实上自从2.6版本开始的Linux内核，<code>arch/arm/Kconfig</code>里就有了<code>CONFIG_MMU</code>的选项，因此严格地说，Linux内核<strong>早就能存活在没有MMU的ARM芯片上</strong>了。</p>
-<p>uclinux严格意义上说是一个完整的发行版，它就是<code>主流内核 + 大量应用程序</code>。uclinux一直在慢慢悠悠地更新。最新的是2016年发布的4.4内核版本，然后直到现在再也没有更新了。</p>
-<p>Linux内核里面MMU-less芯片的驱动日渐丰富，到了2015年内核4.2时代，里面竟赫然出现了STM32的配置和驱动！随后其STM32的驱动逐渐多了起来，从一开始的只有串口、pinctrl、RCC等的少量驱动，发展到支持I2C、DMA、定时器、ADC、DAC、LTDC、DCMI、USB、MII/RMII等等几乎所有STM32的外设；从一开始只支持stm32f429，到如今甚至已经支持<code>stm32h7</code>了，而现在2018年初h7芯片还基本买不到；stm32的设备树写法也改了一版。</p>
-        
-          <a class="article-more-a" href="/2018/02/27/ucpc1/#more">more >></a>
-        
+        <p>PULPino是<a href="https://www.pulp-platform.org/" target="_blank" rel="noopener">PULP</a>的一个子项目，<code>PULP</code>全称“Parallel Ultra Low Power”，是一个<a href="http://riscv.org/" target="_blank" rel="noopener">RISC-V</a>项目，旨在搭建低功耗的多核嵌入式SOC。PULPino是一个单核的单片机的架构，CPU内核除了实现RISCV的I、M、C指令集之外还扩展了一些类似于DSP的指令集，使其<a href="https://riscv.org/wp-content/uploads/2016/01/Wed1315-PULP-riscv3_noanim.pdf" target="_blank" rel="noopener">计算性能超过了ARM Cortex M4</a>、硅片面积更小、功耗更低。。。</p>
+<p>PULPino的<a href="https://github.com/pulp-platform/pulpino/tree/master/sw" target="_blank" rel="noopener">例程</a>用cmake来管理；其中有FreeRTOS的简单移植。FreeRTOS说到底就是一个scheduler，其他东西基本上连架构都没有，啥都要自己动手。</p>
+<p>就功能而言适用于无MMU的操作系统最强的当属<a href="http://www.nuttx.org/" target="_blank" rel="noopener">nuttx</a>，号称“Linux on microcontroller”，文件系统、网络、应用程序一应俱全，而且非常小巧，完全没有UCLinux那般臃肿。作为例子，若在stm32上要用网络，则nuttx不用特别裁剪优化得到100kB左右的bin，而UCLinux疯狂裁剪之后得到1MB左右的bin。</p>
+<p>目前nuttx里有riscv的基本移植，但要移植到PULPino上还需要非常多的功夫。本文阐述nuttx的踩坑历程。</p>
+<a id="more"></a>
+<h3 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h3><ul>
+<li><a href="#1、nuttx世界观">1、nuttx世界观</a><ul>
+<li><a href="#1-1、多架构的管理">1-1、多架构的管理</a></li>
+<li><a href="#1-2、内核运行方式">1-2、内核运行方式</a></li>
+<li><a href="#1-3、应用程序">1-3、应用程序</a></li>
+<li><a href="#1-4、简洁的驱动架构">1-4、简洁的驱动架构</a></li>
+<li><a href="#1-5、配置方式">1-5、配置方式</a></li>
+</ul>
+</li>
+<li><a href="#2、PULPino底层移植">2、PULPino底层移植</a><ul>
+<li><a href="#2-1、内存映射">2-1、内存映射</a></li>
+<li><a href="#2-2、启动代码">2-2、启动代码</a></li>
+<li><a href="#2-3、中断处理与任务切换">2-3、中断处理与任务切换</a><ul>
+<li><a href="#2-3-1、nuttx内核API">2-3-1、nuttx内核API</a></li>
+<li><a href="#2-3-2、PULPino的简易中断控制">2-3-2、PULPino的简易中断控制</a></li>
+<li><a href="#2-3-3、nuttx任务的数据结构">2-3-3、nuttx任务的数据结构</a></li>
+<li><a href="#2-3-4、中断返回伴随着任务切换">2-3-4、中断返回伴随着任务切换</a></li>
+<li><a href="#2-3-5、细致的切换过程">2-3-5、细致的切换过程</a></li>
+</ul>
+</li>
+<li><a href="#2-4、定时器">2-4、定时器</a></li>
+<li><a href="#2-5、工具配置">2-5、工具配置</a><ul>
+<li><a href="#2-5-1、工具链">2-5-1、工具链</a></li>
+<li><a href="#2-5-2、链接脚本">2-5-2、链接脚本</a></li>
+</ul>
+</li>
+<li><a href="#2-6、启动nsh">2-6、启动nsh</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="1、nuttx世界观"><a href="#1、nuttx世界观" class="headerlink" title="1、nuttx世界观"></a>1、nuttx世界观</h3><p>Nuttx的创立者名叫Gregory Nutt，命名有Linus风范。nuttx定位在从RTOS到Linux的这段广阔的中间地带：这里有着很多“高性能”的MCU，也有一些有MMU的GHz主频级别的应用处理器，甚至是SMP多核处理器。</p>
+<p>nuttx的功能多得令人咋舌，驱动架构、VFS、可执行文件、各种文件系统、网络、shell、web服务器、图形框架等等应有尽有，而且支持非常多的架构（其中大部分是ARM的，其中又有大部分是NXP和STM32的片子），几乎实现了UCLinux的所有东西并且代码时刻在更新。nuttx工程由<a href="https://bitbucket.org/nuttx/nuttx" target="_blank" rel="noopener">Bitbucket</a>托管，如果想贡献代码的话直接给Nutt发邮件即可。。。</p>
+<p>对于系统程序员而言需要特别留意<a href="http://nuttx.org/Documentation/NuttxPortingGuide.html" target="_blank" rel="noopener">Nuttx Porting Guide</a>，在源码里也有<code>Documentation/NuttxPortingGuide.html</code>。</p>
+<h4 id="1-1、多架构的管理"><a href="#1-1、多架构的管理" class="headerlink" title="1-1、多架构的管理"></a>1-1、多架构的管理</h4><p>nuttx将SOC的移植分为三个层次：</p>
+<ul>
+<li>架构（arch），即不同的ISA，如ARM、x86、RISCV等；同一类ISA放在<code>arch/</code>目录下面的不同子目录，比如<code>arch/arm/src/armv7-a</code>、<code>arch/arm/src/armv7-m</code>等。</li>
+<li>芯片（chip），即同一个ISA下的不同芯片，如使用ARM架构的不同STM32芯片；它们放在架构目录下的不同子目录中，如<code>arch/arm/src/stm32</code>、<code>arch/arm/src/stm32l4</code>等。</li>
+<li>板极（board），即使用一个chip做出的不同板子，主控一样但是引出的外设、具有的存储器、地址映射等有所不同；它们放在<code>configs/</code>目录下面，如一些有名的板子像<code>configs/stm32f4discovery/</code>、<code>configs/stm32f429i-disco/</code>等。</li>
+</ul>
+<p>在架构级目录下面实现的是诸如进程调度、系统调用、信号之类的与ISA息息相关的东西。</p>
+<p>在芯片级目录下面实现的是片子的外设驱动，以及它的启动文件（需要实现启动代码和中断向量表）。值得一提的是Linux的外设驱动分散在它的<code>drivers/</code>目录下面，而<code>arch/xxx/mach-xxx/</code>目录下面又只有非常少的东西。</p>
+<p>在板极目录下面实现的一般是外挂设备的<em>初始化</em>，比方说SDIO上挂了一个WiFi网卡，SPI上挂了一个flash等。这些驱动一般放在<code>drivers/</code>目录下面，毕竟外接设备与架构无关。</p>
+<p>于是一目了然，要做某些层次的移植就要关注那些层次的目录。</p>
+<h4 id="1-2、内核运行方式"><a href="#1-2、内核运行方式" class="headerlink" title="1-2、内核运行方式"></a>1-2、内核运行方式</h4><p>nuttx可以有三种运行方式：</p>
+<ul>
+<li>扁平模式（flat），不区分<code>内核空间</code>和<code>用户空间</code>，就跟普通的小RTOS一样；<strong>STM32等的nuttx实现都是flat模式</strong>；</li>
+<li>保护模式（protected），需要有<code>MPU</code>来保护<code>内核空间</code>，而所有应用程序都在同一个<code>用户空间</code>；</li>
+<li>内核模式（kernel），适用于有<code>MMU</code>的系统，内核、不同的应用程序都在不同的地址空间。</li>
+</ul>
+<p><img src="/2018/07/23/pulpino1/nuttx1.jpeg" alt="nuttx1"></p>
+<h4 id="1-3、应用程序"><a href="#1-3、应用程序" class="headerlink" title="1-3、应用程序"></a>1-3、应用程序</h4><p>为体现模块化，nuttx的应用程序与内核分开来开发，编译时候要分别<a href="http://www.nuttx.org/doku.php?id=downloads" target="_blank" rel="noopener">下载</a><code>nuttx-xxx.tar.gz</code>和<code>apps-xxx.tar.gz</code>。应用程序可以有两类：</p>
+<ul>
+<li>内建的（built-in），跟内核绑在一起，从而可以直接调用nuttx C库。<code>apps</code>目录下开发的所有东西都是内建程序，小到helloworld，中到shell和各种实用工具，大到web服务器，都可以是内建的。。。</li>
+<li>可执行文件，这些程序都放到文件系统里面。可以有<a href="http://www.nuttx.org/Documentation/NuttXBinfmt.html" target="_blank" rel="noopener">两种文件格式</a>：<ul>
+<li>ELF，需要用nuttx buildroot生成的gcc工具链来编译。</li>
+<li><a href="http://nuttx.org/Documentation/NuttXNxFlat.html" target="_blank" rel="noopener">NXFLAT</a>，这是简化版的<a href="http://xflat.sourceforge.net/" target="_blank" rel="noopener">XFLAT</a>，体积小，而且可以在文件系统中就地运行（XIP）从而减少RAM的消耗。目前它只能跑在romfs上。。</li>
+</ul>
+</li>
+</ul>
+<h4 id="1-4、简洁的驱动架构"><a href="#1-4、简洁的驱动架构" class="headerlink" title="1-4、简洁的驱动架构"></a>1-4、简洁的驱动架构</h4><p>与Linux纷繁复杂的驱动架构相比nuttx简单多了。Linux支持的设备太多太复杂了，以至于现在每一个驱动都是一个复杂的架构，比如时钟系统、电源管理等等，程序员要同时关注数个对象、数十个方法；另外它还开发出很多gdb不友好的“动态”的技巧，比方说链表、container_of云云，以至于调bug几乎只能靠打log来猜。。</p>
+<p>小型嵌入式系统在驱动层面上往往没有那么多“动态”的东西：外设少而且几乎都是MMIO，而且并不指望同一个系统镜像能运行在不同类型的板子上，因此它不需要设备树之类的东西；该有的对象直接静态地列出就好。关于设备树的讨论可见笔者<a href="/2018/03/01/ucpc4/">之前的博客</a>。</p>
+<p>值得一提的是nuttx中类的继承关系只有<code>单继承</code>，而且子类的第一个成员对象是父类的实例。这样做的好处是，要通过父类找子类只需要对父类指针cast一下就可以了，根本不需要container_of之类的东西。Java也只有单继承（接口不算），说明这样做也没啥不妥的。</p>
+<h4 id="1-5、配置方式"><a href="#1-5、配置方式" class="headerlink" title="1-5、配置方式"></a>1-5、配置方式</h4><p>与Linux一样，nuttx也使用kbuild来管理工程。用Kconfig脚本，<code>make menuconfig</code>来配置，最后正式编译之前将配置项生成<code>include/nuttx/config.h</code>头文件，根据各个目录下面的<code>Make.defs</code>来确定要编译哪些文件、要加哪些编译参数。</p>
+<p>配置是板极的，一个板子可以有很多个配置，比方说stm32f429-discovery就有：串口shell（nsh）、USB shell（usbnsh）、图形界面（nxwm）等等配置。板极目录下面有这些子目录：</p>
+<ul>
+<li><code>src/</code>和<code>include/</code>，放C语言程序，进行设备初始化。</li>
+<li><code>scripts/</code>，放各种脚本如：链接脚本、Make.defs（设置编译参数）、调试脚本（如gdb脚本、openocd脚本等）</li>
+<li>其他子目录，是各种默认配置，里面只有一个文件，名叫<code>defconfig</code>。</li>
+</ul>
+<p>defconfig非常小，只保留必要信息，可通过遍历整个工程的Kconfig来还原<code>.config</code>。这个过程由<code>tools/configure.sh</code>来进行。比方说要还原<code>configs/xxboard/xxconf/defconfig</code>，则用以下命令：</p>
+<pre><code>$ ./tools/configure.sh xxboard/xxconf
+</code></pre><p>生成defconfig方法如下：</p>
+<pre><code>$ make savedefconfig
+...
+$ mv defconfig configs/xxboard/xxconf
+</code></pre><h3 id="2、PULPino底层移植"><a href="#2、PULPino底层移植" class="headerlink" title="2、PULPino底层移植"></a>2、PULPino底层移植</h3><p>PULPino指令集包括RISCV-IMC以及扩充的计算指令集，系统层面的话只需要关注RISCV的指令即可。由于nuttx里面有RISCV-IM的基本实现，而且需要汇编实现的部分很短而不需要考虑压缩指令集，因此只需要实现chip级以及board级的东西就可以了。</p>
+<ul>
+<li>chip级：<code>arch/risc-v/src/pulpino</code>和<code>arch/risc-v/include/pulpino</code></li>
+<li>board级：<code>configs/pulpino</code>；参照<code>configs/nr5m100-nexys4</code>，一款野生的跑在FPGA上的riscv板子。。</li>
+</ul>
+<h4 id="2-1、内存映射"><a href="#2-1、内存映射" class="headerlink" title="2-1、内存映射"></a>2-1、内存映射</h4><p>因为PULPino既没有MMU也没有MPU，因此内核只能以flat模式运行，整个操作系统就相当于一个程序。由低址到高址可连续地分为以下几段：</p>
+<ul>
+<li>text段：内核的代码段，只读；</li>
+<li>data段：内核的非零的全局变量；</li>
+<li>bss段：内核的清零的全局变量；</li>
+<li>heap段：内核的malloc区域（新建任务的所有东西也都放在这里），又分为两部分：<ul>
+<li>idle task的堆栈区，由<code>CONFIG_IDLETHREAD_STACKSIZE</code>配置大小。从reset handler开始就算idle task了，因此启动代码的堆栈要设置在这里。</li>
+<li>剩下的所有内存空闲区域都留作heap。由arch/risc-v/src/common/up_allocateheap.c:<code>up_allocate_heap()</code>返回基地址和大小。</li>
+</ul>
+</li>
+</ul>
+<p>链接脚本<a href="#2-5-2、链接脚本">见下文</a>。</p>
+<h4 id="2-2、启动代码"><a href="#2-2、启动代码" class="headerlink" title="2-2、启动代码"></a>2-2、启动代码</h4><p>根据<a href="https://pulp-platform.org//wp-content/uploads/2017/11/ri5cy_user_manual.pdf" target="_blank" rel="noopener">RI5CY手册</a>，复位后CPU从0x80处开始执行，那里是一条跳转指令。如果链接脚本没有注明入口，则pulpino的工具链默认0x8C处是reset handler。</p>
+<p><img src="/2018/07/23/pulpino1/vectortable.jpeg" alt="vector"></p>
+<p>启动时，将31个寄存器清零，将bss段清零，初始化data段，然后跳转到c语言程序中（<em>由于目前用JTAG直接下载ELF，因此data段实际上不需要初始化</em>）。如果没什么特别的初始化的话，可以直接跳转到内核的os_start()函数。。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">reset_handler:</span><br><span class="line">  <span class="comment">/* 清零寄存器 */</span></span><br><span class="line">  mv  x1, x0</span><br><span class="line">  mv  x2, x1</span><br><span class="line">  ...</span><br><span class="line">  mv x31, x1</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* 清零bss段 */</span></span><br><span class="line">  la x26, _sbss</span><br><span class="line">  la x27, _ebss</span><br><span class="line">  bge x26, x27, zero_loop_end</span><br><span class="line">zero_loop:</span><br><span class="line">  sw x0, <span class="number">0</span>(x26)</span><br><span class="line">  addi x26, x26, <span class="number">4</span></span><br><span class="line">  ble x26, x27, zero_loop</span><br><span class="line">zero_loop_end:</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* 初始化全局变量 */</span></span><br><span class="line">  <span class="comment">//call    __libc_init_array</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">/* 初始化堆栈指针：idle task的堆栈 */</span></span><br><span class="line">  la   x2, IDLE_TASK_STACK</span><br><span class="line"></span><br><span class="line">main_entry:</span><br><span class="line">  <span class="comment">/* 直接跳到os_start() */</span></span><br><span class="line">  jal x1, os_start</span><br></pre></td></tr></table></figure></p>
+<h4 id="2-3、中断处理与任务切换"><a href="#2-3、中断处理与任务切换" class="headerlink" title="2-3、中断处理与任务切换"></a>2-3、中断处理与任务切换</h4><h4 id="2-3-1、nuttx内核API"><a href="#2-3-1、nuttx内核API" class="headerlink" title="2-3-1、nuttx内核API"></a>2-3-1、nuttx内核API</h4><p>nuttx的中断由内核统一管理，编写的ISR需要统一向内核注册，无论芯片是否支持向量中断：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;nuttx/irq.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">foo_isr</span><span class="params">(<span class="keyword">int</span> irq, FAR <span class="keyword">void</span> *context, FAR <span class="keyword">void</span> *arg)</span></span>;</span><br><span class="line">    <span class="comment">// 将foo_isr注册到编号为IRQN的中断线上</span></span><br><span class="line">    irq_attach(IRQN, foo_isr);</span><br></pre></td></tr></table></figure></p>
+<p>所有中断程序有统一入口：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;nuttx/arch.h&gt;</span></span></span><br><span class="line"><span class="comment">// 传入中断号以及栈顶指针</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">irq_dispatch</span><span class="params">(<span class="keyword">int</span> irq, FAR <span class="keyword">void</span> *context)</span></span>;</span><br></pre></td></tr></table></figure></p>
+<h4 id="2-3-2、PULPino的简易中断控制"><a href="#2-3-2、PULPino的简易中断控制" class="headerlink" title="2-3-2、PULPino的简易中断控制"></a>2-3-2、PULPino的简易中断控制</h4><ul>
+<li>PULPino有向量中断。中断向量表的前32个即分别为其中断入口。中断向量表地址由<code>BOOTREG</code>寄存器设置，其地址为<code>0x1A107008</code>，默认地址是0x00000000。</li>
+<li>它还有一个简易中断控制器，名叫Event Unit，<em>是一个外设</em>。串口、SPI、I2C、定时器之类的中断都由它来处理：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">寄存器</th>
+<th style="text-align:left">MM地址</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">IER</td>
+<td style="text-align:left">0x1A104000</td>
+<td style="text-align:left">32位，每位写1使能中断</td>
+</tr>
+<tr>
+<td style="text-align:left">IPR</td>
+<td style="text-align:left">0x1A104004</td>
+<td style="text-align:left">32位，每位读1代表发生了这个中断</td>
+</tr>
+<tr>
+<td style="text-align:left">ISP</td>
+<td style="text-align:left">0x1A104008</td>
+<td style="text-align:left">32位，每位写1手动触发这个中断</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>内核方面，PULPino只实现了少量必要的CSR寄存器。以下是<code>老版pulpino</code>实现的与中断相关的寄存器：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">寄存器</th>
+<th style="text-align:left">CSR地址</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">MSTATUS</td>
+<td style="text-align:left">0x300</td>
+<td style="text-align:left">最低位控制全局使能（新版变了）</td>
+</tr>
+<tr>
+<td style="text-align:left">MEPC</td>
+<td style="text-align:left">0x341</td>
+<td style="text-align:left">中断返回地址</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>PULPino扩展了循环指令，需要用到两组共6个循环计数器，它们都是CSR寄存器，CSR地址0x7B0-0x7B2和0x7B4-0x7B6；它们在中断时都需要保存。</li>
+</ul>
+<h4 id="2-3-3、nuttx任务的数据结构"><a href="#2-3-3、nuttx任务的数据结构" class="headerlink" title="2-3-3、nuttx任务的数据结构"></a>2-3-3、nuttx任务的数据结构</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;nuttx/sched.h&gt;</span></span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">tcb_s</span> &#123;</span></span><br><span class="line">  <span class="comment">/* 一些架构无关的东西 */</span></span><br><span class="line">  ...</span><br><span class="line">  <span class="comment">/* 中断上下文 */</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">xcptcontext</span> <span class="title">xcp</span>;</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>其中<code>struct xcptcontext</code>每个架构都不同。riscv的在<code>arch/risc-v/include/rv32im/irq.h</code>：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">xcptcontext</span> &#123;</span></span><br><span class="line">  <span class="comment">/* 信号等东西 */</span></span><br><span class="line">  ...</span><br><span class="line">  <span class="comment">/* 寄存器组 */</span></span><br><span class="line">  <span class="keyword">uint32_t</span> regs[XCPTCONTEXT_REGS];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>其中<code>XCPTCONTEXT_REGS</code>定义为39，编制如下：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">序号</th>
+<th style="text-align:left">寄存器</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">0</td>
+<td style="text-align:left">中断返回地址，即<code>mepc</code>值</td>
+</tr>
+<tr>
+<td style="text-align:left">1</td>
+<td style="text-align:left"><code>x1</code>寄存器</td>
+</tr>
+<tr>
+<td style="text-align:left">2</td>
+<td style="text-align:left"><code>x2</code>寄存器，堆栈指针</td>
+</tr>
+<tr>
+<td style="text-align:left">3-31</td>
+<td style="text-align:left">其他通用寄存器</td>
+</tr>
+<tr>
+<td style="text-align:left">32</td>
+<td style="text-align:left"><code>mstatus</code>值</td>
+</tr>
+<tr>
+<td style="text-align:left">33-38</td>
+<td style="text-align:left">6个循环计数器</td>
+</tr>
+</tbody>
+</table>
+<p>刚初始化任务时，<code>up_initial_state()</code>函数在<code>struct tcb_s</code>内设置入口地址和堆栈指针。</p>
+<h4 id="2-3-4、中断返回伴随着任务切换"><a href="#2-3-4、中断返回伴随着任务切换" class="headerlink" title="2-3-4、中断返回伴随着任务切换"></a>2-3-4、中断返回伴随着任务切换</h4><p>因为有可能某个进程正在睡眠等待某个事件，比方说串口接收中断来了，那么getchar()就可以返回了。另外显式的up_switchcontext()通过系统调用来切换任务。将syscall处理程序也注册为一个IRQ即可统一这个过程。</p>
+<p>扁平模式下的任务切换只需换堆栈。因此整个中断处理流程如下：</p>
+<ul>
+<li>中断发生</li>
+<li>汇编程序将39个寄存器压栈；</li>
+<li>汇编将中断号和堆栈指针传入C语言写的中断处理程序；</li>
+<li>中断处理程序或许会返回一个新堆栈指针；</li>
+<li>汇编将寄存器组弹出；</li>
+<li>中断返回</li>
+</ul>
+<p>严格来说syscall应该归为“异常（exception）”，而普通的外部中断归为“中断（interrupt）”。因为exceptions一般都是“同步的”，就像非法指令异常、除以零异常、精确总线异常、系统调用等，都由正常或不正常的CPU指令触发；interrupts则是“异步的”，由CPU片外的东西不时触发。更精细地说，异常发生时那条触发异常的指令没有执行完毕，而中断发生时上一条指令执行完毕而下一条指令还没开始。因此异常返回到触发异常的那条指令，而中断返回返回到那条指令的下一条指令。</p>
+<p>可以简单将syscall注册为一个IRQ，但是它的汇编wrapper要手动将返回地址加4，跳过<code>ecall</code>（新riscv标准为<code>mcall</code>）指令，免得死循环。</p>
+<h4 id="2-3-5、细致的切换过程"><a href="#2-3-5、细致的切换过程" class="headerlink" title="2-3-5、细致的切换过程"></a>2-3-5、细致的切换过程</h4><p>非正在运行状态的任务，寄存器组信息存放在<code>tcb_s::xcptcontext</code>中，进入运行状态则从那里复原寄存器组。但是中断是随机发生的，汇编并不知道该任务的tcb在哪，而且保存寄存器组之前不能破坏原来的寄存器因而不能找全局变量或者调用C程序；因此寄存器组只能暂存在原来任务的堆栈上。传入的上下文指针是此时的栈顶指针。</p>
+<ul>
+<li>如果要进行任务切换，则将寄存器组复制到旧tcb中，最后返回新tcb的寄存器组。<ul>
+<li>任务初始化时tcb中的寄存器组由架构相关的代码初始化，主要就是堆栈和入口地址，也可以对寄存器染色。这是<code>up_initial_state()</code>的工作。</li>
+</ul>
+</li>
+<li>如果不用任务切换，则寄存器组指针不变，汇编wrapper还是从栈上复原寄存器。</li>
+</ul>
+<p><img src="/2018/07/23/pulpino1/taskswitch.jpeg" alt="taskswitch"></p>
+<h4 id="2-4、定时器"><a href="#2-4、定时器" class="headerlink" title="2-4、定时器"></a>2-4、定时器</h4><p>PULPino没有实现RISCV内核的定时器，而是实现了两个简易的32位计数器作为外设。定时器的寄存器如下：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">寄存器</th>
+<th style="text-align:left">MM地址</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">TIMER</td>
+<td style="text-align:left">0x1A103000</td>
+<td style="text-align:left">当前计数器值</td>
+</tr>
+<tr>
+<td style="text-align:left">CTRL</td>
+<td style="text-align:left">0x1A103004</td>
+<td style="text-align:left">最低位写1开启计数器</td>
+</tr>
+<tr>
+<td style="text-align:left">CMP</td>
+<td style="text-align:left">0x1A103008</td>
+<td style="text-align:left">当计数器值达到它时触发中断</td>
+</tr>
+</tbody>
+</table>
+<p>一个定时器有两个中断：</p>
+<ul>
+<li><code>TIMER</code>达到<code>CMP</code>寄存器的值时；</li>
+<li><code>TIMER</code>溢出时；（计数4亿个周期，一两百兆的时钟的话需要好几十秒）</li>
+</ul>
+<p>操作很简单：</p>
+<ul>
+<li>初始化时，根据<code>CONFIG_USEC_PER_TICK</code>设置定时器比较值，开定时器，注册中断函数。</li>
+<li>定时器中断时，重置计数器，随后调用内核<code>sched_process_timer()</code>即可。</li>
+</ul>
+<h4 id="2-5、工具配置"><a href="#2-5、工具配置" class="headerlink" title="2-5、工具配置"></a>2-5、工具配置</h4><h4 id="2-5-1、工具链"><a href="#2-5-1、工具链" class="headerlink" title="2-5-1、工具链"></a>2-5-1、工具链</h4><p>这是arch级别的配置。</p>
+<p>推荐使用<a href="https://github.com/pulp-platform/ri5cy_gnu_toolchain" target="_blank" rel="noopener">ETH定制的riscv32-unknown-elf-gcc</a>。需要注意的是要checkout到老commit，因为新版PULPino指令集有所更改。用RISCV原生工具生成I、M、C指令集也可以运行，只是不能用PULPino的扩展了。</p>
+<p>同时在nuttx源码中更改工具链。首先在<code>arch/risc-v/src/rv32im/Kconfig</code>中添加一个config选项：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">config RI5CY_ETH_TOOLCHAIN</span><br><span class="line">    bool &quot;ETH version toolchain&quot;</span><br></pre></td></tr></table></figure></p>
+<p>随后在<code>arch/risc-v/src/rv32im/Toolchain.defs</code>中添加编译参数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ifeq ($(filter y, $(CONFIG_RI5CY_ETH_TOOLCHAIN)),y)</span><br><span class="line">  CONFIG_RISCV_TOOLCHAIN ?= GNU_RISCY</span><br><span class="line">endif</span><br><span class="line"></span><br><span class="line">ifeq ($(CONFIG_RISCV_TOOLCHAIN),GNU_RISCY)</span><br><span class="line">  CROSSDEV ?= riscv32-unknown-elf-</span><br><span class="line">  ARCROSSDEV ?= riscv32-unknown-elf-</span><br><span class="line">  ARCHCPUFLAGS = -m32 -march=IMXpulpv2 -mrvc</span><br><span class="line">  MAXOPTIMIZATION ?= -Os</span><br><span class="line">endif</span><br></pre></td></tr></table></figure></p>
+<p><code>ARCHCPUFLAGS</code>中的<code>-m32 -march=IMXpulpv2</code>选项将使用PULPino扩展的指令集，<code>-mrvc</code>将使用RISCV-C压缩指令集。<code>MAXOPTIMIZATION</code>是gcc的通用优化选项，<code>-Os</code>是对size的优化。加了这些参数之后生成代码体积可以与ARM Thumb2指令集相媲美。。</p>
+<h4 id="2-5-2、链接脚本"><a href="#2-5-2、链接脚本" class="headerlink" title="2-5-2、链接脚本"></a>2-5-2、链接脚本</h4><p>这是board级别的配置。工作目录在<code>configs/pulpino/scripts/</code>：</p>
+<ul>
+<li>建立链接脚本为<code>link.ld</code></li>
+<li>在<code>Make.defs</code>中设置链接脚本：<code>LDSCRIPT = link.ld</code></li>
+</ul>
+<p>我们pulpino挂了一块挺大的DDR内存。参照内存映射（<a href="#2-1、内存映射">见上文</a>）写链接脚本，简化如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">MEMORY</span><br><span class="line">&#123;</span><br><span class="line">    instrram : ORIGIN = 0x23000000, LENGTH = 0x1000000</span><br><span class="line">    dataram  : ORIGIN = 0x24000000, LENGTH = 0x1000000</span><br><span class="line">&#125;</span><br><span class="line">SECTIONS</span><br><span class="line">&#123;</span><br><span class="line">    .text : &#123;</span><br><span class="line">        _stext = .;</span><br><span class="line">        *(.text)</span><br><span class="line">        _etext = .;</span><br><span class="line">    &#125; &gt; instrram</span><br><span class="line"></span><br><span class="line">    .data : &#123;</span><br><span class="line">        . = ALIGN(4);</span><br><span class="line">        _sdata = .;</span><br><span class="line">        *(.data);</span><br><span class="line">        _edata = .;</span><br><span class="line">    &#125; &gt; dataram</span><br><span class="line"></span><br><span class="line">    .bss :</span><br><span class="line">    &#123;</span><br><span class="line">        . = ALIGN(4);</span><br><span class="line">        _sbss = .;</span><br><span class="line">        *(.bss)</span><br><span class="line">        _ebss = .;</span><br><span class="line">    &#125; &gt; dataram</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>关键就是暴露一些变量，例如data段的开始和结束<code>_sdata</code>、<code>_edata</code>，bss段的开始和结束<code>_sbss</code>、<code>_ebss</code>，以供reset handler初始化它们。</p>
+<h4 id="2-6、启动nsh"><a href="#2-6、启动nsh" class="headerlink" title="2-6、启动nsh"></a>2-6、启动nsh</h4><p>PULPino有一个兼容<code>16750</code>的串口。PC机上的8250、16550、16750之类的串口一脉相承，软件基本上兼容，只是后续的型号速度更快、FIFO更深等等。对于常用的115200波特率而言，可以直接使用nuttx的16550驱动。为此只需要配置好寄存器基地址，并实现<code>uart_getreg()</code>和<code>uart_putreg()</code>即可。</p>
+<pre><code>-&gt; Device Drivers
+  -&gt; Serial Driver Support
+    -&gt; 16550 UART Chip support
+</code></pre><p>另外还要选择串口作为终端：</p>
+<pre><code>-&gt; Device Drivers
+  -&gt; Serial Driver Support
+    -&gt; Serial console (UART)
+</code></pre><p>随后配置nsh library：</p>
+<pre><code>-&gt; Application Configuration
+  -&gt; NSH Library
+</code></pre><p>最后使能nsh：</p>
+<pre><code>-&gt; Application Configuration
+  -&gt; Examples
+    -&gt; NuttShell (NSH) example
+</code></pre><p>编译通过后就可以在串口上操作shell了。</p>
+<p><img src="/2018/07/23/pulpino1/nsh.jpeg" alt="nsh"></p>
+
       
 
       
@@ -185,86 +472,15 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ucpc</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">nuttx</a>
         		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/02/27/ucpc1/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-ucpc0" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/02/26/ucpc0/">uc-PC[0] 序言</a>
-    </h1>
-  
-
-        
-        <a href="/2018/02/26/ucpc0/" class="archive-article-date">
-  	<time datetime="2018-02-26T06:41:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-26</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>研究系统，宜先抽筋剥骨以详其经脉，然后搭出骨架，使其生筋，让其长肉，覆之以皮肤，并让气息充实其中，从而让其鲜活起来，方能叫吃透这个系统。</p>
-<p>玩嵌入式，就是在创造麻雀虽小五脏俱全的系统。茶余饭后，我一直在兴致勃勃地挖掘单片机的潜能，就如让一把大提琴拉出三把琴的和声，令一架管风琴弹出整个乐队的合奏。</p>
-<p>做uc-PC，就是让它逐长筋肉，五脏俱全。</p>
-<h3 id="它是一个完整的电脑"><a href="#它是一个完整的电脑" class="headerlink" title="它是一个完整的电脑"></a>它是一个完整的电脑</h3><p>虽是单片机开发板，但它有着与诸如树莓派、杨梅派、香蕉派、橙子派等相似的接口，插上显示器和键盘，然后假装是一台电脑。</p>
-        
-          <a class="article-more-a" href="/2018/02/26/ucpc0/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
+      		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ucpc</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">pulpino</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">riscv</a>
         		</li>
       		
 		</ul>
@@ -273,16 +489,75 @@
       
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/02/26/ucpc0/">展开全文 >></a>
-        </p>
-      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/07/23/pulpino1/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2018/06/15/ubuntu-tablet/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">山寨平板上的ubuntu</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -302,299 +577,30 @@
 
 
 
-
-  
-    <article id="post-hardfault" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/02/26/hardfault/">调试hardfault</a>
-    </h1>
-  
-
-        
-        <a href="/2018/02/26/hardfault/" class="archive-article-date">
-  	<time datetime="2018-02-26T06:13:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-26</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>对于搞Cortex M系列mcu开发的人来说，hardfault这种鬼东西，不遇到还好，倘若不幸遇到了，复位一下，瞎调一下，左右修补，或许碰巧就消除了。但是靠人品毕竟不是长久之计。下面记录我调试hardfault的一些简单的经验。</p>
-<h2 id="hardfault来源"><a href="#hardfault来源" class="headerlink" title="hardfault来源"></a>hardfault来源</h2><p>Cortex M3、M4的向量表中，3号异常是<code>HardFault</code>；接下来三个异常是<code>MemFault</code>、<code>BusFault</code>、<code>UsageFault</code>。发生了hardfault，基本是因为后面三个异常<code>上访</code>来的。<br><img src="/2018/02/26/hardfault/exceptiontable.jpeg" alt="向量表"><br><a href="http://infocenter.arm.com/help/topic/com.arm.doc.dui0553a/DUI0553A_cortex_m4_dgug.pdf" target="_blank" rel="noopener">手册</a>上的向量表</p>
-        
-          <a class="article-more-a" href="/2018/02/26/hardfault/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/02/26/hardfault/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-gdb调试技巧" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/02/25/gdb调试技巧/">gdb调试stm32的技巧</a>
-    </h1>
-  
-
-        
-        <a href="/2018/02/25/gdb调试技巧/" class="archive-article-date">
-  	<time datetime="2018-02-24T16:08:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-25</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>很多人开发C程序就像写脚本那样，查错，靠的是眼睛看；但是作为系统开发程序员，bug单纯靠看是查不出来的，于是就用printf，于是每一次查错都不可避免要机械地写printf、编译、烧写、运行，没有IDE的时候烧写、运行还不太方便。如果能在命令行下面设断点、单步调试什么的，想必是极好的。</p>
-<p>有时候开发一些程序还不得不在Ubuntu下弄，比方说国外的不少开源项目像px4、openmv之类的，又比方说Linux、nuttx之类的系统开发，等等。当然诸如Eclipse之类的IDE配置一下也能聊胜于无，但是配置它们的复杂度不亚于在命令行下面弄，而且连接板子、开gdb server这些工序只能在命令行下完成；好处是调试时候能用鼠标操作。</p>
-<p>其实，命令行下面用gdb调试，熟悉基本命令之后，用起来相当顺手；在TUI模式下面调试，视觉效果不亚于使用IDE。</p>
-<h2 id="需要安装的软件"><a href="#需要安装的软件" class="headerlink" title="需要安装的软件"></a>需要安装的软件</h2><h3 id="gdb"><a href="#gdb" class="headerlink" title="gdb"></a>gdb</h3><p>包管理装就行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install gdb-arm-none-eabi</span><br></pre></td></tr></table></figure></p>
-<p>当然也可以选用别的，比方说</p>
-<ul>
-<li><a href="https://sourcery.mentor.com/GNUToolchain/package6503/public/arm-uclinuxeabi/arm-2010q1-189-arm-uclinuxeabi-i686-pc-linux-gnu.tar.bz2" target="_blank" rel="noopener">arm-uclinuxeabi-2010q1</a>里面就有arm-uclinuxeabi-gdb。不过这个的TUI有问题。</li>
-<li>SourceForge的uclinux下载页面（崩掉了）</li>
-</ul>
-        
-          <a class="article-more-a" href="/2018/02/25/gdb调试技巧/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/02/25/gdb调试技巧/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-cross-compiler" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/02/23/cross-compiler/">制作arm-uclinuxeabi的交叉编译工具链</a>
-    </h1>
-  
-
-        
-        <a href="/2018/02/23/cross-compiler/" class="archive-article-date">
-  	<time datetime="2018-02-23T15:03:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-23</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="交叉编译的常识"><a href="#交叉编译的常识" class="headerlink" title="交叉编译的常识"></a>交叉编译的常识</h2><p>制作交叉工具链，会涉及到三个架构的机器：</p>
-<ul>
-<li>build，哪个机器制作的这个编译器</li>
-<li>host，哪个机器将运行编译器</li>
-<li>target，编译器生成代码将会跑在哪个机器上</li>
-</ul>
-<p>如果build == host == target，就叫<code>native</code>编译器。这是最正常的情况。<br>如果build == host != target，就叫<code>cross</code>编译器。这就是常规意义下的交叉编译器。<br>如果build != host != target，就叫<code>canadian</code>编译器。据说在社区讨论这种情况的编译器时候，<a href="https://en.wikipedia.org/wiki/Canadian_cross" target="_blank" rel="noopener">加拿大国会有三个党，于是就这样开玩笑了</a>。。。这种情况一般用在<a href="https://en.wikipedia.org/wiki/Compile_farm" target="_blank" rel="noopener">Compile farm</a>里面。编译农场或许就是一堆树莓派，它用来编译不同架构的软件包，制作这个编译器的或许就是某台高性能的x86机器。</p>
-<p>其他情况也有不同的叫法，参考<a href="https://stackoverflow.com/questions/5139403/whats-the-difference-of-configure-option-build-host-and-target" target="_blank" rel="noopener">这个回答</a></p>
-<h2 id="对于Cortex-M，有哪些工具链可选？"><a href="#对于Cortex-M，有哪些工具链可选？" class="headerlink" title="对于Cortex M，有哪些工具链可选？"></a>对于Cortex M，有哪些工具链可选？</h2><ul>
-<li><a href="https://events.static.linuxfound.org/sites/events/files/slides/optimize-uclinux.pdf" target="_blank" rel="noopener">optimize-uclinux</a>这篇报告第34页简述了一些可用的编译器。</li>
-<li><a href="https://toolchains.bootlin.com/" target="_blank" rel="noopener">Bootlin（以前叫Free electrons）公司</a>收录了一堆常见CPU架构的不同版本的gcc工具链。不过armv7-m的工具链貌似不行。</li>
-<li><a href="https://sourcery.mentor.com/GNUToolchain/package6503/public/arm-uclinuxeabi/arm-2010q1-189-arm-uclinuxeabi-i686-pc-linux-gnu.tar.bz2" target="_blank" rel="noopener">社区推荐的arm2010-q1工具链</a>有很强的可用性。</li>
-<li><a href="https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads" target="_blank" rel="noopener">arm官方维护的亲儿子gcc-arm-none-eabi</a>可用用来开发裸机程序，基本没bug，适应的CPU又多。</li>
-<li>包管理可用安装gcc-arm-none-eabi工具链，不过版本略旧与arm官网的gcc。</li>
-<li>自己动手做arm-none-eabi或者arm-uclinuxeabi工具链。</li>
-</ul>
-        
-          <a class="article-more-a" href="/2018/02/23/cross-compiler/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/02/23/cross-compiler/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-uclinux-on-stm32f103" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/02/22/uclinux-on-stm32f103/">uclinux on STM32F103ZET6</a>
-    </h1>
-  
-
-        
-        <a href="/2018/02/22/uclinux-on-stm32f103/" class="archive-article-date">
-  	<time datetime="2018-02-22T15:30:11.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-02-22</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="用哪个BSP？"><a href="#用哪个BSP？" class="headerlink" title="用哪个BSP？"></a>用哪个BSP？</h2><p>ST为他们<a href="http://www.st.com/resource/en/application_note/cd00242717.pdf" target="_blank" rel="noopener">STM3210E-EVAL的评估板</a>制作了uClinux-dist-20080808的补丁。bootloader是一个莫名其妙的bin，kernel和rootfs放在片外nor flash里面，并且带有jffs。官方评估板又贵又买不到，不过我手上一块淘宝上一百多块钱的相似配置的板子也能玩。shell跑起来太慢了，跑个ls都要卡一两秒。</p>
-<p>Emcraft为一些ST的板子做了第三方的BSP，其中包括<a href="https://emcraft.com/products/343" target="_blank" rel="noopener">STM32F429I-disc的uclinux BSP</a>。虽然是给STM32F4板子写的，但是它里面也包括一些STM32F1的驱动，比方说USART、DMA。做一些修改还是可以用的。这份BSP血统比较纯正，用uboot作为bootloader，uclinux内核单独抽出来编译，应用程序用的busybox，包装为ROMFS的镜像。这些东西全部都在片内flash里<code>就地执行</code>，性能颇高，在429 discovery板子上跑的很欢快。</p>
-<p>既然要build it from scratch，那就应该好好研究Emcraft的BSP，好好学学社区的玩法吧。<a href="https://github.com/jserv/stm32f429-linux-builder" target="_blank" rel="noopener">github上有一个makefile，从头开始为429 discovery编译所有东西</a>，它从<a href="https://github.com/robutest" target="_blank" rel="noopener">robutest</a>的仓库里面下载的uboot和uclinux，我猜Emcraft的东西来源也是这个，因为里面的驱动感觉是一样的。</p>
-<p>首先在我买的板子上跑通整个系统，然后再移植到自己的板子上。别人的板子配置颇高，有2MB的片外SRAM跟4MB的片外NOR flash，还有64MB的nand flash，完全可以跑通。我的板子只有1MB的SRAM，加上一个256MB的nand flash；配置之所以那么诡异是因为我芯片只能淘宝。。。</p>
-        
-          <a class="article-more-a" href="/2018/02/22/uclinux-on-stm32f103/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/02/22/uclinux-on-stm32f103/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
   
   
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
-    </nav>
+  
+
+  
+
+  
+
+  
+  <div id="gitment-ctn"></div> 
+<link rel="stylesheet" href="//imsun.github.io/gitment/style/default.css">
+<script src="//imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+var gitment = new Gitment({
+  id: "http://yoursite.com/2018/07/23/pulpino1/",
+  owner: 'hhuysqt',
+  repo: 'hhuysqt.github.io',
+  oauth: {
+    client_id: 'f3accf3be337dcd6d61d',
+    client_secret: 'af75b9e501d76dc85f1f0417d7307419df49aeec',
+  },
+})
+gitment.render('gitment-ctn')
+</script>
   
 
 
@@ -617,8 +623,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
