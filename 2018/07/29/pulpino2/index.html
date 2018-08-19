@@ -18,7 +18,7 @@
 <meta property="og:image" content="http://yoursite.com/2018/07/29/pulpino2/relasymbols.jpeg">
 <meta property="og:image" content="http://yoursite.com/2018/07/29/pulpino2/riscv-instype.jpeg">
 <meta property="og:image" content="http://yoursite.com/2018/07/29/pulpino2/helloaddon.jpeg">
-<meta property="og:updated_time" content="2018-08-19T13:07:54.439Z">
+<meta property="og:updated_time" content="2018-08-19T14:13:54.883Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="pulpino[2] nuttx ELF">
 <meta name="twitter:description" content="应用程序需要内核提供各种服务才能运行，服务通过库以及相应的ABI（Application Binary Interface，应用程序二进制接口）来提供，比方说C库等。nuttx的应用程序可以内置在内核中（built-in），也可以与内核分开（separate），即运行外部可执行文件。目前它支持两种可执行文件：  ELF，就是Linux下标准的ELF可执行文件； NXFLAT，它是简化版的XFLAT">
@@ -181,7 +181,31 @@
 </ul>
 <p>本文讨论如何为nuttx添加riscv的ELF支持，以及如何制作nuttx ELF应用程序。以下叙述适用于<code>nuttx-7.25</code>，nuttx还很年轻，即使是小版本之间的代码变动也可能会比较大。。</p>
 <a id="more"></a>
-<h3 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h3><h3 id="1、ELF简述"><a href="#1、ELF简述" class="headerlink" title="1、ELF简述"></a>1、ELF简述</h3><p>ELF的基本结构可参考<a href="http://www.sco.com/developers/gabi/1998-04-29/contents.html" target="_blank" rel="noopener">SystemV ABI</a>文档。简单说，从上到下依次是<code>ELF头</code>、<code>程序头</code>、<code>段</code>、<code>段表</code>。</p>
+<h3 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h3><ul>
+<li><a href="#1、ELF简述">1、ELF简述</a><ul>
+<li><a href="#1-1、readelf常用命令">1-1、readelf常用命令</a></li>
+<li><a href="#1-2、几种EFL">1-2、几种EFL</a></li>
+</ul>
+</li>
+<li><a href="#2、nuttx的binary-loader">2、nuttx的binary-loader</a><ul>
+<li><a href="#2-1、设计思想">2-1、设计思想</a></li>
+<li><a href="#2-2、ELF代码跟踪">2-2、ELF代码跟踪</a></li>
+</ul>
+</li>
+<li><a href="#3、riscv重定位">3、riscv重定位</a><ul>
+<li><a href="#3-1、重定位符号">3-1、重定位符号</a></li>
+<li><a href="#3-2、riscv重定位类型">3-2、riscv重定位类型</a></li>
+<li><a href="#3-3、需要添加的代码">3-3、需要添加的代码</a></li>
+</ul>
+</li>
+<li><a href="#4、制作nuttx可运行的ELF">4、制作nuttx可运行的ELF</a><ul>
+<li><a href="#4-1、内核没有符号表：直接链到固定地址">4-1、内核没有符号表：直接链到固定地址</a></li>
+<li><a href="#4-2、内核有符号表：根据静态符号表链入内核">4-2、内核有符号表：根据静态符号表链入内核</a></li>
+<li><a href="#4-3、nuttx内核打包">4-3、nuttx内核打包</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="1、ELF简述"><a href="#1、ELF简述" class="headerlink" title="1、ELF简述"></a>1、ELF简述</h3><p>ELF的基本结构可参考<a href="http://www.sco.com/developers/gabi/1998-04-29/contents.html" target="_blank" rel="noopener">SystemV ABI</a>文档。简单说，从上到下依次是<code>ELF头</code>、<code>程序头</code>、<code>段</code>、<code>段表</code>。</p>
 <ul>
 <li><code>ELF头</code>记录基本信息，如该ELF的目标机器、ABI类型、入口地址、段表程序头等的偏移地址。ELF标准中里面的字段以<code>e_</code>作为前缀。</li>
 <li><code>程序头</code>记录需要加载的内容，供ELF加载器操作：该加载的加载，该动态链接的动态链接等。Linux中可执行的文件都必须有程序头，可重定位的ELF则没有程序头。其字段以<code>p_</code>作为前缀。</li>
