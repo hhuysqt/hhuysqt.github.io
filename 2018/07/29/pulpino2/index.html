@@ -6,14 +6,23 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>hhuysqt</title>
+  <title>pulpino[2] nuttx ELF | hhuysqt</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="hhuysqt">
-<meta property="og:url" content="http://yoursite.com/index.html">
+  <meta name="description" content="应用程序需要内核提供各种服务才能运行，服务通过库以及相应的ABI（Application Binary Interface，应用程序二进制接口）来提供，比方说C库等。nuttx的应用程序可以内置在内核中（built-in），也可以与内核分开（separate），即运行外部可执行文件。目前它支持两种可执行文件：  ELF，就是Linux下标准的ELF可执行文件； NXFLAT，它是简化版的XFLAT">
+<meta name="keywords" content="nuttx,pulpino,riscv">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pulpino[2] nuttx ELF">
+<meta property="og:url" content="http://yoursite.com/2018/07/29/pulpino2/index.html">
 <meta property="og:site_name" content="hhuysqt">
+<meta property="og:description" content="应用程序需要内核提供各种服务才能运行，服务通过库以及相应的ABI（Application Binary Interface，应用程序二进制接口）来提供，比方说C库等。nuttx的应用程序可以内置在内核中（built-in），也可以与内核分开（separate），即运行外部可执行文件。目前它支持两种可执行文件：  ELF，就是Linux下标准的ELF可执行文件； NXFLAT，它是简化版的XFLAT">
+<meta property="og:image" content="http://yoursite.com/2018/07/29/pulpino2/relasymbols.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/07/29/pulpino2/riscv-instype.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/07/29/pulpino2/helloaddon.jpeg">
+<meta property="og:updated_time" content="2018-08-19T13:07:54.439Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hhuysqt">
+<meta name="twitter:title" content="pulpino[2] nuttx ELF">
+<meta name="twitter:description" content="应用程序需要内核提供各种服务才能运行，服务通过库以及相应的ABI（Application Binary Interface，应用程序二进制接口）来提供，比方说C库等。nuttx的应用程序可以内置在内核中（built-in），也可以与内核分开（separate），即运行外部可执行文件。目前它支持两种可执行文件：  ELF，就是Linux下标准的ELF可执行文件； NXFLAT，它是简化版的XFLAT">
+<meta name="twitter:image" content="http://yoursite.com/2018/07/29/pulpino2/relasymbols.jpeg">
   
     <link rel="alternative" href="/atom.xml" title="hhuysqt" type="application/atom+xml">
   
@@ -145,16 +154,14 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-pulpino2" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-pulpino2" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/07/29/pulpino2/">pulpino[2] nuttx ELF</a>
+    <h1 class="article-title" itemprop="name">
+      pulpino[2] nuttx ELF
     </h1>
   
 
@@ -173,9 +180,150 @@
 <li><code>NXFLAT</code>，它是简化版的<code>XFLAT</code>；XFLAT原为UCLinux开发，特点在于体积小、可以就地运行（XIP）；简化在于，NXFLAT不支持动态链接，不能导出符号表。</li>
 </ul>
 <p>本文讨论如何为nuttx添加riscv的ELF支持，以及如何制作nuttx ELF应用程序。以下叙述适用于<code>nuttx-7.25</code>，nuttx还很年轻，即使是小版本之间的代码变动也可能会比较大。。</p>
-        
-          <a class="article-more-a" href="/2018/07/29/pulpino2/#more">more >></a>
-        
+<a id="more"></a>
+<h3 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h3><h3 id="1、ELF简述"><a href="#1、ELF简述" class="headerlink" title="1、ELF简述"></a>1、ELF简述</h3><p>ELF的基本结构可参考<a href="http://www.sco.com/developers/gabi/1998-04-29/contents.html" target="_blank" rel="noopener">SystemV ABI</a>文档。简单说，从上到下依次是<code>ELF头</code>、<code>程序头</code>、<code>段</code>、<code>段表</code>。</p>
+<ul>
+<li><code>ELF头</code>记录基本信息，如该ELF的目标机器、ABI类型、入口地址、段表程序头等的偏移地址。ELF标准中里面的字段以<code>e_</code>作为前缀。</li>
+<li><code>程序头</code>记录需要加载的内容，供ELF加载器操作：该加载的加载，该动态链接的动态链接等。Linux中可执行的文件都必须有程序头，可重定位的ELF则没有程序头。其字段以<code>p_</code>作为前缀。</li>
+<li><code>段</code>里堆放着该文件的具体内容，需要结合最后面的<code>段表</code>才能分段解读。虽然大家都会很粗线条地将一个程序分为<code>text段</code>、<code>data段</code>等段，但是实际上段可以很随心所欲地设置，比方说<ul>
+<li>在链接脚本里安排一个段，管它叫什么名字，然后在代码里面<code>__attribute__((section(&quot;xxx&quot;)))</code>；</li>
+<li>gcc的<code>-ffunction-sections</code>和<code>-fdata-sections</code>，可以为每一个函数或者变量安排一个段；</li>
+<li>objcopy的<code>--add-section</code>可以手动添加一个段；</li>
+<li>有些病毒通过在ELF中注入自己的段来感染宿主</li>
+</ul>
+</li>
+<li><code>段表</code>记录这些段的诸如起始地址、长度等信息。可重定位的ELF必须有段表，而可执行的ELF则不必有段表，虽然一般都会保留。其字段以<code>sh_</code>为前缀。每个段都有不同的功能，比方说text段就是机器码，data段是数据区，rela段指示重定位信息，symtab段是符号表，debug段指示源代码信息等。</li>
+</ul>
+<h4 id="1-1、readelf常用命令"><a href="#1-1、readelf常用命令" class="headerlink" title="1-1、readelf常用命令"></a>1-1、readelf常用命令</h4><p><code>xxxxxxxx-readelf</code>是binutils的工具，用来查看ELF信息。有这些常用的命令：</p>
+<ul>
+<li><code>-h</code>查看ELF头</li>
+<li><code>-l</code>查看程序头</li>
+<li><code>-S</code>查看段表</li>
+<li><code>-s</code>查看符号表</li>
+<li><code>-d</code>查看动态链接的符号表</li>
+<li><code>-r</code>查看重定位表</li>
+<li><code>-a</code>统统看</li>
+</ul>
+<p>下面摘录一个ELF头：</p>
+<pre><code>$ readelf -h /lib/x86_64-linux-gnu/ld-2.27.so
+ELF 头：
+  Magic：   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00
+  类别:                              ELF64
+  数据:                              2 补码，小端序 (little endian)
+  版本:                              1 (current)
+  OS/ABI:                            UNIX - System V
+  ABI 版本:                          0
+  类型:                              DYN (共享目标文件)
+  系统架构:                          Advanced Micro Devices X86-64
+  版本:                              0x1
+  入口点地址：               0x1090
+  程序头起点：          64 (bytes into file)
+  Start of section headers:          169232 (bytes into file)
+  标志：             0x0
+  本头的大小：       64 (字节)
+  程序头大小：       56 (字节)
+  Number of program headers:         7
+  节头大小：         64 (字节)
+  节头数量：         27
+  字符串表索引节头： 26
+</code></pre><h4 id="1-2、几种EFL"><a href="#1-2、几种EFL" class="headerlink" title="1-2、几种EFL"></a>1-2、几种EFL</h4><p>由EFL头部的<code>e_type</code>字段标明。值得关注的有这三种：</p>
+<ul>
+<li><code>EL_REL</code>，可重定位的ELF。<code>gcc -c</code>生成的中间文件<code>.o</code>就是这种类型，没有经过<code>ld</code>最终链接，是谓“可重定位”。另外Linux内核模块<code>.ko</code>文件也是这种类型，在<code>insmod</code>或者<code>modprobe</code>时候由加载器进行最终的链接。这种ELF<strong>没有程序头，有段表</strong>。</li>
+<li><code>EL_EXEC</code>，可执行的ELF。gcc最终调用ld生成可执行的ELF。这种ELF<strong>必须要程序头</strong>来指示加载哪些部分。值得一提的是对于嵌入式工程来说编译得到一个ELF文件是“可执行”的，因为可以利用gdb通过各种gdb server、jtag bridge之类的工具连上板子，从而<code>load</code>程序。</li>
+<li><code>EL_DYN</code>，动态链接文件。一般指<code>gcc -shared</code>生成的<code>.so</code>文件。动态链接的关键就在于<strong>导出符号表</strong>。虽然<code>.ko</code>和<code>.so</code>都要经过连接才会被执行，但是前者由Linux内核进行连接，后者由用户空间的动态连接器（一般名叫<code>/lib/ld-linux.so</code>什么的）进行连接。</li>
+</ul>
+<h3 id="2、nuttx的binary-loader"><a href="#2、nuttx的binary-loader" class="headerlink" title="2、nuttx的binary-loader"></a>2、nuttx的binary-loader</h3><p>nuttx就用最直接的方式实现了外部程序的加载器，没什么花拳绣腿。</p>
+<h4 id="2-1、设计思想"><a href="#2-1、设计思想" class="headerlink" title="2-1、设计思想"></a>2-1、设计思想</h4><ul>
+<li>为了支持多种可执行文件类型，就做成一个链表吧。<strong>每一种binfmt类型都需要在板极appinit里面注册</strong>。加载一个文件时候就沿着链表调它回调函数，直到有一个成功运行；</li>
+<li>应用程序直接连接到内核，直接用内核的c库，没有额外的动态链接库。只需经过最简单操作就可执行的ELF当属可重定位的ELF了，于是nuttx就这么干——它的程序相当于Linux中<code>.ko</code>文件的地位。因此nuttx就可以被称为所谓“模块化”了。</li>
+</ul>
+<h4 id="2-2、ELF代码跟踪"><a href="#2-2、ELF代码跟踪" class="headerlink" title="2-2、ELF代码跟踪"></a>2-2、ELF代码跟踪</h4><p>nuttx的一个基本规范是，将一个功能拆分成一个个小文件；这样既可以让代码好读也可以便于裁剪。ELF代码位于<code>binfmt/libelf</code>目录中，里面都是程序文件都只有几百行。</p>
+<ul>
+<li>应用程序的入口：<code>sched/task/task_execv.c:execv()</code>，随后进入<code>binfmt/binfmt_exec.c:exec()</code>；</li>
+<li>然后在文件系统中找到该文件：调用<code>binfmt/binfmt_loadmodule.c:load_module()</code>，在该文件的<code>load_absmodule()</code>中遍历已经注册的binfmt，调用其load方法；</li>
+<li>对于ELF，则load方法为<code>binfmt/elf.c:elf_loadbinary()</code>：<ul>
+<li>首先将该加载的部分加载到内存里：<code>binfmt/libelf/libelf_load.c:elf_load()</code>；</li>
+<li>然后进行重定位：<code>binfmt/libelf/libelf_bind.c:elf_bind()</code></li>
+</ul>
+</li>
+<li>加载完成，就可以跳到程序入口了。</li>
+</ul>
+<h3 id="3、riscv重定位"><a href="#3、riscv重定位" class="headerlink" title="3、riscv重定位"></a>3、riscv重定位</h3><p>重定位部分是依赖架构的：它需要根据重定位的地址，修改对应位置的机器码从而让它可以正确运行。nuttx的重定位竟然放在<code>libc</code>中。。。具体在<code>libs/libc/machine</code>中实现。</p>
+<h4 id="3-1、重定位符号"><a href="#3-1、重定位符号" class="headerlink" title="3-1、重定位符号"></a>3-1、重定位符号</h4><p>代码里的<code>常量</code>在编译时候就能够确定，并不需要重定位。该工程<code>内部的</code>函数变量都是可确定的，也不需要重定位。ELF里需要重定位的是外部的变量、函数，本质上说就是<code>地址</code>，要重定位的地方就是一条未填入地址的用于寻址的机器码。重定位过程就是将那条指令抠出来然后填入正确的地址。这是架构相关的部分。</p>
+<p>重定位ELF中每一个需要被重定位的段都配有一个相应的<code>重定位段</code>，如<code>.text</code>段配<code>.rela.text</code>。重定位段中的字段以<code>r_</code>为前缀。它就是一个表，有<a href="http://www.sco.com/developers/gabi/1998-04-29/ch4.reloc.html" target="_blank" rel="noopener">两种重定位段</a>，在段表中标明：</p>
+<ul>
+<li><code>SHT_REL</code>，每个表项有两个字段，<code>r_offset</code>指出该指令的位置，<code>r_info</code>有一个字段是<code>符号表（.symtab）</code>的索引；</li>
+<li><code>SHT_RELA</code>，比<code>SHT_REL</code>类型多一个所谓“加数”<code>r_addend</code>，是符号的偏置，从符号表中得到符号后需要加上它。</li>
+</ul>
+<p>ARM的ELF只有<code>SHT_REL</code>类型的重定位段，而riscv的ELF只有<code>SHT_RELA</code>类型的重定位段。x86就两者都有。</p>
+<p><a href="http://www.sco.com/developers/gabi/1998-04-29/ch4.symtab.html" target="_blank" rel="noopener">符号表</a><code>.symtab</code>专门存储该ELF中的符号信息，其中关键字段有：</p>
+<ul>
+<li><code>st_shndx</code>，正常的话是一个正整数，是段表的索引，因为不少符号值在某一个段中，比方说代码里面的字符串常量就存在<code>.rodata</code>段里。还有一些其他取值：<ul>
+<li><code>SHN_UNDEF</code>，定义为0，表示这个符号不在本ELF中；</li>
+<li><code>SHN_ABS</code>，定义为<code>0xfff1</code>，表示一个绝对量（absolute value）；</li>
+<li><code>SHN_COMMON</code>，定义为<code>0xfff2</code>，表示一个还未分配空间的块。nuttx并不支持；gcc加参数<code>-fno-common</code>就可以不生成这种符号；</li>
+</ul>
+</li>
+<li><code>st_value</code>，表示该符号在st_shndx那个段的偏移量。</li>
+<li><code>st_name</code>，该符号的名字，是<code>.strtab</code>字符串表的的索引。如果符号未定义，需要通过符号名从外部符号表里面搜索。</li>
+</ul>
+<p><a href="http://www.sco.com/developers/gabi/1998-04-29/ch4.strtab.html" target="_blank" rel="noopener">字符串表</a><code>.strtab</code>堆放着一批字符串，以0结尾。这些字符串并不是给程序用的，而是给装载器、调试器之类的工具用的，因此装载器并不会在内存中给它分配空间。程序用到的字符串一般存在<code>.rodata</code>段。</p>
+<p>可以用<code>readelf -p .strtab xxxx.elf</code>来查看字符串表。</p>
+<p>通常情况下要resolve一个在本ELF中符号：<br><img src="/2018/07/29/pulpino2/relasymbols.jpeg" alt="relocation"></p>
+<p>如果本ELF符号表中没有，那么通过<code>.symtab</code>从<code>.strtab</code>中找到符号名称，从系统的符号表中找。高效率的系统会将符号表设计为一个哈希表，静态的哈希表还可以通过gperf来生成“perfect”的哈希表，例如编译器、解释器等要通过字符串识别一个个token，而关键字都是确定的，这种情况最适合用gperf。而nuttx实现太简单了，它就是只支持静态的符号表，而且仅仅通过遍历来寻找符号。。</p>
+<h4 id="3-2、riscv重定位类型"><a href="#3-2、riscv重定位类型" class="headerlink" title="3-2、riscv重定位类型"></a>3-2、riscv重定位类型</h4><p>根据riscv的<a href="https://github.com/riscv/riscv-elf-psabi-doc/blob/master/riscv-elf.md#relocations" target="_blank" rel="noopener">ABI文档</a>，有那么几十种重定位类型；而<a href="https://github.com/riscv/riscv-linux/blob/406087706427cdd610ce2dc3fbffa655064944d3/arch/riscv/kernel/module.c" target="_blank" rel="noopener">riscv的Linux内核模块装载器</a>只实现了其中的少部分。因为nuttx的ELF相当于Linux内核<code>.ko</code>的地位，而且不支持动态链接，所以需要实现的就更少了；而最关键最常用的也只有寥寥几种。</p>
+<p>rv32-I基本指令集有四种编码类型的指令：<code>R</code>、<code>I</code>、<code>S</code>、<code>U</code>：<br><img src="/2018/07/29/pulpino2/riscv-instype.jpeg" alt="riscvins"></p>
+<p>其中I、S、U都能编码立即数，前两者能编码12位，后者能编码20位。</p>
+<p>rv32的基本指令集都是32位定长的。如果要加载一个32立即数，riscv不是像ARM那样弄一个“文字池（literal pool）”然后从里面load，而是直接把立即数编码在<strong>两条指令</strong>中分两次加载。这样的好处是指令都在流水线上，不需要等待访存操作。所以很多重定位类型都是成双成对的。下面分别讨论：</p>
+<ul>
+<li>C语言里面引用全局变量、字符串常量这种地址固定（absolute address）的变量，就是<code>R_RISCV_HI20</code>配<code>R_RISCV_LO12_I</code>或<code>R_RISCV_LO12_S</code>；</li>
+<li>C语言里面调一个函数，函数地址是PC相关的（PC-relative call），由<code>auipc</code>和<code>jalr</code>来实现。这时auipc之后一定是jalr，这种情况就是<code>R_RISCV_CALL</code>；</li>
+<li>循环、条件跳转等，用到<code>beq</code>、<code>bne</code>等指令，需要有一个PC相关的偏移量，就是<code>R_RISCV_BRANCH</code>；</li>
+<li>用<strong>压缩指令集</strong>（gcc参数是<code>-mrvc</code>。pulpino就支持）时候，各种条件非条件跳转，有<code>R_RISCV_RVC_BRANCH</code>、<code>R_RISCV_RVC_JUMP</code>等；</li>
+<li>还有一些不太常用的类型：<ul>
+<li>汇编里引用一个相对PC指针（PC-relative reference）的值，一般是<code>la</code>伪指令展开的结果（有这样的用例：我想在某处调用一个子程序，但是子程序返回到另一个地方。那么我就<code>la</code>返回地址。。），则是<code>R_RISCV_PCREL_HI20</code>配<code>R_RISCV_PCREL_LO12_I</code>或<code>R_RISCV_PCREL_LO12_S</code>；</li>
+<li>汇编里调用本文件的子程序，用<code>jal</code>指令调到子程序的标号那里。就是<code>R_RISCV_JAL</code>；</li>
+<li>还有直接操作符号的，如<code>R_RISCV_RELAX</code>保持符号值不变、<code>R_RISCV_32</code>直接改32位数、<code>R_RISCV_ADD32</code>/<code>R_RISCV_SUB32</code>对那个32位数作加减。这些一般用于对debug段的重定位。</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-3、需要添加的代码"><a href="#3-3、需要添加的代码" class="headerlink" title="3-3、需要添加的代码"></a>3-3、需要添加的代码</h4><ul>
+<li>nuttx里的ELF加载器基本上是给ARM做的，而ARM只有<code>SHT_REL</code>类型的重定位，于是<code>SHT_RELA</code>类型的重定位就根本没有实现。。所以首先要依葫芦画瓢实现RELA的函数；</li>
+<li>添加<code>libs/libc/machine/riscv</code>目录：<ul>
+<li>根据上文<a href="#3-2、riscv重定位类型">3-2</a>实现<code>arhc_elf.c</code>；</li>
+<li>添加Makefile和Kconfig；</li>
+</ul>
+</li>
+</ul>
+<h3 id="4、制作nuttx可运行的ELF"><a href="#4、制作nuttx可运行的ELF" class="headerlink" title="4、制作nuttx可运行的ELF"></a>4、制作nuttx可运行的ELF</h3><p>参考资料：<a href="http://www.nuttx.org/doku.php?id=wiki:nshhowtos:elf-addon" target="_blank" rel="noopener">elf-addon</a></p>
+<p>Linux的<code>xxx-linux-gcc</code>工具链可以直接生成对应平台下的ELF文件；UCLinux的工具链<code>xxx-uclinuxeabi-gcc</code>可以直接生成可在UCLinux下运行的flat文件，并附带一个后缀为.gdb的ELF文件用于调试；这些ELF文件都是可执行类型的。</p>
+<p>但是nuttx的应用程序是可重定位类型的，就是<code>.o</code>级别的，因此其实并不需要<code>xxx-nuttx-gcc</code>，直接用<code>xxx-none-gcc</code>、<code>xxx-unknown-gcc</code>就可以了。另外nuttx的buildroot制作的<code>xxx-nuttx-gcc</code>其实跟Linux、UCLinux的并不是一回事，也不能不加参数一步到位生成可执行的ELF。这时我们应该显示地<strong>先编译再链接</strong>，链接时候需要加参数<code>-r</code>以告诉ld要生成relocatable的ELF。</p>
+<p>作为例子，假设有这样一个c应用程序：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// hello.c</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"Hello from Add-On Program!\n"</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>该程序中printf是C库函数，在nuttx内核提供的C库里。所以问题就是要将找到printf符号。如果用的是工具链里的C库（<code>riscv32-unknown-elf-</code>用的是<code>newlib</code>），那上面的printf有可能会被编译器解释为putc。如果用nuttx打包的头文件的话就还是printf。这个程序的重定位表有以下表项：</p>
+<pre><code>偏移量     信息    类型              符号值      符号名称 + 加数
+00000000  0000071a R_RISCV_HI20      00000000   .LC0 + 0
+00000006  0000071b R_RISCV_LO12_I    00000000   .LC0 + 0
+0000000c  00000b12 R_RISCV_CALL      00000000   printf + 0
+</code></pre><p>其中前两个是字符串常量<code>&quot;Hello from Add-On Program!\n&quot;</code>，最后一个是<code>printf</code>符号。</p>
+<h4 id="4-1、内核没有符号表：直接链到固定地址"><a href="#4-1、内核没有符号表：直接链到固定地址" class="headerlink" title="4-1、内核没有符号表：直接链到固定地址"></a>4-1、内核没有符号表：直接链到固定地址</h4><p>由于并没有外部符号表，因此<strong>printf不能是UND符号</strong>。例子中用了两次链接。第一次将所有编译的<code>.o</code>链接为一个可重定位的文件（相当于archive了一次）；然后第二次链接，填入所有未定义符号。</p>
+<p>编译完nuttx内核，就会生成一个<code>System.map</code>文件，里面列举了所有全局变量和函数的地址，其中就包括C库的函数。我们找到<code>printf</code>的地址，假设它是<code>0x23015bc2</code>。可以在ld script里面加一句话：<code>printf=0x23015bc2;</code>，也可以为ld加参数<code>--defsym=printf=0x23015bc2</code>。这样就能消掉printf的未定义。</p>
+<p><code>printf</code>未定义时，符号表里是这样的：</p>
+<pre><code>11: 00000000     0 NOTYPE  GLOBAL DEFAULT  UND printf
+</code></pre><p>第二次链接之后，<code>printf</code>被resolved成一个absolute的值<code>0x23015bc2</code>。</p>
+<pre><code>8: 23015bc2     0 NOTYPE  GLOBAL DEFAULT  ABS printf
+</code></pre><h4 id="4-2、内核有符号表：根据静态符号表链入内核"><a href="#4-2、内核有符号表：根据静态符号表链入内核" class="headerlink" title="4-2、内核有符号表：根据静态符号表链入内核"></a>4-2、内核有符号表：根据静态符号表链入内核</h4><p>这时就允许<code>printf</code>是UND符号了，因为有外部符号表。但是这个符号表需要写死在内核里。如果只需要printf的话可以这样写一个数组：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;nuttx/binfmt/symtab.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">symtab_s</span> <span class="title">g_symtab</span>[] =</span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  &#123;<span class="string">"printf"</span>, (FAR <span class="keyword">void</span> *)<span class="built_in">printf</span>&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> g_nsymbols = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+<p>其中<code>g_symtab</code>、<code>g_nsymbols</code>都是在Kconfig里预定义好的符号。。。会在<code>binfmt/binfmt_execsymtab.c</code>里被引用。</p>
+<p>nuttx也有工具去生成符号表，这个工具提供了源码：<code>tools/mksymtab.c</code>和<code>tools/cvsparser.c</code>可制作出<code>mksymtab</code>工具，它输入一个<code>.csv</code>文件，输出一个<code>.c</code>文件。<code>.csv</code>文件在源码里就有，它枚举了函数名、参数等信息。<code>tools/README.txt</code>里建议这样生成符号表数组：</p>
+<pre><code>$ cd nuttx/tools
+$ cat ../syscall/syscall.csv ../libs/libc/libc.csv | sort &gt; tmp.csv
+$ ./mksymtab tmp.csv tmp.c
+</code></pre><p>然后将符号表加入源码中编译即可。不过源码中提供的csv文件有点问题，有些函数还没有实现，需要一个个去除。。</p>
+<p>ELF程序可以放在一张SD卡里面，然后执行：<br><img src="/2018/07/29/pulpino2/helloaddon.jpeg" alt="helloworld"></p>
+<h4 id="4-3、nuttx内核打包"><a href="#4-3、nuttx内核打包" class="headerlink" title="4-3、nuttx内核打包"></a>4-3、nuttx内核打包</h4><p>可以将nuttx的头文件和静态链接库打包出去制作SDK。</p>
+<pre><code>$ make export
+</code></pre><p>它将所有头文件打包，包括arch级以及板极的头文件，加上两个archives：<code>libnuttx.a</code>和<code>libapps.a</code>。头文件可以用于制作<code>xxx-nuttx-gcc</code>工具链；利用这个SDK可以对固件做二次开发。可参考<a href="http://nuttx.org/doku.php?id=wiki:nshhowtos:external-applications" target="_blank" rel="noopener">Building NuttX with Applications Outside of the Source Tree</a>，以及<a href="https://acassis.wordpress.com/2017/03/28/using-nuttx-as-a-library/" target="_blank" rel="noopener">Using NuttX as a library</a>。</p>
+
       
 
       
@@ -205,16 +353,75 @@
       
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/07/29/pulpino2/">展开全文 >></a>
-        </p>
-      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/07/29/pulpino2/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2018/07/23/pulpino1/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">pulpino[1] nuttx：bring up</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -234,756 +441,30 @@
 
 
 
-
-  
-    <article id="post-pulpino1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/07/23/pulpino1/">pulpino[1] nuttx：bring up</a>
-    </h1>
-  
-
-        
-        <a href="/2018/07/23/pulpino1/" class="archive-article-date">
-  	<time datetime="2018-07-23T13:19:06.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-07-23</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>PULPino是<a href="https://www.pulp-platform.org/" target="_blank" rel="noopener">PULP</a>的一个子项目，<code>PULP</code>全称“Parallel Ultra Low Power”，是一个<a href="http://riscv.org/" target="_blank" rel="noopener">RISC-V</a>项目，旨在搭建低功耗的多核嵌入式SOC。PULPino是一个单核的单片机的架构，CPU内核除了实现RISCV的I、M、C指令集之外还扩展了一些类似于DSP的指令集，使其<a href="https://riscv.org/wp-content/uploads/2016/01/Wed1315-PULP-riscv3_noanim.pdf" target="_blank" rel="noopener">计算性能超过了ARM Cortex M4</a>、硅片面积更小、功耗更低。。。</p>
-<p>PULPino的<a href="https://github.com/pulp-platform/pulpino/tree/master/sw" target="_blank" rel="noopener">例程</a>用cmake来管理；其中有FreeRTOS的简单移植。FreeRTOS说到底就是一个scheduler，其他东西基本上连架构都没有，啥都要自己动手。</p>
-<p>就功能而言适用于无MMU的操作系统最强的当属<a href="http://www.nuttx.org/" target="_blank" rel="noopener">nuttx</a>，号称“Linux on microcontroller”，文件系统、网络、应用程序一应俱全，而且非常小巧，完全没有UCLinux那般臃肿。作为例子，若在stm32上要用网络，则nuttx不用特别裁剪优化得到100kB左右的bin，而UCLinux疯狂裁剪之后得到1MB左右的bin。</p>
-<p>目前nuttx里有riscv的基本移植，但要移植到PULPino上还需要非常多的功夫。本文阐述nuttx的踩坑历程。</p>
-        
-          <a class="article-more-a" href="/2018/07/23/pulpino1/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">nuttx</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">pulpino</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">riscv</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/07/23/pulpino1/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-ubuntu-tablet" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/06/15/ubuntu-tablet/">山寨平板上的ubuntu</a>
-    </h1>
-  
-
-        
-        <a href="/2018/06/15/ubuntu-tablet/" class="archive-article-date">
-  	<time datetime="2018-06-15T10:03:22.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-06-15</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>几百块钱的Windows寨板一般都是这样的配置：CPU是Intel的Baytrail z3735f，或者Cherrytrail z8300/z8350，都是不到2GHz的四核凌动x86，而后者的核显性能数倍于前者（虽然性能都不高，但还是属于吊打树莓派的那种）。内存一般是2GB，而z83xx可以上4GB，只是性能会有所降低。闪存一般是32GB的emmc flash，聊胜于无。外设方面就是触屏WiFi蓝牙SD卡USB云云。它们一般跑着win10或者win+Android双系统。</p>
-<p>对于树莓派一类玩家而言这些寨板吸引人的地方在于，价格便宜！x86的性能强！主频高内存大！WiFi！屏幕！然而虽然是x86的机器，它们并不能直接安装Ubuntu一类系统，原因在于：</p>
-<ul>
-<li>32位UEFI，因为32位的Windows占用空间小一些</li>
-<li>驱动非常不齐全</li>
-</ul>
-<p>以没经过处理的<code>Ubuntu-1404</code>为例，64位镜像因为机子UEFI是32位的而无法启动，32位镜像没有EFI启动文件也启动不了。强行给32位镜像补上EFI文件则可以顺利安装，然而电池、SD卡、触屏、WiFi、声卡、屏幕调光、按键、陀螺仪、摄像头之类的驱动统统没有，只有USB能用。。。</p>
-<p>要解决这两个问题势必要经过一些折腾。</p>
-        
-          <a class="article-more-a" href="/2018/06/15/ubuntu-tablet/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">baytrail</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/06/15/ubuntu-tablet/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-bcmf3" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/04/30/bcmf3/">bcmf[3] 与固件交互：bcdc和sdpcm</a>
-    </h1>
-  
-
-        
-        <a href="/2018/04/30/bcmf3/" class="archive-article-date">
-  	<time datetime="2018-04-30T12:56:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-30</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>与固件交互时，数据包往下传到SDIO网卡之前，还需要对它进行两层包装，简单说：<code>IP协议栈</code>数据包包装为<code>bdc</code>数据包，<code>控制命令</code>则包装为<code>cdc</code>数据包；bdc、cdc在Linux中统称为bcdc；bcdc再进一步包装为<code>sdpcm</code>数据包，进而通过SDIO发送给网卡。而博通只有SDIO的网卡才多包一层sdpcm，USB、PCIE接口的网卡都没有这样做。</p>
-<p>Linux、nuttx、WICED它们在sdpcm这一层都用了一个线程，专门包装发送、接收解析这些sdpcm数据包。单线程+中断的模型未必不可以，但是若接收数据包时处于SDIO中断上下文，而接收的时候也得利用SDIO的中断去收数据，这就是自己嵌套自己的不愉快的事情了。于是在RTOS上，该线程便使用信号量去指示是否有事情发生，在Linux上则直接使用work queue去处理这种事情。</p>
-        
-          <a class="article-more-a" href="/2018/04/30/bcmf3/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">bcm-wifi</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/04/30/bcmf3/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-bcmf2" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/04/27/bcmf2/">bcmf[2] 驱动：初始化</a>
-    </h1>
-  
-
-        
-        <a href="/2018/04/27/bcmf2/" class="archive-article-date">
-  	<time datetime="2018-04-27T03:57:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-27</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>本文总结BCM43438的初始化流程，初始化成功的标志是连上WiFi。</p>
-<p>参考WICED SDK、NuttX，以及Linux的源码，它们的流程略有不同。Linux的驱动面面俱到；WICED的驱动虽只针对物联网设备，却写得相当冗杂；nuttx的驱动则相当简洁恰好能用。</p>
-<ul>
-<li>WICED可从<a href="https://community.cypress.com/community/wiced-wifi" target="_blank" rel="noopener">Cypress官网</a>上下载，注册个账号就好了。这份软件架构简直是<strong>一切以WICED为中心</strong>，有bootloader、dct（Device Configuration Table）、OTA（Over The Air）等自创的元素，如果用它支持的平台如stm32的话，那可以非常迅速地出成果，然而如果要移植到别的CPU架构的话它并不太友好。。</li>
-<li>NuttX可从<a href="https://bitbucket.org/nuttx/nuttx/src/master/" target="_blank" rel="noopener">bitbucket/nuttx</a>上git clone一份，或者从<a href="http://sourceforge.net/projects/nuttx/files/" target="_blank" rel="noopener">SourceForge</a>下载代码包。SourceForge上面的7.24及以前的驱动有问题，我在bitbucket上提交了<a href="https://bitbucket.org/nuttx/nuttx/commits/144e335b85fed8852e259f80181d6914b93dc659" target="_blank" rel="noopener">这份commit</a>。bitbucket在墙内访问相当不稳定。。</li>
-<li>Linux可以直接访问<a href="https://elixir.bootlin.com/linux/v4.13.3/source" target="_blank" rel="noopener">Bootlin的Linux Cross Reference</a>。在Linux内核中，博通<strong>SDIO接口的</strong>网卡驱动是<code>brcmfmac</code>，归类到<code>brcm80211</code>，这是博通官方提供的驱动，需要non-free的固件。<code>b43</code>的驱动是社区通过一些逆向工程实现的，只支持老版的PCIe网卡。。</li>
-</ul>
-<p>初始化过程纯粹就是面向过程的代码，因此以下通过罗列它们的流程来进行分析。</p>
-<p>固件这玩意儿想必是厂商喜闻乐见的东西——在你编写的程序中安插黑盒子，而你又无可奈何。</p>
-        
-          <a class="article-more-a" href="/2018/04/27/bcmf2/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">bcm-wifi</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/04/27/bcmf2/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-bcmf1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/04/26/bcmf1/">bcmf[1] SDIO-WiFi-phy选型</a>
-    </h1>
-  
-
-        
-        <a href="/2018/04/26/bcmf1/" class="archive-article-date">
-  	<time datetime="2018-04-26T02:58:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-26</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>物联网硬件联网的方案很多，其中WiFi相当诱人。如果说传感器分布于野外，那WiFi不一定适用，但是在室内就不同了：WiFi技术成熟，带宽大，而且很多家庭都有的路由器，就是现成的网关，功能性的东西可以迅速实现（当然也要考虑别的质量属性，比如安全性等等）。</p>
-<p>最近正在给pulpino移植AP6212的驱动，pulpino又跑不了Linux，AP6xxx的非Linux资料又几乎没有，参考手册又没有，就一堆数据手册；碰壁许久，总算有点感想和发现，遂记录几篇文章：</p>
-<ul>
-<li>一、<a href="#目录">芯片选型</a></li>
-<li>二、<a href="/2018/04/27/bcmf2/">初始化BCM43438</a></li>
-<li>三、<a href="/2018/04/30/bcmf3/">与固件交互：bdc和cdc</a></li>
-</ul>
-<p>下面讨论的都是<strong>低端的网卡</strong>，相对于集群、数据中心啥的而言的话是，非常非常低端的东西；做大工程不行，但是做一些比较hack的东西还是绰绰有余的。</p>
-        
-          <a class="article-more-a" href="/2018/04/26/bcmf1/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">bcm-wifi</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/04/26/bcmf1/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-ucpc6" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/03/13/ucpc6/">uc-PC[6] 构建rootfs</a>
-    </h1>
-  
-
-        
-        <a href="/2018/03/13/ucpc6/" class="archive-article-date">
-  	<time datetime="2018-03-13T12:57:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-13</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>简单来讲，内核、文件系统、应用程序，三者构成一个完整可用的系统。发行版之间不同之处不在于内核啥的，而在于rootfs——它的一套系统工具；比如包管理，Ubuntu上面就是apt-get，Arch上面就是pacman，OpenWRT上面就是opkg，等等。</p>
-<p>内核可以放在文件系统里面，如果bootloader支持文件系统的话就可以找到内核在哪里，树莓派啥的就是这样的风格。而不少嵌入式设备bootloader不会关注文件系统的事情，它只需有引导、更新内核的能力即可。所以不少板子直接将内核放在nand flash的某一个或几个block里面，如用uboot，则只需要<code>nand read xxxx xxxx xxxx</code>就可以了。而对于ucpc这块板子来说，内核在片内flash里面就地运行，文件系统完全可以放在别的地方。</p>
-<p>更完整的系统还需要包括各种运行时库（如C库）和链接器等，而且编译器是其中的重要软件，再不济也得有个解释器（比如Sylixos里面有个C解释器）。不过编译器在嵌入式设备上面几乎无用，即使性能强如智能手机也一样，没多少人愿意在板子上做native编译，毕竟上位机工具功能才全面。而对于ucpc这块板子来说，因为现成的arm-uclinuxeabi工具链都不能编译动态链接库，所以所有应用程序都是静态链接的，于是rootfs里面就连C库和链接器都不需要了。</p>
-<p><em>（手机请横屏看代码）</em><br></p>
-        
-          <a class="article-more-a" href="/2018/03/13/ucpc6/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ucpc</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/03/13/ucpc6/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-ucpc5" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/03/07/ucpc5/">uc-PC[5] Linux设备驱动配置</a>
-    </h1>
-  
-
-        
-        <a href="/2018/03/07/ucpc5/" class="archive-article-date">
-  	<time datetime="2018-03-07T01:21:49.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>uc-PC板子上跑的是Linux 4.13.3，使用设备树。内核不经压缩，<strong>就地运行</strong>（XIP，全称execute in place）。</p>
-<p>需要使能的功能有：网络、显示、USB、SD卡、摄像头、yaffs。这些功能全部开启的话，内核大小将为4MB以上，而片内flash只有2MB，不模块化的话只能跑在SDRAM上，这回导致性能低下，所以调通设备驱动之后应该进行模块化，将关键部分编译进内核，内核塞进片内flash，从而提高性能。</p>
-<p>以下将只描述它们如何配置，而不涉及具体驱动的软件架构。</p>
-<ul>
-<li>配置之前，应该设置环境变量：<strong>ARCH=arm CROSS_COMPILE=arm-none-eabi-</strong>（其他编译工具链设置也类似），不然的话会按照host的架构去配置。</li>
-<li>配置时一般用<code>make menuconfig</code>，如果装了qt的话还可以用<code>make xconfig</code>；后者可以用鼠标操作，全屏的话看到的信息量更多。</li>
-<li>搜索某一个配置时，不用加<code>CONFIG_</code>前缀，而且不用管大小写。</li>
-<li>某一个配置没有显示出来，是因为它依赖的配置还没有使能；这时就要耐着性子去一个个翻找。。。</li>
-</ul>
-<p><em>（手机请横屏看代码）</em><br></p>
-        
-          <a class="article-more-a" href="/2018/03/07/ucpc5/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ucpc</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/03/07/ucpc5/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-ucpc4" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/03/01/ucpc4/">uc-PC[4] 小议“设备树”</a>
-    </h1>
-  
-
-        
-        <a href="/2018/03/01/ucpc4/" class="archive-article-date">
-  	<time datetime="2018-03-01T07:33:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>讲设备树的文章不少。以下是一些挺有意思的文章：</p>
-<ul>
-<li><a href="http://www.wowotech.net/device_model/why-dt.html" target="_blank" rel="noopener">蜗窝科技的博客</a>紧扣Linux内核来讲设备树的来历与用法；</li>
-<li>Thomas Petazzoni是Bootlin公司（以前叫Free Electrons，一家很有水平的专注Linux的法国公司）的CTO，他写过一份讲义叫<a href="https://bootlin.com/pub/conferences/2013/elce/petazzoni-device-tree-dummies/petazzoni-device-tree-dummies.pdf" target="_blank" rel="noopener">《傻瓜都懂的设备树》</a>，详细地介绍了设备树的语法与Linux内核中现实的用例；</li>
-<li><a href="https://elinux.org/images/0/0c/Rowand--devicetree_kernel_internals.pdf" target="_blank" rel="noopener">device tree kernel internals</a>这篇报告更加详细地描述了设备树的语法、编译过程，并分析了设备树展开过程的一些源码；</li>
-<li>还是Thomas Petazzoni，他在2015年的ELC会议上抱怨说：<a href="https://events.static.linuxfound.org/sites/events/files/slides/petazzoni-dt-as-stable-abi-fairy-tale.pdf" target="_blank" rel="noopener">不同内核里设备树接口要保持可移植性，这简直是个神话</a>；</li>
-</ul>
-<p>很多介绍设备树的文章都会开门见山地介绍设备树的各种概念，然后罗列出设备树的语法。<strong>不过很少有人会从头到尾讲透驱动程序和设备树，然后旗帜鲜明地指出，设备树描述的就是平台设备（platform_device），或许他们默认了你已经懂得那些前提知识</strong>。以下记录了我的一些思考，尝试从<code>面向对象</code>的角度去切入。</p>
-<p><em>（手机请横屏看代码）</em><br></p>
-        
-          <a class="article-more-a" href="/2018/03/01/ucpc4/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ucpc</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/03/01/ucpc4/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-ucpc3" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/03/01/ucpc3/">uc-PC[3] 板子验证与bootloader移植</a>
-    </h1>
-  
-
-        
-        <a href="/2018/03/01/ucpc3/" class="archive-article-date">
-  	<time datetime="2018-02-28T16:23:39.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>稍微复杂一点的的嵌入式系统，底层初始化和操作系统的引导都由bootloader完成。bootloader可以很简单，只需要将内存初始化好、将操作系统加载好就行；也可以比较复杂，比如大名鼎鼎的<a href="http://www.denx.de/wiki/U-Boot/" target="_blank" rel="noopener">u-boot</a>，或者不那么有名的<a href="https://www.barebox.org/" target="_blank" rel="noopener">barebox</a>等等，都有大量的功能，管理着大量的外设，可以从各种各样的地方启动系统（flash、SD卡、U盘、网络服务器等等），并且有一个简单的或许可以跑脚本的shell。相当复杂的bootloader比如BIOS、UEFI等等甚至都有图形界面，能键盘鼠标操作。</p>
-<p>对于我们的板子而言，只需要启动存储在片内flash的Linux就够了，所以bootloader只需要初始化好内存，然后直接跳转到Linux。但是为了初步验证板子各部分的功能，首先应该跑通一个比较完整的uboot；所幸的是，github上有人为stm32f429-disc移植了uboot，驱动已经十分全面，剩下的就是要细心地改GPIO口，并且查漏补缺。</p>
-<ul>
-<li><a href="https://github.com/hhuysqt/afboot-stm32" target="_blank" rel="noopener">afboot-stm32</a>是专为STM32板子上启动Linux的最小bootloader；</li>
-<li><a href="https://github.com/robutest/u-boot" target="_blank" rel="noopener">这个版本的uboot</a>已移植到了429 discovery；</li>
-</ul>
-<p><em>（手机请横屏看代码）</em><br></p>
-        
-          <a class="article-more-a" href="/2018/03/01/ucpc3/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ucpc</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/03/01/ucpc3/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
   
   
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
-    </nav>
+  
+
+  
+
+  
+
+  
+  <div id="gitment-ctn"></div> 
+<link rel="stylesheet" href="//imsun.github.io/gitment/style/default.css">
+<script src="//imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+var gitment = new Gitment({
+  id: "http://yoursite.com/2018/07/29/pulpino2/",
+  owner: 'hhuysqt',
+  repo: 'hhuysqt.github.io',
+  oauth: {
+    client_id: 'f3accf3be337dcd6d61d',
+    client_secret: 'af75b9e501d76dc85f1f0417d7307419df49aeec',
+  },
+})
+gitment.render('gitment-ctn')
+</script>
   
 
 
@@ -1006,8 +487,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,

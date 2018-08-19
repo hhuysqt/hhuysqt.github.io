@@ -19,7 +19,7 @@
 <meta property="og:image" content="http://yoursite.com/2018/04/27/bcmf2/cmd5253.jpeg">
 <meta property="og:image" content="http://yoursite.com/2018/04/27/bcmf2/fwlayout.jpeg">
 <meta property="og:image" content="http://yoursite.com/2018/04/27/bcmf2/photon.jpeg">
-<meta property="og:updated_time" content="2018-05-29T10:17:33.196Z">
+<meta property="og:updated_time" content="2018-08-18T12:26:42.366Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="bcmf[2] 驱动：初始化">
 <meta name="twitter:description" content="本文总结BCM43438的初始化流程，初始化成功的标志是连上WiFi。 参考WICED SDK、NuttX，以及Linux的源码，它们的流程略有不同。Linux的驱动面面俱到；WICED的驱动虽只针对物联网设备，却写得相当冗杂；nuttx的驱动则相当简洁恰好能用。  WICED可从Cypress官网上下载，注册个账号就好了。这份软件架构简直是一切以WICED为中心，有bootloader、dct（">
@@ -370,6 +370,7 @@
 <li><strong>注册事件</strong>，使用<code>&quot;event_msgs&quot;</code>，参数是一个一百多位的位图，每一位代表一个事件，置一则代表主机打算相应这个事件。Linux在brcmfmac/fweh.h里定义为<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.h#L32" target="_blank" rel="noopener">enum brcmf_fweh_event_code</a>，nuttx在bcmf_ioctl.h里定义为<strong>enum wl_event_num_t</strong>，WICED在WICED/WWD/include/wwd_events.h里定义为<strong>enum wwd_event_num_t</strong>。</li>
 <li><strong>WiFi up</strong>，发送<code>WLC_UP</code>的ioctl，编号是2。ifup这个命令在Linux和nuttx里都有，if的全称应该是interface，比方说<code>ifup wlan0</code>；它底层就是发送了WLC_UP指令。</li>
 </ul>
+<p>另外需要注意<code>roaming（漫游）</code>的问题。bcmf固件有自动漫游功能，通过<code>&quot;roam_off&quot;</code>的iovar来开关。不应该关闭；否则，如果现在连接的AP并不是信号最强的话，每隔一段时间就会自行断开当前连接，给上层一个<code>DEAUTH</code>事件，然后连接信号最强者。Linux的brcmfmac驱动有个参数名叫<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c#L72" target="_blank" rel="noopener">brcmf_roamoff</a>，默认不roam_off。而nuttx则默认roam_off，上层却缺乏断线重连的逻辑，因此相关的初始化应该去掉。</p>
 <h4 id="2-4-2、连接WiFi"><a href="#2-4-2、连接WiFi" class="headerlink" title="2-4-2、连接WiFi"></a>2-4-2、连接WiFi</h4><p>就是join一个Access Point（AP），一个AP一般有一个名字叫SSID，以及密码（当然也有隐藏的WiFi和开放的WiFi）。对于Linux和nuttx来说决定要连接WiFi的是应用程序而不是内核，需要调用ioctl来陷入内核从而进行操作。</p>
 <ul>
 <li>Linux：drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c:<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c#L1951" target="_blank" rel="noopener">brcmf_cfg80211_connect()</a></li>
