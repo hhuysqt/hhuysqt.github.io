@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="hhuysqt">
 <meta property="og:description" content="与固件交互时，数据包往下传到SDIO网卡之前，还需要对它进行两层包装，简单说：IP协议栈数据包包装为bdc数据包，控制命令则包装为cdc数据包；bdc、cdc在Linux中统称为bcdc；bcdc再进一步包装为sdpcm数据包，进而通过SDIO发送给网卡。而博通只有SDIO的网卡才多包一层sdpcm，USB、PCIE接口的网卡都没有这样做。 Linux、nuttx、WICED它们在sdpcm这一层">
 <meta property="og:image" content="http://yoursite.com/bcmf3/cdc.jpeg">
-<meta property="og:updated_time" content="2018-05-29T10:17:33.196Z">
+<meta property="og:updated_time" content="2018-09-20T17:16:08.803Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="bcmf[3] 与固件交互：bcdc和sdpcm">
 <meta name="twitter:description" content="与固件交互时，数据包往下传到SDIO网卡之前，还需要对它进行两层包装，简单说：IP协议栈数据包包装为bdc数据包，控制命令则包装为cdc数据包；bdc、cdc在Linux中统称为bcdc；bcdc再进一步包装为sdpcm数据包，进而通过SDIO发送给网卡。而博通只有SDIO的网卡才多包一层sdpcm，USB、PCIE接口的网卡都没有这样做。 Linux、nuttx、WICED它们在sdpcm这一层">
@@ -182,7 +182,13 @@
 </ul>
 </li>
 <li><a href="#2、sdpcm数据结构">2、sdpcm数据结构</a></li>
-<li><a href="#3、这两层的实现">3、这两层的实现</a></li>
+<li><a href="#3、分层实现">3、分层实现</a><ul>
+<li><a href="#3-0、零拷贝缓冲区">3-0、零拷贝缓冲区</a></li>
+<li><a href="#3-1、nuttx">3-1、nuttx</a></li>
+<li><a href="#3-2、WICED">3-2、WICED</a></li>
+<li><a href="#3-3、Linux">3-3、Linux</a></li>
+</ul>
+</li>
 </ul>
 <h3 id="1、bcdc层"><a href="#1、bcdc层" class="headerlink" title="1、bcdc层"></a>1、bcdc层</h3><p><code>cdc</code>用于发送、接收命令，比如查询固件版本号、查询设置MAC地址、开关连接WiFi、注册事件等等；这些功能一般都调用ioctl去执行，属于<code>带外数据</code>；<br><code>bdc</code>上面则直接接的是IP协议栈，上层就是socket的read、write，属于<code>带内数据</code>；</p>
 <h4 id="1-1、cdc协议"><a href="#1-1、cdc协议" class="headerlink" title="1-1、cdc协议"></a>1-1、cdc协议</h4><p>控制命令分为<code>ioctl</code>和<code>iovar</code>两种；二者都带有cdc头部，其数据结构如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">struct bcmf_cdc_header &#123;</span><br><span class="line">    uint32_t cmd;    /* 命令编号 */</span><br><span class="line">    uint32_t len;    /* 命令长度 */</span><br><span class="line">    uint32_t flags;  /* 标志位 */</span><br><span class="line">    uint32_t status; /* 返回状态 */</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
@@ -246,21 +252,24 @@
 <li><code>credit</code>，解释为max sequence，上面的<code>sequence</code>字段不能超过它。BCM芯片每返回一个包就更新一次credit。</li>
 <li><code>padding</code>，置零。（WICED里发送bdc包时候后面会在此基础上另外多增加两字节的padding。。。）</li>
 </ul>
-<h3 id="3、这两层的实现"><a href="#3、这两层的实现" class="headerlink" title="3、这两层的实现"></a>3、这两层的实现</h3><ul>
+<h3 id="3、分层实现"><a href="#3、分层实现" class="headerlink" title="3、分层实现"></a>3、分层实现</h3><ul>
 <li>nuttx严格分层了：drivers/wireless/ieee80211/目录下的<strong>bcmf_cdc.c、bcmf_bdc.c、bcmf_sdpcm.c</strong></li>
 <li>Linux中bdc、cdc集中为drivers/net/wireless/broadcom/brcm80211/brcmfmac/ <a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcdc.c" target="_blank" rel="noopener">bcdc.c</a>，sdpcm则是<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c" target="_blank" rel="noopener">sdio.c</a></li>
 <li>WICED将bcdc、sdpcm都搅在一起：WICED/WWD/internal/ <strong>wwd_sdpcm.c</strong></li>
 </ul>
 <p>bcdc层跟sdpcm层的接口，三份代码都无一例外使用了<strong>函数指针</strong>。如果说Linux里是为了兼顾PCIE和USB接口的网卡的话，nuttx和WICED估计就是单纯地依葫芦画瓢吧。。。</p>
+<h4 id="3-0、零拷贝缓冲区"><a href="#3-0、零拷贝缓冲区" class="headerlink" title="3-0、零拷贝缓冲区"></a>3-0、零拷贝缓冲区</h4><p>发送的数据都要写入驱动的buffer。驱动中的子层每一层都会对它进行包装——添加一个头部。如果不涉及数据的切分，为了避免重复性的拷贝，最好的方法是这些子层分别引用同一个buffer的不同部分。显然，最底层需要最大的缓冲区。</p>
+<p>因此，无论是nuttx还是wiced，它们发送数据的话都是“<strong>向驱动申请缓冲区，填写缓冲区，最后发送</strong>”这种模式，而不是自己随便申请一个缓冲区，写完之后丢给驱动。</p>
+<p>本层模块向低一层模块申请一块包含本层头部与数据区的buffer，然后给高一层的模块返回减去本层头部的那部分。最底层模块才真正malloc一个缓冲区。</p>
 <h4 id="3-1、nuttx"><a href="#3-1、nuttx" class="headerlink" title="3-1、nuttx"></a>3-1、nuttx</h4><p>发送数据或命令都是阻塞的，bdc、cdc都会等到收到回应才返回。</p>
 <p>发送接收线程：bcmf_sdio.c里有一个<code>bcmf_sdio_thread()</code>，循环地等待一个名叫<code>thread_signal</code>的信号量，发送数据、接收数据，都会发出信号量从而触发其行动。</p>
 <p>以发送一个iovar命令为例。cdc层给调用sdpcm层发送<code>thread_signal</code>之后，等待一个名为<code>control_timeout</code>的信号量；由中断程序触发bcmf_sdio_thread()去接收数据后，该线程发出<code>control_timeout</code>信号量，进而促使cdc层返回数据。<br><img src="/bcmf3/cdc.jpeg" alt="cdc"></p>
 <h4 id="3-2、WICED"><a href="#3-2、WICED" class="headerlink" title="3-2、WICED"></a>3-2、WICED</h4><p>WICED的线程是wwd_thread.c:<code>wwd_thread_func()</code>，整个流程处理方式与nuttx很类似，只是做了一些冗余的操作。</p>
 <ul>
 <li>添加了WICED自己的头部，发送之前去掉。</li>
-<li>申请了sdpcm缓冲区之后填数据，数据前面为对齐而留白，然而最终发送之前又将整段数据往前面搬了。。。</li>
+<li>申请了sdpcm缓冲区之后填数据，数据前面为对齐而留白，然而最终发送之前又将整段数据往前面搬了。。。或许它是为了防止别的进程使用的内存中该缓冲区之前的数据的越界而践踏我的数据。</li>
 </ul>
-<h4 id="3-3、Linux"><a href="#3-3、Linux" class="headerlink" title="3-3、Linux"></a>3-3、Linux</h4><p>Linux用的是work queue机制，由worker_thread内核线程统一执行。brcmfmac的workqueue是<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c#L3622" target="_blank" rel="noopener">brcmf_sdio_dataworker()</a>。除此之外整个流程其实相当相似，只是考虑到多核、乱序、大小字节序等情况而用了一些晦涩的接口，加了不少锁以及一些存储屏障，并且将函数分的更细致了，到处都是层层调用。</p>
+<h4 id="3-3、Linux"><a href="#3-3、Linux" class="headerlink" title="3-3、Linux"></a>3-3、Linux</h4><p>Linux用的是work queue机制，由worker_thread内核线程统一执行。brcmfmac的workqueue是<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c#L3622" target="_blank" rel="noopener">brcmf_sdio_dataworker()</a>。除此之外整个流程其实相当相似，只是考虑到多核、编译器优化、乱序、大小字节序等情况而用了一些晦涩的接口，加了不少锁以及一些存储屏障，并且将函数分的更细致了，到处都是层层调用。</p>
 
       
 
@@ -513,11 +522,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ucpc</a>
+                <a href="javascript:void(0)" class="js-tag color4">baytrail</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">baytrail</a>
+                <a href="javascript:void(0)" class="js-tag color5">ucpc</a>
               </li>
             
             <div class="clearfix"></div>
