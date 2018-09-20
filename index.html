@@ -154,12 +154,12 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/07/29/pulpino2/">pulpino[2] nuttx ELF</a>
+      <a class="article-title" href="/pulpino2/">pulpino[2] nuttx ELF</a>
     </h1>
   
 
         
-        <a href="/2018/07/29/pulpino2/" class="archive-article-date">
+        <a href="/pulpino2/" class="archive-article-date">
   	<time datetime="2018-07-29T07:48:33.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-07-29</time>
 </a>
         
@@ -174,7 +174,7 @@
 </ul>
 <p>本文讨论如何为nuttx添加riscv的ELF支持，以及如何制作nuttx ELF应用程序。以下叙述适用于<code>nuttx-7.25</code>，nuttx还很年轻，即使是小版本之间的代码变动也可能会比较大。。</p>
         
-          <a class="article-more-a" href="/2018/07/29/pulpino2/#more">more >></a>
+          <a class="article-more-a" href="/pulpino2/#more">more >></a>
         
       
 
@@ -206,7 +206,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/07/29/pulpino2/">展开全文 >></a>
+          <a class="article-more-a" href="/pulpino2/">展开全文 >></a>
         </p>
       
 
@@ -243,12 +243,12 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/07/23/pulpino1/">pulpino[1] nuttx：bring up</a>
+      <a class="article-title" href="/pulpino1/">pulpino[1] nuttx：bring up</a>
     </h1>
   
 
         
-        <a href="/2018/07/23/pulpino1/" class="archive-article-date">
+        <a href="/pulpino1/" class="archive-article-date">
   	<time datetime="2018-07-23T13:19:06.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-07-23</time>
 </a>
         
@@ -261,7 +261,7 @@
 <p>就功能而言适用于无MMU的操作系统最强的当属<a href="http://www.nuttx.org/" target="_blank" rel="noopener">nuttx</a>，号称“Linux on microcontroller”，文件系统、网络、应用程序一应俱全，而且非常小巧，完全没有UCLinux那般臃肿。作为例子，若在stm32上要用网络，则nuttx不用特别裁剪优化得到100kB左右的bin，而UCLinux疯狂裁剪之后得到1MB左右的bin。</p>
 <p>目前nuttx里有riscv的基本移植，但要移植到PULPino上还需要非常多的功夫。本文阐述nuttx的踩坑历程。</p>
         
-          <a class="article-more-a" href="/2018/07/23/pulpino1/#more">more >></a>
+          <a class="article-more-a" href="/pulpino1/#more">more >></a>
         
       
 
@@ -293,7 +293,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/07/23/pulpino1/">展开全文 >></a>
+          <a class="article-more-a" href="/pulpino1/">展开全文 >></a>
         </p>
       
 
@@ -330,12 +330,12 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/06/15/ubuntu-tablet/">山寨平板上的ubuntu</a>
+      <a class="article-title" href="/ubuntu-tablet/">山寨平板上的ubuntu</a>
     </h1>
   
 
         
-        <a href="/2018/06/15/ubuntu-tablet/" class="archive-article-date">
+        <a href="/ubuntu-tablet/" class="archive-article-date">
   	<time datetime="2018-06-15T10:03:22.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-06-15</time>
 </a>
         
@@ -352,7 +352,7 @@
 <p>以没经过处理的<code>Ubuntu-1404</code>为例，64位镜像因为机子UEFI是32位的而无法启动，32位镜像没有EFI启动文件也启动不了。强行给32位镜像补上EFI文件则可以顺利安装，然而电池、SD卡、触屏、WiFi、声卡、屏幕调光、按键、陀螺仪、摄像头之类的驱动统统没有，只有USB能用。。。</p>
 <p>要解决这两个问题势必要经过一些折腾。</p>
         
-          <a class="article-more-a" href="/2018/06/15/ubuntu-tablet/#more">more >></a>
+          <a class="article-more-a" href="/ubuntu-tablet/#more">more >></a>
         
       
 
@@ -376,7 +376,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/06/15/ubuntu-tablet/">展开全文 >></a>
+          <a class="article-more-a" href="/ubuntu-tablet/">展开全文 >></a>
         </p>
       
 
@@ -413,12 +413,12 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/04/30/bcmf3/">bcmf[3] 与固件交互：bcdc和sdpcm</a>
+      <a class="article-title" href="/bcmf3/">bcmf[3] 与固件交互：bcdc和sdpcm</a>
     </h1>
   
 
         
-        <a href="/2018/04/30/bcmf3/" class="archive-article-date">
+        <a href="/bcmf3/" class="archive-article-date">
   	<time datetime="2018-04-30T12:56:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-30</time>
 </a>
         
@@ -429,7 +429,7 @@
         <p>与固件交互时，数据包往下传到SDIO网卡之前，还需要对它进行两层包装，简单说：<code>IP协议栈</code>数据包包装为<code>bdc</code>数据包，<code>控制命令</code>则包装为<code>cdc</code>数据包；bdc、cdc在Linux中统称为bcdc；bcdc再进一步包装为<code>sdpcm</code>数据包，进而通过SDIO发送给网卡。而博通只有SDIO的网卡才多包一层sdpcm，USB、PCIE接口的网卡都没有这样做。</p>
 <p>Linux、nuttx、WICED它们在sdpcm这一层都用了一个线程，专门包装发送、接收解析这些sdpcm数据包。单线程+中断的模型未必不可以，但是若接收数据包时处于SDIO中断上下文，而接收的时候也得利用SDIO的中断去收数据，这就是自己嵌套自己的不愉快的事情了。于是在RTOS上，该线程便使用信号量去指示是否有事情发生，在Linux上则直接使用work queue去处理这种事情。</p>
         
-          <a class="article-more-a" href="/2018/04/30/bcmf3/#more">more >></a>
+          <a class="article-more-a" href="/bcmf3/#more">more >></a>
         
       
 
@@ -453,7 +453,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/04/30/bcmf3/">展开全文 >></a>
+          <a class="article-more-a" href="/bcmf3/">展开全文 >></a>
         </p>
       
 
@@ -490,12 +490,12 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/04/27/bcmf2/">bcmf[2] 驱动：初始化</a>
+      <a class="article-title" href="/bcmf2/">bcmf[2] 驱动：初始化</a>
     </h1>
   
 
         
-        <a href="/2018/04/27/bcmf2/" class="archive-article-date">
+        <a href="/bcmf2/" class="archive-article-date">
   	<time datetime="2018-04-27T03:57:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-27</time>
 </a>
         
@@ -513,7 +513,7 @@
 <p>初始化过程纯粹就是面向过程的代码，因此以下通过罗列它们的流程来进行分析。</p>
 <p>固件这玩意儿想必是厂商喜闻乐见的东西——在你编写的程序中安插黑盒子，而你又无可奈何。</p>
         
-          <a class="article-more-a" href="/2018/04/27/bcmf2/#more">more >></a>
+          <a class="article-more-a" href="/bcmf2/#more">more >></a>
         
       
 
@@ -537,7 +537,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/04/27/bcmf2/">展开全文 >></a>
+          <a class="article-more-a" href="/bcmf2/">展开全文 >></a>
         </p>
       
 
@@ -574,12 +574,12 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/04/26/bcmf1/">bcmf[1] SDIO-WiFi-phy选型</a>
+      <a class="article-title" href="/bcmf1/">bcmf[1] SDIO-WiFi-phy选型</a>
     </h1>
   
 
         
-        <a href="/2018/04/26/bcmf1/" class="archive-article-date">
+        <a href="/bcmf1/" class="archive-article-date">
   	<time datetime="2018-04-26T02:58:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-26</time>
 </a>
         
@@ -591,12 +591,12 @@
 <p>最近正在给pulpino移植AP6212的驱动，pulpino又跑不了Linux，AP6xxx的非Linux资料又几乎没有，参考手册又没有，就一堆数据手册；碰壁许久，总算有点感想和发现，遂记录几篇文章：</p>
 <ul>
 <li>一、<a href="#目录">芯片选型</a></li>
-<li>二、<a href="/2018/04/27/bcmf2/">初始化BCM43438</a></li>
-<li>三、<a href="/2018/04/30/bcmf3/">与固件交互：bdc和cdc</a></li>
+<li>二、<a href="/bcmf2/">初始化BCM43438</a></li>
+<li>三、<a href="/bcmf3/">与固件交互：bdc和cdc</a></li>
 </ul>
 <p>下面讨论的都是<strong>低端的网卡</strong>，相对于集群、数据中心啥的而言的话是，非常非常低端的东西；做大工程不行，但是做一些比较hack的东西还是绰绰有余的。</p>
         
-          <a class="article-more-a" href="/2018/04/26/bcmf1/#more">more >></a>
+          <a class="article-more-a" href="/bcmf1/#more">more >></a>
         
       
 
@@ -620,7 +620,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/04/26/bcmf1/">展开全文 >></a>
+          <a class="article-more-a" href="/bcmf1/">展开全文 >></a>
         </p>
       
 
@@ -657,12 +657,12 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/03/13/ucpc6/">uc-PC[6] 构建rootfs</a>
+      <a class="article-title" href="/ucpc6/">uc-PC[6] 构建rootfs</a>
     </h1>
   
 
         
-        <a href="/2018/03/13/ucpc6/" class="archive-article-date">
+        <a href="/ucpc6/" class="archive-article-date">
   	<time datetime="2018-03-13T12:57:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-13</time>
 </a>
         
@@ -675,7 +675,7 @@
 <p>更完整的系统还需要包括各种运行时库（如C库）和链接器等，而且编译器是其中的重要软件，再不济也得有个解释器（比如Sylixos里面有个C解释器）。不过编译器在嵌入式设备上面几乎无用，即使性能强如智能手机也一样，没多少人愿意在板子上做native编译，毕竟上位机工具功能才全面。而对于ucpc这块板子来说，因为现成的arm-uclinuxeabi工具链都不能编译动态链接库，所以所有应用程序都是静态链接的，于是rootfs里面就连C库和链接器都不需要了。</p>
 <p><em>（手机请横屏看代码）</em><br></p>
         
-          <a class="article-more-a" href="/2018/03/13/ucpc6/#more">more >></a>
+          <a class="article-more-a" href="/ucpc6/#more">more >></a>
         
       
 
@@ -699,7 +699,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/03/13/ucpc6/">展开全文 >></a>
+          <a class="article-more-a" href="/ucpc6/">展开全文 >></a>
         </p>
       
 
@@ -736,12 +736,12 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/03/07/ucpc5/">uc-PC[5] Linux设备驱动配置</a>
+      <a class="article-title" href="/ucpc5/">uc-PC[5] Linux设备驱动配置</a>
     </h1>
   
 
         
-        <a href="/2018/03/07/ucpc5/" class="archive-article-date">
+        <a href="/ucpc5/" class="archive-article-date">
   	<time datetime="2018-03-07T01:21:49.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-07</time>
 </a>
         
@@ -760,7 +760,7 @@
 </ul>
 <p><em>（手机请横屏看代码）</em><br></p>
         
-          <a class="article-more-a" href="/2018/03/07/ucpc5/#more">more >></a>
+          <a class="article-more-a" href="/ucpc5/#more">more >></a>
         
       
 
@@ -784,7 +784,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/03/07/ucpc5/">展开全文 >></a>
+          <a class="article-more-a" href="/ucpc5/">展开全文 >></a>
         </p>
       
 
@@ -821,12 +821,12 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/03/01/ucpc4/">uc-PC[4] 小议“设备树”</a>
+      <a class="article-title" href="/ucpc4/">uc-PC[4] 小议“设备树”</a>
     </h1>
   
 
         
-        <a href="/2018/03/01/ucpc4/" class="archive-article-date">
+        <a href="/ucpc4/" class="archive-article-date">
   	<time datetime="2018-03-01T07:33:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-01</time>
 </a>
         
@@ -844,7 +844,7 @@
 <p>很多介绍设备树的文章都会开门见山地介绍设备树的各种概念，然后罗列出设备树的语法。<strong>不过很少有人会从头到尾讲透驱动程序和设备树，然后旗帜鲜明地指出，设备树描述的就是平台设备（platform_device），或许他们默认了你已经懂得那些前提知识</strong>。以下记录了我的一些思考，尝试从<code>面向对象</code>的角度去切入。</p>
 <p><em>（手机请横屏看代码）</em><br></p>
         
-          <a class="article-more-a" href="/2018/03/01/ucpc4/#more">more >></a>
+          <a class="article-more-a" href="/ucpc4/#more">more >></a>
         
       
 
@@ -868,7 +868,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/03/01/ucpc4/">展开全文 >></a>
+          <a class="article-more-a" href="/ucpc4/">展开全文 >></a>
         </p>
       
 
@@ -905,12 +905,12 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/03/01/ucpc3/">uc-PC[3] 板子验证与bootloader移植</a>
+      <a class="article-title" href="/ucpc3/">uc-PC[3] 板子验证与bootloader移植</a>
     </h1>
   
 
         
-        <a href="/2018/03/01/ucpc3/" class="archive-article-date">
+        <a href="/ucpc3/" class="archive-article-date">
   	<time datetime="2018-02-28T16:23:39.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-01</time>
 </a>
         
@@ -926,7 +926,7 @@
 </ul>
 <p><em>（手机请横屏看代码）</em><br></p>
         
-          <a class="article-more-a" href="/2018/03/01/ucpc3/#more">more >></a>
+          <a class="article-more-a" href="/ucpc3/#more">more >></a>
         
       
 
@@ -950,7 +950,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/03/01/ucpc3/">展开全文 >></a>
+          <a class="article-more-a" href="/ucpc3/">展开全文 >></a>
         </p>
       
 
@@ -1093,11 +1093,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">baytrail</a>
+                <a href="javascript:void(0)" class="js-tag color5">ucpc</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">ucpc</a>
+                <a href="javascript:void(0)" class="js-tag color4">baytrail</a>
               </li>
             
             <div class="clearfix"></div>
