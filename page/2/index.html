@@ -147,6 +147,88 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-ucpc3" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/ucpc3/">uc-PC[3] 板子验证与bootloader移植</a>
+    </h1>
+  
+
+        
+        <a href="/ucpc3/" class="archive-article-date">
+  	<time datetime="2018-02-28T16:23:39.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-01</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>稍微复杂一点的的嵌入式系统，底层初始化和操作系统的引导都由bootloader完成。bootloader可以很简单，只需要将内存初始化好、将操作系统加载好就行；也可以比较复杂，比如大名鼎鼎的<a href="http://www.denx.de/wiki/U-Boot/" target="_blank" rel="noopener">u-boot</a>，或者不那么有名的<a href="https://www.barebox.org/" target="_blank" rel="noopener">barebox</a>等等，都有大量的功能，管理着大量的外设，可以从各种各样的地方启动系统（flash、SD卡、U盘、网络服务器等等），并且有一个简单的或许可以跑脚本的shell。相当复杂的bootloader比如BIOS、UEFI等等甚至都有图形界面，能键盘鼠标操作。</p>
+<p>对于我们的板子而言，只需要启动存储在片内flash的Linux就够了，所以bootloader只需要初始化好内存，然后直接跳转到Linux。但是为了初步验证板子各部分的功能，首先应该跑通一个比较完整的uboot；所幸的是，github上有人为stm32f429-disc移植了uboot，驱动已经十分全面，剩下的就是要细心地改GPIO口，并且查漏补缺。</p>
+<ul>
+<li><a href="https://github.com/hhuysqt/afboot-stm32" target="_blank" rel="noopener">afboot-stm32</a>是专为STM32板子上启动Linux的最小bootloader；</li>
+<li><a href="https://github.com/robutest/u-boot" target="_blank" rel="noopener">这个版本的uboot</a>已移植到了429 discovery；</li>
+</ul>
+<p><em>（手机请横屏看代码）</em><br></p>
+        
+          <a class="article-more-a" href="/ucpc3/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ucpc</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/ucpc3/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-ucpc2" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -681,7 +763,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2018 hhuysqt
+    		&copy; 2019 hhuysqt
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -785,6 +867,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">ucpc</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">zynq</a>
               </li>
             
             <div class="clearfix"></div>
