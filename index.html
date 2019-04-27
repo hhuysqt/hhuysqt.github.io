@@ -147,6 +147,85 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-zynq2" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/zynq2/">zynq[2] Linux from scratch</a>
+    </h1>
+  
+
+        
+        <a href="/zynq2/" class="archive-article-date">
+  	<time datetime="2019-04-27T04:35:38.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-27</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Xilinx有个工具叫<code>PetaLinux</code>，它可以一键生成uboot、Linux、根文件系统。但是按照惯例我们还是自己敲命令一个个来吧。</p>
+<p>Xilinx有个<a href="https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18841738/Getting+Started" target="_blank" rel="noopener">wiki</a>讲述如何一步步做<code>Linux from scratch</code>。有些步骤是多余的，比如编译设备树的工具链。鉴于我们的EBAZ4205是块野生的板子，需要稍微做一些配置。</p>
+<p>安装vivado、SDK时候顺便安装了<code>arm-linux-gnueabihf-</code>以及其他Xilinx自家的工具链，不妨将其export到PATH：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># gcc</span></span><br><span class="line"><span class="built_in">export</span> PATH=/某某某/SDK/2017.4/gnu/aarch32/lin/gcc-arm-linux-gnueabi/bin/:<span class="variable">$PATH</span></span><br><span class="line"><span class="comment"># bootgen etc.</span></span><br><span class="line"><span class="built_in">export</span> PATH=/某某某/SDK/2017.4/bin:<span class="variable">$PATH</span></span><br></pre></td></tr></table></figure></p>
+<p>所有工作开始之前，还要export <code>ARCH</code>和<code>CROSS_COMPILE</code>两个环境变量：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> ARCH=arm</span><br><span class="line"><span class="built_in">export</span> CROSS_COMPILE=arm-linux-gnueabihf-</span><br></pre></td></tr></table></figure></p>
+        
+          <a class="article-more-a" href="/zynq2/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">zynq</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/zynq2/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-zynq1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -863,90 +942,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/ucpc5/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-ucpc4" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/ucpc4/">uc-PC[4] 小议“设备树”</a>
-    </h1>
-  
-
-        
-        <a href="/ucpc4/" class="archive-article-date">
-  	<time datetime="2018-03-01T07:33:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>讲设备树的文章不少。以下是一些挺有意思的文章：</p>
-<ul>
-<li><a href="http://www.wowotech.net/device_model/why-dt.html" target="_blank" rel="noopener">蜗窝科技的博客</a>紧扣Linux内核来讲设备树的来历与用法；</li>
-<li>Thomas Petazzoni是Bootlin公司（以前叫Free Electrons，一家很有水平的专注Linux的法国公司）的CTO，他写过一份讲义叫<a href="https://bootlin.com/pub/conferences/2013/elce/petazzoni-device-tree-dummies/petazzoni-device-tree-dummies.pdf" target="_blank" rel="noopener">《傻瓜都懂的设备树》</a>，详细地介绍了设备树的语法与Linux内核中现实的用例；</li>
-<li><a href="https://elinux.org/images/0/0c/Rowand--devicetree_kernel_internals.pdf" target="_blank" rel="noopener">device tree kernel internals</a>这篇报告更加详细地描述了设备树的语法、编译过程，并分析了设备树展开过程的一些源码；</li>
-<li>还是Thomas Petazzoni，他在2015年的ELC会议上抱怨说：<a href="https://events.static.linuxfound.org/sites/events/files/slides/petazzoni-dt-as-stable-abi-fairy-tale.pdf" target="_blank" rel="noopener">不同内核里设备树接口要保持可移植性，这简直是个神话</a>；</li>
-</ul>
-<p>很多介绍设备树的文章都会开门见山地介绍设备树的各种概念，然后罗列出设备树的语法。<strong>不过很少有人会从头到尾讲透驱动程序和设备树，然后旗帜鲜明地指出，设备树描述的就是平台设备（platform_device），或许他们默认了你已经懂得那些前提知识</strong>。以下记录了我的一些思考，尝试从<code>面向对象</code>的角度去切入。</p>
-<p><em>（手机请横屏看代码）</em><br></p>
-        
-          <a class="article-more-a" href="/ucpc4/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">ucpc</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/ucpc4/">展开全文 >></a>
         </p>
       
 

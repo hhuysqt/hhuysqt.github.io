@@ -6,43 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>zynq[1] 矿板helloworld | hhuysqt</title>
+  <title>zynq[2] Linux from scratch | hhuysqt</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="最近矿难，某宝某鱼上都出现了大量矿机控制板。。。ASIC负责挖矿，控制板负责联网、监视、控制之类。控制板不乏有各种水果派，像香橙派、树莓派、狗骨头之类的所谓“极客玩具”在其之列，想必国内水果派厂家活的是相当滋润。。。光靠极客教育哪有什么赚头，极客大都很穷的，像我这样看到三五十块钱的“zynq开发板”，便忍不住要跟风收一波垃圾了。。。 某鱼上EBAZ4205控制板泛滥，它出自翼比特E9+矿机。它的老">
+  <meta name="description" content="Xilinx有个工具叫PetaLinux，它可以一键生成uboot、Linux、根文件系统。但是按照惯例我们还是自己敲命令一个个来吧。 Xilinx有个wiki讲述如何一步步做Linux from scratch。有些步骤是多余的，比如编译设备树的工具链。鉴于我们的EBAZ4205是块野生的板子，需要稍微做一些配置。 安装vivado、SDK时候顺便安装了arm-linux-gnueabihf-以">
 <meta name="keywords" content="zynq">
 <meta property="og:type" content="article">
-<meta property="og:title" content="zynq[1] 矿板helloworld">
-<meta property="og:url" content="http://yoursite.com/zynq1/index.html">
+<meta property="og:title" content="zynq[2] Linux from scratch">
+<meta property="og:url" content="http://yoursite.com/zynq2/index.html">
 <meta property="og:site_name" content="hhuysqt">
-<meta property="og:description" content="最近矿难，某宝某鱼上都出现了大量矿机控制板。。。ASIC负责挖矿，控制板负责联网、监视、控制之类。控制板不乏有各种水果派，像香橙派、树莓派、狗骨头之类的所谓“极客玩具”在其之列，想必国内水果派厂家活的是相当滋润。。。光靠极客教育哪有什么赚头，极客大都很穷的，像我这样看到三五十块钱的“zynq开发板”，便忍不住要跟风收一波垃圾了。。。 某鱼上EBAZ4205控制板泛滥，它出自翼比特E9+矿机。它的老">
-<meta property="og:image" content="http://yoursite.com/zynq1/ebazE9p.jpg">
-<meta property="og:image" content="http://yoursite.com/zynq1/ebaz4205-3.jpg">
-<meta property="og:image" content="http://yoursite.com/zynq1/zynqbd.jpeg">
-<meta property="og:image" content="http://yoursite.com/zynq1/ebaz4205-2.jpg">
-<meta property="og:image" content="http://yoursite.com/zynq1/vivado1.jpeg">
-<meta property="og:image" content="http://yoursite.com/zynq1/vivado2.jpeg">
-<meta property="og:image" content="http://yoursite.com/zynq1/vivado3.jpeg">
-<meta property="og:image" content="http://yoursite.com/zynq1/vivado4.jpeg">
-<meta property="og:image" content="http://yoursite.com/zynq1/vivado5.jpeg">
-<meta property="og:image" content="http://yoursite.com/zynq1/vivado7.jpeg">
-<meta property="og:image" content="http://yoursite.com/zynq1/vivado6.jpeg">
-<meta property="og:image" content="http://yoursite.com/zynq1/vivado8.jpeg">
-<meta property="og:image" content="http://yoursite.com/zynq1/vivado10.jpeg">
-<meta property="og:image" content="http://yoursite.com/zynq1/vivado9.jpeg">
-<meta property="og:image" content="http://yoursite.com/zynq1/vivado11.jpeg">
-<meta property="og:image" content="http://yoursite.com/zynq1/vivado12.jpeg">
-<meta property="og:image" content="http://yoursite.com/zynq1/vivado13.jpeg">
-<meta property="og:image" content="http://yoursite.com/zynq1/sdk1.jpeg">
-<meta property="og:image" content="http://yoursite.com/zynq1/sdk2.jpeg">
-<meta property="og:image" content="http://yoursite.com/zynq1/sdk3.jpeg">
-<meta property="og:image" content="http://yoursite.com/zynq1/telnet.jpeg">
-<meta property="og:image" content="http://yoursite.com/zynq1/ebaz4205-1.jpg">
-<meta property="og:image" content="http://yoursite.com/zynq1/bqb.jpg">
-<meta property="og:updated_time" content="2019-04-27T04:35:13.976Z">
+<meta property="og:description" content="Xilinx有个工具叫PetaLinux，它可以一键生成uboot、Linux、根文件系统。但是按照惯例我们还是自己敲命令一个个来吧。 Xilinx有个wiki讲述如何一步步做Linux from scratch。有些步骤是多余的，比如编译设备树的工具链。鉴于我们的EBAZ4205是块野生的板子，需要稍微做一些配置。 安装vivado、SDK时候顺便安装了arm-linux-gnueabihf-以">
+<meta property="og:updated_time" content="2019-04-27T09:04:23.217Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="zynq[1] 矿板helloworld">
-<meta name="twitter:description" content="最近矿难，某宝某鱼上都出现了大量矿机控制板。。。ASIC负责挖矿，控制板负责联网、监视、控制之类。控制板不乏有各种水果派，像香橙派、树莓派、狗骨头之类的所谓“极客玩具”在其之列，想必国内水果派厂家活的是相当滋润。。。光靠极客教育哪有什么赚头，极客大都很穷的，像我这样看到三五十块钱的“zynq开发板”，便忍不住要跟风收一波垃圾了。。。 某鱼上EBAZ4205控制板泛滥，它出自翼比特E9+矿机。它的老">
-<meta name="twitter:image" content="http://yoursite.com/zynq1/ebazE9p.jpg">
+<meta name="twitter:title" content="zynq[2] Linux from scratch">
+<meta name="twitter:description" content="Xilinx有个工具叫PetaLinux，它可以一键生成uboot、Linux、根文件系统。但是按照惯例我们还是自己敲命令一个个来吧。 Xilinx有个wiki讲述如何一步步做Linux from scratch。有些步骤是多余的，比如编译设备树的工具链。鉴于我们的EBAZ4205是块野生的板子，需要稍微做一些配置。 安装vivado、SDK时候顺便安装了arm-linux-gnueabihf-以">
   
     <link rel="alternative" href="/atom.xml" title="hhuysqt" type="application/atom+xml">
   
@@ -174,140 +150,168 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-zynq1" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-zynq2" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      zynq[1] 矿板helloworld
+      zynq[2] Linux from scratch
     </h1>
   
 
         
-        <a href="/zynq1/" class="archive-article-date">
-  	<time datetime="2019-04-26T11:56:38.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-26</time>
+        <a href="/zynq2/" class="archive-article-date">
+  	<time datetime="2019-04-27T04:35:38.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-27</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>最近矿难，某宝某鱼上都出现了大量矿机控制板。。。ASIC负责挖矿，控制板负责联网、监视、控制之类。控制板不乏有各种水果派，像香橙派、树莓派、狗骨头之类的所谓“极客玩具”在其之列，想必国内水果派厂家活的是相当滋润。。。光靠极客教育哪有什么赚头，极客大都很穷的，像我这样看到三五十块钱的“zynq开发板”，便忍不住要跟风收一波垃圾了。。。</p>
-<p>某鱼上<code>EBAZ4205</code>控制板泛滥，它出自<code>翼比特E9+</code>矿机。它的老版控制卡<code>EBAZ4203</code>配置与其基本一样。</p>
-<p><img src="/zynq1/ebazE9p.jpg" alt="ebaz4205"><br><strong>下面一大坨都是计算卡，上面一小块才是控制板</strong></p>
+        <p>Xilinx有个工具叫<code>PetaLinux</code>，它可以一键生成uboot、Linux、根文件系统。但是按照惯例我们还是自己敲命令一个个来吧。</p>
+<p>Xilinx有个<a href="https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18841738/Getting+Started" target="_blank" rel="noopener">wiki</a>讲述如何一步步做<code>Linux from scratch</code>。有些步骤是多余的，比如编译设备树的工具链。鉴于我们的EBAZ4205是块野生的板子，需要稍微做一些配置。</p>
+<p>安装vivado、SDK时候顺便安装了<code>arm-linux-gnueabihf-</code>以及其他Xilinx自家的工具链，不妨将其export到PATH：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># gcc</span></span><br><span class="line"><span class="built_in">export</span> PATH=/某某某/SDK/2017.4/gnu/aarch32/lin/gcc-arm-linux-gnueabi/bin/:<span class="variable">$PATH</span></span><br><span class="line"><span class="comment"># bootgen etc.</span></span><br><span class="line"><span class="built_in">export</span> PATH=/某某某/SDK/2017.4/bin:<span class="variable">$PATH</span></span><br></pre></td></tr></table></figure></p>
+<p>所有工作开始之前，还要export <code>ARCH</code>和<code>CROSS_COMPILE</code>两个环境变量：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> ARCH=arm</span><br><span class="line"><span class="built_in">export</span> CROSS_COMPILE=arm-linux-gnueabihf-</span><br></pre></td></tr></table></figure></p>
 <a id="more"></a>
 <h3 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h3><ul>
-<li><a href="#1、板子概况">1、板子概况</a></li>
-<li><a href="#2、开发工程">2、开发工程</a><ul>
-<li><a href="#2-1、SOC启动配置">2-1、SOC启动配置</a></li>
-<li><a href="#2-2、Vivado操作流程">2-2、Vivado操作流程</a></li>
-<li><a href="#2-3、SDK操作流程">2-3、SDK操作流程</a></li>
+<li><a href="#1、uboot">1、uboot</a><ul>
+<li><a href="#1-1、改改配置">1-1、改改配置</a></li>
+<li><a href="#1-2、生成BOOT.bin">1-2、生成BOOT.bin</a></li>
 </ul>
 </li>
+<li><a href="#2、Linux内核">2、Linux内核</a><ul>
+<li><a href="#2-1、设备树">2-1、设备树</a></li>
+<li><a href="#2-2、编译">2-2、编译</a></li>
 </ul>
-<h3 id="1、板子概况"><a href="#1、板子概况" class="headerlink" title="1、板子概况"></a>1、板子概况</h3><p><img src="/zynq1/ebaz4205-3.jpg" alt="ebaz4205"></p>
+</li>
+<li><a href="#3、rootfs">3、rootfs</a></li>
+<li><a href="#4、启动！">4、启动！</a></li>
+</ul>
+<h3 id="1、uboot"><a href="#1、uboot" class="headerlink" title="1、uboot"></a>1、uboot</h3><p>uboot只需要极少量的配置，就基本上works out of the box了。现在我们先用<code>tftp</code>来启动内核。各部分的地址如下：</p>
 <table>
 <thead>
 <tr>
 <th style="text-align:left"></th>
-<th style="text-align:left"></th>
+<th style="text-align:left">文件名</th>
+<th style="text-align:left">启动地址</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left">主控</td>
-<td style="text-align:left">XC7Z010CLG400-1</td>
+<td style="text-align:left">设备树</td>
+<td style="text-align:left">zynq-zc702.dtb</td>
+<td style="text-align:left">0</td>
 </tr>
 <tr>
-<td style="text-align:left">内存</td>
-<td style="text-align:left">256MB DDR3，EM6GD16EWKG或者MT41K128M16</td>
+<td style="text-align:left">内核</td>
+<td style="text-align:left">uImage</td>
+<td style="text-align:left">0x8000</td>
 </tr>
 <tr>
-<td style="text-align:left">nand</td>
-<td style="text-align:left">128MB SLC</td>
-</tr>
-<tr>
-<td style="text-align:left">以太网</td>
-<td style="text-align:left">百兆网卡，IP101GA</td>
-</tr>
-<tr>
-<td style="text-align:left">供电</td>
-<td style="text-align:left">5V也行</td>
-</tr>
-<tr>
-<td style="text-align:left">其他</td>
-<td style="text-align:left">TF卡，UART1，2个风扇口，14针jtag，3个20pin IO口</td>
+<td style="text-align:left">文件系统</td>
+<td style="text-align:left">uramdisk.image.gz</td>
+<td style="text-align:left">0x01000000</td>
 </tr>
 </tbody>
 </table>
-<h3 id="2、开发工程"><a href="#2、开发工程" class="headerlink" title="2、开发工程"></a>2、开发工程</h3><h4 id="2-1、SOC启动配置"><a href="#2-1、SOC启动配置" class="headerlink" title="2-1、SOC启动配置"></a>2-1、SOC启动配置</h4><p>ZYNQ系列的SOC集成了双核ARM Cortex-A9和FPGA。整个SOC分为<code>PS</code>（processing system）和<code>PL</code>（programmable logic）两部分。PS包括处理器、片上AMBA总线、存储控制器、部分外设以及固定的IO口；PL就是FPGA。ZYNQ 7010处理器主频可以到约600MHz，FPGA有约28K个LE。<br><img src="/zynq1/zynqbd.jpeg" alt="zynq"></p>
-<p>ZYNQ的PS部分可以抛开PL部分而独立运行，因为PS的外设都默认绑定了一些IO口（<code>MIO</code>），内存控制器之类的IO口还是不可更改的，这时候就可以像开发其他ARM SOC那样去玩ZYNQ。MIO是有限的，一些外设端口冲突的话可以通过<code>EMIO</code>绕道PL将其引出，这时候就需要管PL部分了。</p>
-<p>ZYNQ的启动分为三步：</p>
+<p>从<a href="https://github.com/Xilinx/u-boot-xlnx" target="_blank" rel="noopener">https://github.com/Xilinx/u-boot-xlnx</a>上下载Xilinx家的uboot，当然也可以选择去下载<a href="https://github.com/Xilinx/u-boot-xlnx/releases" target="_blank" rel="noopener">release</a>版本的。</p>
+<h4 id="1-1、改改配置"><a href="#1-1、改改配置" class="headerlink" title="1-1、改改配置"></a>1-1、改改配置</h4><p><a href="https://github.com/Xilinx/u-boot-xlnx/blob/master/arch/arm/dts/zynq-zc702.dts#L22" target="_blank" rel="noopener">arch/arm/dts/zynq-zc702.dts</a>的<code>memory</code>节点，内存大小改为256MB<br><figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@@ -21,7 +21,7 @@</span></span><br><span class="line"> </span><br><span class="line"> 	memory@0 &#123;</span><br><span class="line"> 		device_type = "memory";</span><br><span class="line"><span class="deletion">-		reg = &lt;0x0 0x40000000&gt;;</span></span><br><span class="line"><span class="addition">+		reg = &lt;0x0 0x10000000&gt;;</span></span><br><span class="line"> 	&#125;;</span><br><span class="line"> </span><br><span class="line"> 	chosen &#123;</span><br></pre></td></tr></table></figure></p>
+<p>直接用<code>zynq_zc702_defconfig</code>：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make zynq_zc702_defconfig</span><br></pre></td></tr></table></figure></p>
 <ul>
-<li><code>BOOT ROM</code>，根据引脚配置选择从哪里启动，如QSPI、nand/nor flash、SD卡等。将<code>FSBL</code>（first stage bootloader）加载到片上内存里。7010的片上内存有256k。</li>
-<li><code>FSBL</code>，初始化更多的MIO口，初始化DDR，还可以初始化PL部分，然后将应用程序搬到DDR中。初始化部分由vivado直接生成，即那个上万行的<code>ps7_init.c</code>。FSBL可以直接用Xilinx SDK的例子工程，相当于这些工作都可以点点鼠标就完成了。</li>
-<li><code>应用程序</code>。可以直接是用户的应用程序，也可以是又一个loader，比如uboot之类的，剩下的事情就由程序员自己做决定了。</li>
+<li>关闭<code>CONFIG_ENV_IS_IN_SPI_FLASH</code>，不然启动时候会卡死在SPI flash初始化部分。这时候就用默认的环境变量。</li>
+<li>开启<code>CONFIG_NAND</code>、<code>CONFIG_NAND_ZYNQ</code>，以开启nand命令。</li>
 </ul>
-<p>应当指出，FSBL相当于是uboot SPL的地位。在Xilinx uboot工程中，那个上万行的初始化c程序就编译进SPL中去了，所以如果用SDK的FSBL就不需要uboot的SPL了。</p>
-<p>这块板子的<code>R2577</code>和<code>R2584</code>电阻用于配置启动设备。把<code>R2584</code>焊到<code>R2577</code>上，将原来nand启动改为SD卡启动。</p>
-<p><img src="/zynq1/ebaz4205-2.jpg" alt="vivado"></p>
-<h4 id="2-2、Vivado操作流程"><a href="#2-2、Vivado操作流程" class="headerlink" title="2-2、Vivado操作流程"></a>2-2、Vivado操作流程</h4><p>利用Xilinx那套笨重的开发环境，helloworld工程完全可以用鼠标操作出来，一行代码都不用写。。</p>
-<h4 id="（0）首先新建个工程"><a href="#（0）首先新建个工程" class="headerlink" title="（0）首先新建个工程"></a>（0）首先新建个工程</h4><p>一直next到选择芯片。选<code>xc7z010clg400-1</code></p>
-<p><img src="/zynq1/vivado1.jpeg" alt="vivado"></p>
-<p>接下来就顺着左边栏<code>Flow Navigator</code>进行操作。</p>
-<p><img src="/zynq1/vivado2.jpeg" alt="vivado"></p>
-<h4 id="（1）Create-Board-Design"><a href="#（1）Create-Board-Design" class="headerlink" title="（1）Create Board Design"></a>（1）Create Board Design</h4><p>点加号添加<code>ZYNQ7 Processing System</code>:</p>
-<p><img src="/zynq1/vivado3.jpeg" alt="vivado"></p>
-<p>双击出来的zynq7 processing system蓝框框，配置PS系统：</p>
+<p>定制环境变量，改<code>include/configs/zynq-common.h</code>，主要是来配置启动参数。</p>
 <ul>
-<li><p>添加nand控制器，默认就行了：<br><img src="/zynq1/vivado4.jpeg" alt="vivado"></p>
-</li>
-<li><p>添加MIO设置。勾上ENET0、SD0、UART1。注意引脚配置：<br><img src="/zynq1/vivado5.jpeg" alt="vivado"></p>
-</li>
-<li><p>设置外设时钟。把网口改成百兆的：<br><img src="/zynq1/vivado7.jpeg" alt="vivado"></p>
-</li>
-<li><p>设置DDR。幸好我们的<code>MT41K128M16</code>有默认参数配置：<br><img src="/zynq1/vivado6.jpeg" alt="vivado"></p>
-</li>
+<li>tftp之前得显式地设置<code>serverip</code></li>
+<li>要tftp内核、设备树、根文件系统</li>
 </ul>
-<p>因为板子的网口通过EMIO引出，所以我们需要一个个手动分配引脚。但是这个IP是GMII千兆网口，TX RX有8位，而百兆网卡用的MII接口TX RX只有4位，<strong>必须显式地加两个concat模块来将8位转为4位</strong>，否则多余的引脚引出了但是不分配IO口，最后生成bitstream时候会报错。</p>
-<p><img src="/zynq1/vivado8.jpeg" alt="vivado"></p>
-<p>将GMII的TX、RX引到各自的concat模块处，将GMII其他引脚以及MDIO引出：右键点击<code>Make External</code></p>
-<p><img src="/zynq1/vivado10.jpeg" alt="vivado"></p>
-<p>将<code>FCLK_CLK0</code>跟<code>M_AXI_GP0_ACLK</code>连起来，最后点击上方栏的<code>Run Block Automation</code>完成剩下的工作。</p>
-<p><img src="/zynq1/vivado9.jpeg" alt="vivado"></p>
-<p>完成后的效果：</p>
-<p><img src="/zynq1/vivado11.jpeg" alt="vivado"></p>
-<h4 id="（2）左边栏Generate-Block-Design"><a href="#（2）左边栏Generate-Block-Design" class="headerlink" title="（2）左边栏Generate Block Design"></a>（2）左边栏Generate Block Design</h4><p>先<code>Generate Block Design</code>，然后右键<code>Source</code>框下面的bd文件，<code>Create HDL Wrapper</code>：</p>
-<p><img src="/zynq1/vivado12.jpeg" alt="vivado"></p>
-<h4 id="（3）左边栏Run-Synthesis"><a href="#（3）左边栏Run-Synthesis" class="headerlink" title="（3）左边栏Run Synthesis"></a>（3）左边栏Run Synthesis</h4><p>先综合一次，然后打开<code>Open Synthesized Design</code>-&gt;<code>Constraint Wizard</code>，分配引脚。这时需要新建一个constraint文件。</p>
-<p>将网口的引脚都设置为<code>LVCMOS33</code>电平，然后逐个分配引脚。。。</p>
-<p><img src="/zynq1/vivado13.jpeg" alt="vivado"></p>
-<p>设置完成后<code>Ctrl-S</code>保存，约束文件生成如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">set_property IOSTANDARD LVCMOS33 [get_ports ENET0_GMII_RX_CLK_0]</span><br><span class="line">...</span><br><span class="line">set_property PACKAGE_PIN U14 [get_ports ENET0_GMII_RX_CLK_0]</span><br><span class="line">set_property PACKAGE_PIN U15 [get_ports ENET0_GMII_TX_CLK_0]</span><br><span class="line">set_property PACKAGE_PIN W19 [get_ports &#123;ENET0_GMII_TX_EN_0[0]&#125;]</span><br><span class="line">set_property PACKAGE_PIN W18 [get_ports &#123;enet0_gmii_txd[0]&#125;]</span><br><span class="line">set_property PACKAGE_PIN Y18 [get_ports &#123;enet0_gmii_txd[1]&#125;]</span><br><span class="line">set_property PACKAGE_PIN V18 [get_ports &#123;enet0_gmii_txd[2]&#125;]</span><br><span class="line">set_property PACKAGE_PIN Y19 [get_ports &#123;enet0_gmii_txd[3]&#125;]</span><br><span class="line">set_property PACKAGE_PIN W16 [get_ports ENET0_GMII_RX_DV_0]</span><br><span class="line">set_property PACKAGE_PIN W15 [get_ports MDIO_ETHERNET_0_0_mdc]</span><br><span class="line">set_property PACKAGE_PIN Y14 [get_ports MDIO_ETHERNET_0_0_mdio_io]</span><br><span class="line">set_property PACKAGE_PIN Y16 [get_ports &#123;enet0_gmii_rxd[0]&#125;]</span><br><span class="line">set_property PACKAGE_PIN V16 [get_ports &#123;enet0_gmii_rxd[1]&#125;]</span><br><span class="line">set_property PACKAGE_PIN V17 [get_ports &#123;enet0_gmii_rxd[2]&#125;]</span><br><span class="line">set_property PACKAGE_PIN Y17 [get_ports &#123;enet0_gmii_rxd[3]&#125;]</span><br></pre></td></tr></table></figure></p>
-<p><strong>然后再综合一次。。。</strong></p>
-<h4 id="（4）左边栏Run-Implementation-和-Generate-Bitstream"><a href="#（4）左边栏Run-Implementation-和-Generate-Bitstream" class="headerlink" title="（4）左边栏Run Implementation 和 Generate Bitstream"></a>（4）左边栏Run Implementation 和 Generate Bitstream</h4><p>要跑一段时间。。。</p>
-<h4 id="（5）输出设计"><a href="#（5）输出设计" class="headerlink" title="（5）输出设计"></a>（5）输出设计</h4><p><code>File</code>-&gt;<code>Export</code>-&gt;<code>Export Hardware</code></p>
-<p>记得勾上<code>Include Bitstream</code>。</p>
-<h4 id="（6）进入SDK"><a href="#（6）进入SDK" class="headerlink" title="（6）进入SDK"></a>（6）进入SDK</h4><p><code>File</code>-&gt;<code>Launch SDK</code></p>
-<h4 id="2-3、SDK操作流程"><a href="#2-3、SDK操作流程" class="headerlink" title="2-3、SDK操作流程"></a>2-3、SDK操作流程</h4><h4 id="（1）首先需要新建FSBL。"><a href="#（1）首先需要新建FSBL。" class="headerlink" title="（1）首先需要新建FSBL。"></a>（1）首先需要新建FSBL。</h4><p><code>File</code>-&gt;<code>New</code>-&gt;<code>Application Project</code>，Next到<code>Templates</code>，选<code>Zynq FSBL</code>：</p>
-<p><img src="/zynq1/sdk1.jpeg" alt="sdk"></p>
-<p>然后它会自动开始编译。。。</p>
-<h4 id="（2）然后才新建helloworld。。"><a href="#（2）然后才新建helloworld。。" class="headerlink" title="（2）然后才新建helloworld。。"></a>（2）然后才新建helloworld。。</h4><p><code>File</code>-&gt;<code>New</code>-&gt;<code>Application Project</code>，Next到<code>Templates</code>，选<code>Hello World</code>。它也会自动开始编译，不出意外的话就完事了。</p>
-<h4 id="（3）最后生成启动文件BOOT-bin"><a href="#（3）最后生成启动文件BOOT-bin" class="headerlink" title="（3）最后生成启动文件BOOT.bin"></a>（3）最后生成启动文件BOOT.bin</h4><p>左边栏右键helloworld工程，<code>Create Boot Image</code>。可以看到这个启动文件包括了三部分：</p>
-<ul>
-<li>fsbl</li>
-<li>bitstream</li>
-<li>应用程序</li>
-</ul>
-<p><img src="/zynq1/sdk2.jpeg" alt="sdk"></p>
-<h4 id="（4）点亮板子"><a href="#（4）点亮板子" class="headerlink" title="（4）点亮板子"></a>（4）点亮板子</h4><p>将一张SD卡格式化为fat文件系统，将<code>bootimage/BOOT.bin</code>丢进去，插上电就能启动了。</p>
-<p><img src="/zynq1/sdk3.jpeg" alt="sdk"></p>
-<h4 id="（5）测试网口"><a href="#（5）测试网口" class="headerlink" title="（5）测试网口"></a>（5）测试网口</h4><p>SDK里面新建<code>lwIP Echo Server</code>工程，等它编译完，生成BOOT.bin，拷到SD卡里。插好网线，在终端中<code>telnet</code>它的7号端口，输入一行，回车，然后它就将你输入的东西返回来了。。。</p>
-<p><img src="/zynq1/telnet.jpeg" alt="sdk"></p>
-<p><img src="/zynq1/ebaz4205-1.jpg" alt="debugging"></p>
-<p><img src="/zynq1/bqb.jpg" alt="debugging"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">set serverip xxx.xxx.xxx.xxx</span><br><span class="line">dhcp</span><br><span class="line">tftpboot 0 zynq-zc702.dtb</span><br><span class="line">tftpboot 8000 uImage</span><br><span class="line">tftpboot 1000000 uramdisk.image.gz</span><br><span class="line">bootm 8000 1000000 0</span><br></pre></td></tr></table></figure>
+<p>然后make，生成了<code>u-boot</code>可执行文件。</p>
+<h4 id="1-2、生成BOOT-bin"><a href="#1-2、生成BOOT-bin" class="headerlink" title="1-2、生成BOOT.bin"></a>1-2、生成BOOT.bin</h4><p>我们写一个<code>boot.bif</code>，引用之前建的helloworld工程中的<code>FSBL</code>和<code>bitstream</code>：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">the_ROM_image:</span><br><span class="line">&#123;</span><br><span class="line">	[bootloader]/某某某/fsbl.elf</span><br><span class="line">	/某某某/ebaz4205_wrapper.bit</span><br><span class="line">	/某某某/u-boot.elf</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>利用vivado安装的工具<code>bootgen</code>，通过上述配置文件来生成<code>BOOT.bin</code>。<strong><code>u-boot</code>需要重命名为<code>u-boot.elf</code>，不然bootgen不认为它是ELF文件，就当它是bin文件来处理了。。。</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mv u-boot u-boot.elf</span><br><span class="line">bootgen -image boot.bif -o i BOOT.bin -w</span><br></pre></td></tr></table></figure></p>
+<h3 id="2、Linux内核"><a href="#2、Linux内核" class="headerlink" title="2、Linux内核"></a>2、Linux内核</h3><p>内核很大程度上也是work out of the box了，改改设备树就好。</p>
+<p>从<a href="https://github.com/Xilinx/linux-xlnx" target="_blank" rel="noopener">https://github.com/Xilinx/linux-xlnx</a>上下载Xilinx家的内核。目前版本是4.19.0，还是挺新的。</p>
+<h4 id="2-1、设备树"><a href="#2-1、设备树" class="headerlink" title="2-1、设备树"></a>2-1、设备树</h4><p>首先还是得将内存大小改对：<br><figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">        memory@0 &#123;</span><br><span class="line">                device_type = "memory";</span><br><span class="line"><span class="deletion">-               reg = &lt;0x0 0x40000000&gt;;</span></span><br><span class="line"><span class="addition">+               reg = &lt;0x0 0x10000000&gt;;</span></span><br><span class="line">        &#125;;</span><br></pre></td></tr></table></figure></p>
+<p>因为我们的野生板子外设很少，必须将不用的外设<code>disabled</code>掉，不然引脚配置会打架。<br><figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"> &amp;can0 &#123;</span><br><span class="line"><span class="deletion">-       status = "okay";</span></span><br><span class="line"><span class="addition">+       status = "disabled";</span></span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"> &amp;i2c0 &#123;</span><br><span class="line"><span class="deletion">-       status = "okay";</span></span><br><span class="line"><span class="addition">+       status = "disabled";</span></span><br><span class="line"></span><br><span class="line"> &amp;qspi &#123;</span><br><span class="line">        u-boot,dm-pre-reloc;</span><br><span class="line"><span class="deletion">-       status = "okay";</span></span><br><span class="line"><span class="addition">+       status = "disabled";</span></span><br><span class="line"></span><br><span class="line"> &amp;usb0 &#123;</span><br><span class="line"><span class="deletion">-       status = "okay";</span></span><br><span class="line"><span class="addition">+       status = "disabled";</span></span><br></pre></td></tr></table></figure></p>
+<p>串口的引脚要改对：<br><figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@@ -368,12 +382,12 @@</span></span><br><span class="line"> 		&#125;;</span><br><span class="line"> </span><br><span class="line"> 		conf-rx &#123;</span><br><span class="line"><span class="deletion">-			pins = "MIO49";</span></span><br><span class="line"><span class="addition">+			pins = "MIO25";</span></span><br><span class="line"> 			bias-high-impedance;</span><br><span class="line"> 		&#125;;</span><br><span class="line"> </span><br><span class="line"> 		conf-tx &#123;</span><br><span class="line"><span class="deletion">-			pins = "MIO48";</span></span><br><span class="line"><span class="addition">+			pins = "MIO24";</span></span><br><span class="line"> 			bias-disable;</span><br><span class="line"> 		&#125;;</span><br><span class="line"> 	&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>网口通过<code>EMIO</code>引出，因此<code>gem0</code>的引脚声明应该删掉，否则会跟串口引脚打架，导致启动到一半串口没输出了。。并且<code>ethernet_phy</code>节点的<code>reg</code>参数应改为0，不然会枚举不到那个网卡：<br><figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&amp;gem0 &#123;</span><br><span class="line">	status = "okay";</span><br><span class="line">	phy-mode = "rgmii-id";</span><br><span class="line">	phy-handle = &lt;&amp;ethernet_phy&gt;;</span><br><span class="line"><span class="deletion">-	pinctrl-names = "default";</span></span><br><span class="line"><span class="deletion">-	pinctrl-0 = &lt;&amp;pinctrl_gem0_default&gt;;</span></span><br><span class="line"><span class="deletion">-	phy-reset-gpio = &lt;&amp;gpio0 11 0&gt;;</span></span><br><span class="line"><span class="deletion">-	phy-reset-active-low;</span></span><br><span class="line"> </span><br><span class="line"><span class="deletion">-	ethernet_phy: ethernet-phy@7 &#123;</span></span><br><span class="line"><span class="deletion">-		reg = &lt;7&gt;;</span></span><br><span class="line"><span class="addition">+	ethernet_phy: ethernet-phy@0 &#123;</span></span><br><span class="line"><span class="addition">+		reg = &lt;0&gt;;</span></span><br><span class="line"> 		device_type = "ethernet-phy";</span><br><span class="line"> 	&#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>SDIO接口也在fsbl初始化完成了，所以它的引脚声明也要删掉：<br><figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"> &amp;sdhci0 &#123;</span><br><span class="line"> 	u-boot,dm-pre-reloc;</span><br><span class="line"> 	status = "okay";</span><br><span class="line"><span class="deletion">-	pinctrl-names = "default";</span></span><br><span class="line"><span class="deletion">-	pinctrl-0 = &lt;&amp;pinctrl_sdhci0_default&gt;;</span></span><br><span class="line"> &#125;;</span><br></pre></td></tr></table></figure></p>
+<p>为了用nand flash，需要添加<code>nand</code>节点。在阿莫论坛<a href="https://www.amobbs.com/thread-5705018-1-1.html" target="_blank" rel="noopener">有个帖子</a>，62楼列举了原板子启动的log，可以看到它有9个分区：</p>
+<pre><code>Creating 9 MTD partitions on &quot;pl35x-nand&quot;:
+0x000000000000-0x000000300000 : &quot;nand-fsbl-uboot&quot;
+0x000000300000-0x000000800000 : &quot;nand-linux&quot;
+0x000000800000-0x000000820000 : &quot;nand-device-tree&quot;
+0x000000820000-0x000001220000 : &quot;nand-rootfs&quot;
+0x000001220000-0x000002220000 : &quot;nand-jffs2&quot;
+0x000002220000-0x000002a20000 : &quot;nand-bitstream&quot;
+0x000002a20000-0x000006a20000 : &quot;nand-allrootfs&quot;
+0x000006a20000-0x000007e00000 : &quot;nand-release&quot;
+0x000007e00000-0x000008000000 : &quot;nand-reserve&quot;
+</code></pre><p>所以我们这样设置<code>nand0</code>节点：<br><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">&amp;nand0</span> &#123;</span><br><span class="line">	status = <span class="string">"okay"</span>;</span><br><span class="line">	pinctrl-names = <span class="string">"default"</span>;</span><br><span class="line">	pinctrl<span class="number">-0</span> = <span class="params">&lt;<span class="variable">&amp;pinctrl_nand0_default</span>&gt;</span>;</span><br><span class="line">	<span class="class">partition@0 </span>&#123;</span><br><span class="line">		label = <span class="string">"nand-fsbl-uboot"</span>;</span><br><span class="line">		reg = <span class="params">&lt;<span class="number">0x0</span> <span class="number">0x300000</span>&gt;</span>;</span><br><span class="line">	&#125;;</span><br><span class="line">	<span class="class">partition@1 </span>&#123;</span><br><span class="line">		label = <span class="string">"nand-linux"</span>;</span><br><span class="line">		reg = <span class="params">&lt;<span class="number">0x300000</span> <span class="number">0x500000</span>&gt;</span>;</span><br><span class="line">	&#125;;</span><br><span class="line">	<span class="class">partition@2 </span>&#123;</span><br><span class="line">		label = <span class="string">"nand-device-tree"</span>;</span><br><span class="line">		reg = <span class="params">&lt;<span class="number">0x800000</span> <span class="number">0x20000</span>&gt;</span>;</span><br><span class="line">	&#125;;</span><br><span class="line">	<span class="class">partition@3 </span>&#123;</span><br><span class="line">		label = <span class="string">"nand-rootfs"</span>;</span><br><span class="line">		reg = <span class="params">&lt;<span class="number">0x820000</span> <span class="number">0xa00000</span>&gt;</span>;</span><br><span class="line">	&#125;;</span><br><span class="line">	<span class="class">partition@4 </span>&#123;</span><br><span class="line">		label = <span class="string">"nand-jffs2"</span>;</span><br><span class="line">		reg = <span class="params">&lt;<span class="number">0x1220000</span> <span class="number">0x1000000</span>&gt;</span>;</span><br><span class="line">	&#125;;</span><br><span class="line">	<span class="class">partition@5 </span>&#123;</span><br><span class="line">		label = <span class="string">"nand-bitstream"</span>;</span><br><span class="line">		reg = <span class="params">&lt;<span class="number">0x2220000</span> <span class="number">0x800000</span>&gt;</span>;</span><br><span class="line">	&#125;;</span><br><span class="line">	<span class="class">partition@6 </span>&#123;</span><br><span class="line">		label = <span class="string">"nand-allrootfs"</span>;</span><br><span class="line">		reg = <span class="params">&lt;<span class="number">0x2a20000</span> <span class="number">0x4000000</span>&gt;</span>;</span><br><span class="line">	&#125;;</span><br><span class="line">	<span class="class">partition@7 </span>&#123;</span><br><span class="line">		label = <span class="string">"nand-release"</span>;</span><br><span class="line">		reg = <span class="params">&lt;<span class="number">0x6a20000</span> <span class="number">0x13e0000</span>&gt;</span>;</span><br><span class="line">	&#125;;</span><br><span class="line">	<span class="class">partition@8 </span>&#123;</span><br><span class="line">		label = <span class="string">"nand-reserve"</span>;</span><br><span class="line">		reg = <span class="params">&lt;<span class="number">0x7e00000</span> <span class="number">0x200000</span>&gt;</span>;</span><br><span class="line">	&#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>它的引脚配置<code>pinctrl_nand0_default</code>如下：<br><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">pinctrl_nand0_default:</span> nand0-<span class="class">default </span>&#123;</span><br><span class="line">	<span class="class">mux </span>&#123;</span><br><span class="line">		groups = <span class="string">"smc0_nand8_grp"</span>;</span><br><span class="line">		function = <span class="string">"smc0_nand"</span>;</span><br><span class="line">	&#125;;</span><br><span class="line"></span><br><span class="line">	<span class="class">conf </span>&#123;</span><br><span class="line">		groups = <span class="string">"smc0_nand8_grp"</span>;</span><br><span class="line">		bias-pull-up;</span><br><span class="line">	&#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>groups的名字是在<a href="https://github.com/Xilinx/linux-xlnx/blob/master/drivers/pinctrl/pinctrl-zynq.c#L715" target="_blank" rel="noopener">pinctrl-zynq.c第715行</a>找到的。</p>
+<p>由于在<a href="https://github.com/Xilinx/linux-xlnx/blob/master/arch/arm/boot/dts/zynq-7000.dtsi#L220" target="_blank" rel="noopener">zynq-7000.dtsi</a>里，<code>nand0</code>是<code>smcc</code>的子节点，所以还要使能<code>smcc</code>节点：<br><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">&amp;smcc</span> &#123;</span><br><span class="line">	status = <span class="string">"okay"</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>为了避免<code>pinctrl_gpio0_default</code>跟<code>pinctrl_nand0_default</code>引脚打架，前者的引脚都应该删掉：<br><figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"> 	pinctrl_gpio0_default: gpio0-default &#123;</span><br><span class="line"> 		mux &#123;</span><br><span class="line"> 			function = "gpio0";</span><br><span class="line"><span class="deletion">-			groups = "gpio0_7_grp", "gpio0_8_grp", "gpio0_9_grp",</span></span><br><span class="line"><span class="deletion">-				 "gpio0_10_grp", "gpio0_11_grp", "gpio0_12_grp",</span></span><br><span class="line"><span class="deletion">-				 "gpio0_13_grp", "gpio0_14_grp";</span></span><br><span class="line"><span class="addition">+			groups = "";</span></span><br><span class="line"> 		&#125;;</span><br><span class="line"> </span><br><span class="line"> 		conf &#123;</span><br><span class="line"><span class="deletion">-			groups = "gpio0_7_grp", "gpio0_8_grp", "gpio0_9_grp",</span></span><br><span class="line"><span class="deletion">-				 "gpio0_10_grp", "gpio0_11_grp", "gpio0_12_grp",</span></span><br><span class="line"><span class="deletion">-				 "gpio0_13_grp", "gpio0_14_grp";</span></span><br><span class="line"><span class="addition">+			groups = "";</span></span><br><span class="line"> 			slew-rate = &lt;0&gt;;</span><br><span class="line"> 			io-standard = &lt;1&gt;;</span><br><span class="line"> 		&#125;;</span><br><span class="line"> </span><br><span class="line"> 		conf-pull-up &#123;</span><br><span class="line"><span class="deletion">-			pins = "MIO9", "MIO10", "MIO11", "MIO12", "MIO13", "MIO14";</span></span><br><span class="line"><span class="addition">+			pins = "";</span></span><br><span class="line"> 			bias-pull-up;</span><br><span class="line"> 		&#125;;</span><br><span class="line"> </span><br><span class="line"> 		conf-pull-none &#123;</span><br><span class="line"><span class="deletion">-			pins = "MIO7", "MIO8";</span></span><br><span class="line"><span class="addition">+			pins = "";</span></span><br><span class="line"> 			bias-disable;</span><br><span class="line"> 		&#125;;</span><br><span class="line"> 	&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>其他节点该删的都要删掉，比如<code>gpio-keys</code>、<code>leds</code>、<code>usb_phy0</code>等。还有一些pinctrl的节点，看着碍事也不妨删掉，比如<code>pinctrl_gem0_default</code>等。。</p>
+<h4 id="2-2、编译"><a href="#2-2、编译" class="headerlink" title="2-2、编译"></a>2-2、编译</h4><p>其实用<code>xilinx_zynq_defconfig</code>已经足够，不过如果想要更多的功能，比如<code>ZRAM</code>压缩内存之类的比较骚的设施，也可以稍微配置一下。。</p>
+<p>记得我们uboot会将内核放在32K开始的内存地址处。然后编译设备树。</p>
+<pre><code>make xilinx_zynq_defconfig
+make uImage UIMAGE_LOADADDR=0x8000
+make dtbs
+</code></pre><h3 id="3、rootfs"><a href="#3、rootfs" class="headerlink" title="3、rootfs"></a>3、rootfs</h3><p>从<a href="https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18842473/Build+and+Modify+a+Rootfs" target="_blank" rel="noopener">Build and Modify a Rootfs</a>上下载人家编译好的<code>busybox</code>做的文件系统<code>arm_ramdisk.image.gz</code>，然后将它打包为uboot能识别的格式：</p>
+<pre><code>mkimage -A arm -T ramdisk -C gzip -d arm_ramdisk.image.gz uramdisk.image.gz
+</code></pre><h3 id="4、启动！"><a href="#4、启动！" class="headerlink" title="4、启动！"></a>4、启动！</h3><p>装好tftp server，将<code>uImage</code>、<code>zynq-zc702.dtb</code>、<code>uramdisk.image.gz</code>放进去。将<code>BOOT.bin</code>丢进格式化为fatfs的SD卡的根目录里面，然后就可以等它启动了。</p>
+<pre><code>## Booting kernel from Legacy Image at 00008000 ...
+  Image Name:   Linux-4.19.0-xilinx
+  Image Type:   ARM Linux Kernel Image (uncompressed)
+  Data Size:    4322424 Bytes = 4.1 MiB
+  Load Address: 00008000
+  Entry Point:  00008000
+  Verifying Checksum ... OK
+## Loading init Ramdisk from Legacy Image at 01000000 ...
+  Image Name:
+  Image Type:   ARM Linux RAMDisk Image (gzip compressed)
+  Data Size:    5309954 Bytes = 5.1 MiB
+  Load Address: 00000000
+  Entry Point:  00000000
+  Verifying Checksum ... OK
+## Flattened Device Tree blob at 00000000
+  Booting using the fdt blob at 0x000000
+  Loading Kernel Image ... OK
+  Loading Ramdisk to 0e5f3000, end 0eb03602 ... OK
+  Loading Device Tree to 0e5ec000, end 0e5f27a6 ... OK
 
+Starting kernel ...
+
+Booting Linux on physical CPU 0x0
+Linux version 4.19.0-xilinx (hyq@ict) (gcc version 6.2.1 20161114 (Linaro GCC Snapshot 6.2-2016.11))
+#19 SMP PREEMPT Wed Apr 24 21:55:25 CST 2019
+CPU: ARMv7 Processor [413fc090] revision 0 (ARMv7), cr=18c5387d
+
+....
+
+VFS: Mounted root (ext4 filesystem) on device 1:0.
+Starting rcS...
+++ Mounting filesystem
+mount: mounting /dev/mmcblk0p1 on /mnt failed: No such file or directory
+mount: mounting /dev/mmcblk0 on /mnt failed: No such file or directory
+++ Setting up mdev
+++ Starting telnet daemon
+++ Starting http daemon
+++ Starting ftp daemon
+++ Starting ssh daemon
+random: sshd: uninitialized urandom read (32 bytes read)
+rcS Complete
+zynq&gt;
+zynq&gt; 
+zynq&gt; 
+zynq&gt; uname -a
+Linux (none) 4.19.0-xilinx #19 SMP PREEMPT Wed Apr 24 21:55:25 CST 2019 armv7l GNU/Linux
+zynq&gt; 
+</code></pre>
       
 
       
@@ -376,7 +380,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/zynq1/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/zynq2/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -390,18 +394,9 @@
   
 <nav id="article-nav">
   
-    <a href="/zynq2/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          zynq[2] Linux from scratch
-        
-      </div>
-    </a>
   
-  
-    <a href="/pulpino2/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">pulpino[2] nuttx ELF</div>
+    <a href="/zynq1/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">zynq[1] 矿板helloworld</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -440,7 +435,7 @@
 <script src="https://jjeejj.github.io/js/gitment.js"></script>
 <script>
 var gitment = new Gitment({
-  id: "http://yoursite.com/zynq1/",
+  id: "http://yoursite.com/zynq2/",
   owner: 'hhuysqt',
   repo: 'hhuysqt.github.io',
   oauth: {
