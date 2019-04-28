@@ -30,7 +30,7 @@
 <meta property="og:description" content="Ubuntu、Debian之类的不同的发行版，其实就是不同的rootfs。Debian系的发行版有个工具叫debootstrap，可以从源那里下载最小的根文件系统。Arch相应的工具则是packstrap。 下完根文件系统之后chroot进去进行相应的配置，为了chroot到一个ARM的rootfs，我们需要用qemu-arm-static。进去之后apt-get你想要安装的东西。配完了之后烧进s">
 <meta property="og:image" content="https://hhuysqt.github.io/zynq3/screenfetch.jpeg">
 <meta property="og:image" content="https://hhuysqt.github.io/zynq3/screenfetch2.jpeg">
-<meta property="og:updated_time" content="2019-04-27T19:01:32.613Z">
+<meta property="og:updated_time" content="2019-04-28T07:28:18.843Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="zynq[3] bootstrap Ubuntu">
 <meta name="twitter:description" content="Ubuntu、Debian之类的不同的发行版，其实就是不同的rootfs。Debian系的发行版有个工具叫debootstrap，可以从源那里下载最小的根文件系统。Arch相应的工具则是packstrap。 下完根文件系统之后chroot进去进行相应的配置，为了chroot到一个ARM的rootfs，我们需要用qemu-arm-static。进去之后apt-get你想要安装的东西。配完了之后烧进s">
@@ -324,6 +324,9 @@ iface eth0 inet dhcp
 <p>设置默认挂载目录：改<code>/etc/fstab</code>，将启动分区挂载到<code>/boot</code>目录上：</p>
 <pre><code>/dev/mmcblk0p1 /boot vfat defaults 0 0
 </code></pre><p>如果没什么别的想要配置的话，就可以<code>exit</code>退出了。</p>
+<blockquote>
+<p>注意，因为Xilinx的内核配置默认将所有驱动都直接编译进内核，所以不需要将模块安装到文件系统中，就一个放在启动分区的内核就够了。</p>
+</blockquote>
 <h3 id="烧录SD卡"><a href="#烧录SD卡" class="headerlink" title="烧录SD卡"></a>烧录SD卡</h3><p>我们将镜像文件卸载：</p>
 <pre><code class="bash">sudo umount ./boot
 sudo umount ./rootfs
@@ -439,7 +442,7 @@ ubuntu@armhf:~$
     <div class="content">
         
 <span class="post-time">
-    Last updated: <time datetime="2019-04-27T19:01:32.613Z" itemprop="dateUpdated">2019-04-28 03:01:32</time>
+    Last updated: <time datetime="2019-04-28T07:28:18.843Z" itemprop="dateUpdated">2019-04-28 15:28:18</time>
 </span><br>
 
 
