@@ -28,6 +28,7 @@
 <meta property="og:url" content="https://hhuysqt.github.io/ucpc5/index.html">
 <meta property="og:site_name" content="hhuysqt">
 <meta property="og:description" content="uc-PC板子上跑的是Linux 4.13.3，使用设备树。内核不经压缩，就地运行（XIP，全称execute in place）。 需要使能的功能有：网络、显示、USB、SD卡、摄像头、yaffs。这些功能全部开启的话，内核大小将为4MB以上，而片内flash只有2MB，不模块化的话只能跑在SDRAM上，这回导致性能低下，所以调通设备驱动之后应该进行模块化，将关键部分编译进内核，内核塞进片内fl">
+<meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://hhuysqt.github.io/ucpc5/net-config.jpeg">
 <meta property="og:image" content="https://hhuysqt.github.io/ucpc5/net-config2.jpeg">
 <meta property="og:image" content="https://hhuysqt.github.io/ucpc5/net-config2.2.jpeg">
@@ -137,6 +138,13 @@
               </a>
             </li>
         
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-male"></i>
+                关于我
+              </a>
+            </li>
+        
       </ul>
     </div>
   </div>
@@ -154,7 +162,7 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
@@ -849,7 +857,7 @@ static struct mtd_partition stm32_nand_partitions[] = {
     <div class="content">
         
 <span class="post-time">
-    Last updated: <time datetime="2019-04-27T15:20:06.959Z" itemprop="dateUpdated">2019-04-27 23:20:06</time>
+    最后更新时间：<time datetime="2019-04-27T15:20:06.959Z" itemprop="dateUpdated">2019-04-27 23:20:06</time>
 </span><br>
 
 
@@ -1010,7 +1018,7 @@ static struct mtd_partition stm32_nand_partitions[] = {
             
                 <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
             
-            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
         </p>
     </div>
     <div class="bottom">

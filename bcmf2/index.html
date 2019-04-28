@@ -28,6 +28,7 @@
 <meta property="og:url" content="https://hhuysqt.github.io/bcmf2/index.html">
 <meta property="og:site_name" content="hhuysqt">
 <meta property="og:description" content="本文总结BCM43438的初始化流程，初始化成功的标志是连上WiFi。 参考WICED SDK、NuttX，以及Linux的源码，它们的流程略有不同。Linux的驱动面面俱到；WICED的驱动虽只针对物联网设备，却写得相当冗杂；nuttx的驱动则相当简洁恰好能用。  WICED可从Cypress官网上下载，注册个账号就好了。这份软件架构简直是一切以WICED为中心，有bootloader、dct（">
+<meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://hhuysqt.github.io/bcmf2/sdio.jpeg">
 <meta property="og:image" content="https://hhuysqt.github.io/bcmf2/cmd5253.jpeg">
 <meta property="og:image" content="https://hhuysqt.github.io/bcmf2/fwlayout.jpeg">
@@ -114,6 +115,13 @@
               </a>
             </li>
         
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-male"></i>
+                关于我
+              </a>
+            </li>
+        
       </ul>
     </div>
   </div>
@@ -131,7 +139,7 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
@@ -474,7 +482,7 @@ nsh&gt;
     <div class="content">
         
 <span class="post-time">
-    Last updated: <time datetime="2019-04-27T15:32:31.933Z" itemprop="dateUpdated">2019-04-27 23:32:31</time>
+    最后更新时间：<time datetime="2019-04-27T15:32:31.933Z" itemprop="dateUpdated">2019-04-27 23:32:31</time>
 </span><br>
 
 
@@ -635,7 +643,7 @@ nsh&gt;
             
                 <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
             
-            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
         </p>
     </div>
     <div class="bottom">

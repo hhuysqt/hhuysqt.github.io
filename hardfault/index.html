@@ -27,6 +27,7 @@
 <meta property="og:url" content="https://hhuysqt.github.io/hardfault/index.html">
 <meta property="og:site_name" content="hhuysqt">
 <meta property="og:description" content="对于搞Cortex M系列mcu开发的人来说，hardfault这种鬼东西，不遇到还好，倘若不幸遇到了，复位一下，瞎调一下，左右修补，或许碰巧就消除了。但是靠人品毕竟不是长久之计。下面记录我调试hardfault的一些简单的经验。 hardfault来源Cortex M3、M4的向量表中，3号异常是HardFault；接下来三个异常是MemFault、BusFault、UsageFault。发生了">
+<meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://hhuysqt.github.io/hardfault/exceptiontable.jpeg">
 <meta property="og:image" content="https://hhuysqt.github.io/hardfault/hfsr.jpeg">
 <meta property="og:image" content="https://hhuysqt.github.io/hardfault/bfsr.jpeg">
@@ -119,6 +120,13 @@
               </a>
             </li>
         
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-male"></i>
+                关于我
+              </a>
+            </li>
+        
       </ul>
     </div>
   </div>
@@ -136,7 +144,7 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
@@ -320,7 +328,7 @@ extern char *buff;
     <div class="content">
         
 <span class="post-time">
-    Last updated: <time datetime="2019-04-13T13:32:50.532Z" itemprop="dateUpdated">2019-04-13 21:32:50</time>
+    最后更新时间：<time datetime="2019-04-13T13:32:50.532Z" itemprop="dateUpdated">2019-04-13 21:32:50</time>
 </span><br>
 
 
@@ -478,7 +486,7 @@ extern char *buff;
             
                 <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
             
-            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
         </p>
     </div>
     <div class="bottom">

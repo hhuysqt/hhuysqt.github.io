@@ -63,7 +63,7 @@
             if (flag) {
                 menu.classList.remove('hide');
 
-                if (w.innerWidth < 1241) {
+                if (w.innerWidth < 1461) {
                     mask.classList.add('in');
                     menu.classList.add('show');
 
