@@ -5,9 +5,9 @@
   
   <link href="/atom.xml" rel="self"/>
   
-  <link href="http://yoursite.com/"/>
+  <link href="https://hhuysqt.github.io/"/>
   <updated>2019-04-27T19:01:32.613Z</updated>
-  <id>http://yoursite.com/</id>
+  <id>https://hhuysqt.github.io/</id>
   
   <author>
     <name>hhuysqt</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>zynq[3] bootstrap Ubuntu</title>
-    <link href="http://yoursite.com/zynq3/"/>
-    <id>http://yoursite.com/zynq3/</id>
+    <link href="https://hhuysqt.github.io/zynq3/"/>
+    <id>https://hhuysqt.github.io/zynq3/</id>
     <published>2019-04-27T09:05:56.000Z</published>
     <updated>2019-04-27T19:01:32.613Z</updated>
     
@@ -35,14 +35,14 @@
     </summary>
     
     
-      <category term="zynq" scheme="http://yoursite.com/tags/zynq/"/>
+      <category term="zynq" scheme="https://hhuysqt.github.io/tags/zynq/"/>
     
   </entry>
   
   <entry>
     <title>zynq[2] Linux from scratch</title>
-    <link href="http://yoursite.com/zynq2/"/>
-    <id>http://yoursite.com/zynq2/</id>
+    <link href="https://hhuysqt.github.io/zynq2/"/>
+    <id>https://hhuysqt.github.io/zynq2/</id>
     <published>2019-04-27T04:35:38.000Z</published>
     <updated>2019-04-27T15:15:27.421Z</updated>
     
@@ -66,14 +66,14 @@ export CROSS_COMPILE=arm-linux-gnueabihf-
     </summary>
     
     
-      <category term="zynq" scheme="http://yoursite.com/tags/zynq/"/>
+      <category term="zynq" scheme="https://hhuysqt.github.io/tags/zynq/"/>
     
   </entry>
   
   <entry>
     <title>zynq[1] 矿板helloworld</title>
-    <link href="http://yoursite.com/zynq1/"/>
-    <id>http://yoursite.com/zynq1/</id>
+    <link href="https://hhuysqt.github.io/zynq1/"/>
+    <id>https://hhuysqt.github.io/zynq1/</id>
     <published>2019-04-26T11:56:38.000Z</published>
     <updated>2019-04-27T15:17:24.544Z</updated>
     
@@ -95,14 +95,14 @@ export CROSS_COMPILE=arm-linux-gnueabihf-
     </summary>
     
     
-      <category term="zynq" scheme="http://yoursite.com/tags/zynq/"/>
+      <category term="zynq" scheme="https://hhuysqt.github.io/tags/zynq/"/>
     
   </entry>
   
   <entry>
     <title>pulpino[2] nuttx ELF</title>
-    <link href="http://yoursite.com/pulpino2/"/>
-    <id>http://yoursite.com/pulpino2/</id>
+    <link href="https://hhuysqt.github.io/pulpino2/"/>
+    <id>https://hhuysqt.github.io/pulpino2/</id>
     <published>2018-07-29T07:48:33.000Z</published>
     <updated>2019-04-27T15:27:14.224Z</updated>
     
@@ -120,18 +120,18 @@ export CROSS_COMPILE=arm-linux-gnueabihf-
     </summary>
     
     
-      <category term="nuttx" scheme="http://yoursite.com/tags/nuttx/"/>
+      <category term="nuttx" scheme="https://hhuysqt.github.io/tags/nuttx/"/>
     
-      <category term="pulpino" scheme="http://yoursite.com/tags/pulpino/"/>
+      <category term="pulpino" scheme="https://hhuysqt.github.io/tags/pulpino/"/>
     
-      <category term="riscv" scheme="http://yoursite.com/tags/riscv/"/>
+      <category term="riscv" scheme="https://hhuysqt.github.io/tags/riscv/"/>
     
   </entry>
   
   <entry>
     <title>pulpino[1] nuttx：bring up</title>
-    <link href="http://yoursite.com/pulpino1/"/>
-    <id>http://yoursite.com/pulpino1/</id>
+    <link href="https://hhuysqt.github.io/pulpino1/"/>
+    <id>https://hhuysqt.github.io/pulpino1/</id>
     <published>2018-07-23T13:19:06.000Z</published>
     <updated>2019-04-27T15:28:29.508Z</updated>
     
@@ -147,18 +147,18 @@ export CROSS_COMPILE=arm-linux-gnueabihf-
     </summary>
     
     
-      <category term="nuttx" scheme="http://yoursite.com/tags/nuttx/"/>
+      <category term="nuttx" scheme="https://hhuysqt.github.io/tags/nuttx/"/>
     
-      <category term="pulpino" scheme="http://yoursite.com/tags/pulpino/"/>
+      <category term="pulpino" scheme="https://hhuysqt.github.io/tags/pulpino/"/>
     
-      <category term="riscv" scheme="http://yoursite.com/tags/riscv/"/>
+      <category term="riscv" scheme="https://hhuysqt.github.io/tags/riscv/"/>
     
   </entry>
   
   <entry>
     <title>山寨平板上的ubuntu</title>
-    <link href="http://yoursite.com/ubuntu-tablet/"/>
-    <id>http://yoursite.com/ubuntu-tablet/</id>
+    <link href="https://hhuysqt.github.io/ubuntu-tablet/"/>
+    <id>https://hhuysqt.github.io/ubuntu-tablet/</id>
     <published>2018-06-15T10:03:22.000Z</published>
     <updated>2019-04-27T15:26:26.688Z</updated>
     
@@ -178,14 +178,14 @@ export CROSS_COMPILE=arm-linux-gnueabihf-
     </summary>
     
     
-      <category term="baytrail" scheme="http://yoursite.com/tags/baytrail/"/>
+      <category term="baytrail" scheme="https://hhuysqt.github.io/tags/baytrail/"/>
     
   </entry>
   
   <entry>
     <title>bcmf[3] 与固件交互：bcdc和sdpcm</title>
-    <link href="http://yoursite.com/bcmf3/"/>
-    <id>http://yoursite.com/bcmf3/</id>
+    <link href="https://hhuysqt.github.io/bcmf3/"/>
+    <id>https://hhuysqt.github.io/bcmf3/</id>
     <published>2018-04-30T12:56:56.000Z</published>
     <updated>2019-04-27T15:29:13.156Z</updated>
     
@@ -199,14 +199,14 @@ export CROSS_COMPILE=arm-linux-gnueabihf-
     </summary>
     
     
-      <category term="bcm-wifi" scheme="http://yoursite.com/tags/bcm-wifi/"/>
+      <category term="bcm-wifi" scheme="https://hhuysqt.github.io/tags/bcm-wifi/"/>
     
   </entry>
   
   <entry>
     <title>bcmf[2] 驱动：初始化</title>
-    <link href="http://yoursite.com/bcmf2/"/>
-    <id>http://yoursite.com/bcmf2/</id>
+    <link href="https://hhuysqt.github.io/bcmf2/"/>
+    <id>https://hhuysqt.github.io/bcmf2/</id>
     <published>2018-04-27T03:57:26.000Z</published>
     <updated>2019-04-27T15:32:31.933Z</updated>
     
@@ -227,14 +227,14 @@ export CROSS_COMPILE=arm-linux-gnueabihf-
     </summary>
     
     
-      <category term="bcm-wifi" scheme="http://yoursite.com/tags/bcm-wifi/"/>
+      <category term="bcm-wifi" scheme="https://hhuysqt.github.io/tags/bcm-wifi/"/>
     
   </entry>
   
   <entry>
     <title>bcmf[1] SDIO-WiFi-phy选型</title>
-    <link href="http://yoursite.com/bcmf1/"/>
-    <id>http://yoursite.com/bcmf1/</id>
+    <link href="https://hhuysqt.github.io/bcmf1/"/>
+    <id>https://hhuysqt.github.io/bcmf1/</id>
     <published>2018-04-26T02:58:05.000Z</published>
     <updated>2019-04-27T19:00:04.450Z</updated>
     
@@ -254,14 +254,14 @@ export CROSS_COMPILE=arm-linux-gnueabihf-
     </summary>
     
     
-      <category term="bcm-wifi" scheme="http://yoursite.com/tags/bcm-wifi/"/>
+      <category term="bcm-wifi" scheme="https://hhuysqt.github.io/tags/bcm-wifi/"/>
     
   </entry>
   
   <entry>
     <title>uc-PC[6] 构建rootfs</title>
-    <link href="http://yoursite.com/ucpc6/"/>
-    <id>http://yoursite.com/ucpc6/</id>
+    <link href="https://hhuysqt.github.io/ucpc6/"/>
+    <id>https://hhuysqt.github.io/ucpc6/</id>
     <published>2018-03-13T12:57:51.000Z</published>
     <updated>2019-04-27T15:18:21.252Z</updated>
     
@@ -277,14 +277,14 @@ export CROSS_COMPILE=arm-linux-gnueabihf-
     </summary>
     
     
-      <category term="ucpc" scheme="http://yoursite.com/tags/ucpc/"/>
+      <category term="ucpc" scheme="https://hhuysqt.github.io/tags/ucpc/"/>
     
   </entry>
   
   <entry>
     <title>uc-PC[5] Linux设备驱动配置</title>
-    <link href="http://yoursite.com/ucpc5/"/>
-    <id>http://yoursite.com/ucpc5/</id>
+    <link href="https://hhuysqt.github.io/ucpc5/"/>
+    <id>https://hhuysqt.github.io/ucpc5/</id>
     <published>2018-03-07T01:21:49.000Z</published>
     <updated>2019-04-27T15:20:06.959Z</updated>
     
@@ -306,14 +306,14 @@ export CROSS_COMPILE=arm-linux-gnueabihf-
     </summary>
     
     
-      <category term="ucpc" scheme="http://yoursite.com/tags/ucpc/"/>
+      <category term="ucpc" scheme="https://hhuysqt.github.io/tags/ucpc/"/>
     
   </entry>
   
   <entry>
     <title>uc-PC[4] 小议“设备树”</title>
-    <link href="http://yoursite.com/ucpc4/"/>
-    <id>http://yoursite.com/ucpc4/</id>
+    <link href="https://hhuysqt.github.io/ucpc4/"/>
+    <id>https://hhuysqt.github.io/ucpc4/</id>
     <published>2018-03-01T07:33:52.000Z</published>
     <updated>2019-04-27T18:59:05.773Z</updated>
     
@@ -334,14 +334,14 @@ export CROSS_COMPILE=arm-linux-gnueabihf-
     </summary>
     
     
-      <category term="ucpc" scheme="http://yoursite.com/tags/ucpc/"/>
+      <category term="ucpc" scheme="https://hhuysqt.github.io/tags/ucpc/"/>
     
   </entry>
   
   <entry>
     <title>uc-PC[3] 板子验证与bootloader移植</title>
-    <link href="http://yoursite.com/ucpc3/"/>
-    <id>http://yoursite.com/ucpc3/</id>
+    <link href="https://hhuysqt.github.io/ucpc3/"/>
+    <id>https://hhuysqt.github.io/ucpc3/</id>
     <published>2018-02-28T16:23:39.000Z</published>
     <updated>2019-04-27T15:24:04.403Z</updated>
     
@@ -360,14 +360,14 @@ export CROSS_COMPILE=arm-linux-gnueabihf-
     </summary>
     
     
-      <category term="ucpc" scheme="http://yoursite.com/tags/ucpc/"/>
+      <category term="ucpc" scheme="https://hhuysqt.github.io/tags/ucpc/"/>
     
   </entry>
   
   <entry>
     <title>uc-PC[2] 硬件设计</title>
-    <link href="http://yoursite.com/ucpc2/"/>
-    <id>http://yoursite.com/ucpc2/</id>
+    <link href="https://hhuysqt.github.io/ucpc2/"/>
+    <id>https://hhuysqt.github.io/ucpc2/</id>
     <published>2018-02-27T12:26:57.000Z</published>
     <updated>2019-04-27T15:25:41.144Z</updated>
     
@@ -386,14 +386,14 @@ export CROSS_COMPILE=arm-linux-gnueabihf-
     </summary>
     
     
-      <category term="ucpc" scheme="http://yoursite.com/tags/ucpc/"/>
+      <category term="ucpc" scheme="https://hhuysqt.github.io/tags/ucpc/"/>
     
   </entry>
   
   <entry>
     <title>uc-PC[1] ucLinux or Linux?</title>
-    <link href="http://yoursite.com/ucpc1/"/>
-    <id>http://yoursite.com/ucpc1/</id>
+    <link href="https://hhuysqt.github.io/ucpc1/"/>
+    <id>https://hhuysqt.github.io/ucpc1/</id>
     <published>2018-02-27T06:04:21.000Z</published>
     <updated>2019-04-13T13:32:52.172Z</updated>
     
@@ -408,14 +408,14 @@ export CROSS_COMPILE=arm-linux-gnueabihf-
     </summary>
     
     
-      <category term="ucpc" scheme="http://yoursite.com/tags/ucpc/"/>
+      <category term="ucpc" scheme="https://hhuysqt.github.io/tags/ucpc/"/>
     
   </entry>
   
   <entry>
     <title>uc-PC[0] 序言</title>
-    <link href="http://yoursite.com/ucpc0/"/>
-    <id>http://yoursite.com/ucpc0/</id>
+    <link href="https://hhuysqt.github.io/ucpc0/"/>
+    <id>https://hhuysqt.github.io/ucpc0/</id>
     <published>2018-02-26T06:41:37.000Z</published>
     <updated>2019-04-13T13:32:51.108Z</updated>
     
@@ -431,14 +431,14 @@ export CROSS_COMPILE=arm-linux-gnueabihf-
     </summary>
     
     
-      <category term="ucpc" scheme="http://yoursite.com/tags/ucpc/"/>
+      <category term="ucpc" scheme="https://hhuysqt.github.io/tags/ucpc/"/>
     
   </entry>
   
   <entry>
     <title>调试hardfault</title>
-    <link href="http://yoursite.com/hardfault/"/>
-    <id>http://yoursite.com/hardfault/</id>
+    <link href="https://hhuysqt.github.io/hardfault/"/>
+    <id>https://hhuysqt.github.io/hardfault/</id>
     <published>2018-02-26T06:13:10.000Z</published>
     <updated>2019-04-13T13:32:50.532Z</updated>
     
@@ -462,8 +462,8 @@ export CROSS_COMPILE=arm-linux-gnueabihf-
   
   <entry>
     <title>gdb调试stm32的技巧</title>
-    <link href="http://yoursite.com/gdb%E8%B0%83%E8%AF%95%E6%8A%80%E5%B7%A7/"/>
-    <id>http://yoursite.com/gdb调试技巧/</id>
+    <link href="https://hhuysqt.github.io/gdb%E8%B0%83%E8%AF%95%E6%8A%80%E5%B7%A7/"/>
+    <id>https://hhuysqt.github.io/gdb调试技巧/</id>
     <published>2018-02-24T16:08:35.000Z</published>
     <updated>2019-04-13T13:32:50.444Z</updated>
     
@@ -489,8 +489,8 @@ export CROSS_COMPILE=arm-linux-gnueabihf-
   
   <entry>
     <title>制作arm-uclinuxeabi的交叉编译工具链</title>
-    <link href="http://yoursite.com/cross-compiler/"/>
-    <id>http://yoursite.com/cross-compiler/</id>
+    <link href="https://hhuysqt.github.io/cross-compiler/"/>
+    <id>https://hhuysqt.github.io/cross-compiler/</id>
     <published>2018-02-23T15:03:53.000Z</published>
     <updated>2019-04-13T13:32:51.868Z</updated>
     
@@ -522,8 +522,8 @@ export CROSS_COMPILE=arm-linux-gnueabihf-
   
   <entry>
     <title>uclinux on STM32F103ZET6</title>
-    <link href="http://yoursite.com/uclinux-on-stm32f103/"/>
-    <id>http://yoursite.com/uclinux-on-stm32f103/</id>
+    <link href="https://hhuysqt.github.io/uclinux-on-stm32f103/"/>
+    <id>https://hhuysqt.github.io/uclinux-on-stm32f103/</id>
     <published>2018-02-22T15:30:11.000Z</published>
     <updated>2019-04-13T13:32:52.180Z</updated>
     

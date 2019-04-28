@@ -25,15 +25,15 @@
 <meta name="keywords" content="bcm-wifi">
 <meta property="og:type" content="article">
 <meta property="og:title" content="bcmf[3] 与固件交互：bcdc和sdpcm">
-<meta property="og:url" content="http://yoursite.com/bcmf3/index.html">
+<meta property="og:url" content="https://hhuysqt.github.io/bcmf3/index.html">
 <meta property="og:site_name" content="hhuysqt">
 <meta property="og:description" content="与固件交互时，数据包往下传到SDIO网卡之前，还需要对它进行两层包装，简单说：IP协议栈数据包包装为bdc数据包，控制命令则包装为cdc数据包；bdc、cdc在Linux中统称为bcdc；bcdc再进一步包装为sdpcm数据包，进而通过SDIO发送给网卡。而博通只有SDIO的网卡才多包一层sdpcm，USB、PCIE接口的网卡都没有这样做。 Linux、nuttx、WICED它们在sdpcm这一层">
-<meta property="og:image" content="http://yoursite.com/bcmf3/cdc.jpeg">
+<meta property="og:image" content="https://hhuysqt.github.io/bcmf3/cdc.jpeg">
 <meta property="og:updated_time" content="2019-04-27T15:29:13.156Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="bcmf[3] 与固件交互：bcdc和sdpcm">
 <meta name="twitter:description" content="与固件交互时，数据包往下传到SDIO网卡之前，还需要对它进行两层包装，简单说：IP协议栈数据包包装为bdc数据包，控制命令则包装为cdc数据包；bdc、cdc在Linux中统称为bcdc；bcdc再进一步包装为sdpcm数据包，进而通过SDIO发送给网卡。而博通只有SDIO的网卡才多包一层sdpcm，USB、PCIE接口的网卡都没有这样做。 Linux、nuttx、WICED它们在sdpcm这一层">
-<meta name="twitter:image" content="http://yoursite.com/bcmf3/cdc.jpeg">
+<meta name="twitter:image" content="https://hhuysqt.github.io/bcmf3/cdc.jpeg">
     
         <link rel="alternate" type="application/atom+xml" title="hhuysqt" href="/atom.xml">
     
@@ -128,7 +128,7 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="検索">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
@@ -345,7 +345,7 @@ typedef struct
     <div class="content">
         
 <span class="post-time">
-    最終更新：<time datetime="2019-04-27T15:29:13.156Z" itemprop="dateUpdated">2019-04-27 23:29:13</time>
+    Last updated: <time datetime="2019-04-27T15:29:13.156Z" itemprop="dateUpdated">2019-04-27 23:29:13</time>
 </span><br>
 
 
@@ -355,7 +355,7 @@ typedef struct
     </div>
     
     <footer>
-        <a href="http://yoursite.com">
+        <a href="https://hhuysqt.github.io">
             <img src="/img/avatar.jpg" alt="hhuysqt">
             hhuysqt
         </a>
@@ -377,7 +377,7 @@ typedef struct
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/bcmf3/&title=《bcmf[3] 与固件交互：bcdc和sdpcm》 — hhuysqt&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://hhuysqt.github.io/bcmf3/&title=《bcmf[3] 与固件交互：bcdc和sdpcm》 — hhuysqt&pic=https://hhuysqt.github.io/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -387,22 +387,22 @@ typedef struct
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/bcmf3/&title=《bcmf[3] 与固件交互：bcdc和sdpcm》 — hhuysqt&source=与固件交互时，数据包往下传到SDIO网卡之前，还需要对它进行两层包装，简单说：IP协议栈数据包包装为bdc数据包，控制命令则包装为cdc数据包；bdc、c..." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://hhuysqt.github.io/bcmf3/&title=《bcmf[3] 与固件交互：bcdc和sdpcm》 — hhuysqt&source=与固件交互时，数据包往下传到SDIO网卡之前，还需要对它进行两层包装，简单说：IP协议栈数据包包装为bdc数据包，控制命令则包装为cdc数据包；bdc、c..." data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/bcmf3/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://hhuysqt.github.io/bcmf3/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《bcmf[3] 与固件交互：bcdc和sdpcm》 — hhuysqt&url=http://yoursite.com/bcmf3/&via=http://yoursite.com" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《bcmf[3] 与固件交互：bcdc和sdpcm》 — hhuysqt&url=https://hhuysqt.github.io/bcmf3/&via=https://hhuysqt.github.io" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/bcmf3/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://hhuysqt.github.io/bcmf3/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -505,7 +505,7 @@ typedef struct
             
                 <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
             
-            <span>このブログの内容物は<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ja">クリエイティブ・コモンズ 表示 - 非営利 - 継承 4.0 国際ライセンスの下に提供されています</a></span>
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
         </p>
     </div>
     <div class="bottom">
@@ -527,7 +527,7 @@ typedef struct
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/bcmf3/&title=《bcmf[3] 与固件交互：bcdc和sdpcm》 — hhuysqt&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://hhuysqt.github.io/bcmf3/&title=《bcmf[3] 与固件交互：bcdc和sdpcm》 — hhuysqt&pic=https://hhuysqt.github.io/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -537,22 +537,22 @@ typedef struct
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/bcmf3/&title=《bcmf[3] 与固件交互：bcdc和sdpcm》 — hhuysqt&source=与固件交互时，数据包往下传到SDIO网卡之前，还需要对它进行两层包装，简单说：IP协议栈数据包包装为bdc数据包，控制命令则包装为cdc数据包；bdc、c..." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://hhuysqt.github.io/bcmf3/&title=《bcmf[3] 与固件交互：bcdc和sdpcm》 — hhuysqt&source=与固件交互时，数据包往下传到SDIO网卡之前，还需要对它进行两层包装，简单说：IP协议栈数据包包装为bdc数据包，控制命令则包装为cdc数据包；bdc、c..." data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/bcmf3/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://hhuysqt.github.io/bcmf3/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《bcmf[3] 与固件交互：bcdc和sdpcm》 — hhuysqt&url=http://yoursite.com/bcmf3/&via=http://yoursite.com" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《bcmf[3] 与固件交互：bcdc和sdpcm》 — hhuysqt&url=https://hhuysqt.github.io/bcmf3/&via=https://hhuysqt.github.io" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/bcmf3/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://hhuysqt.github.io/bcmf3/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -563,7 +563,7 @@ typedef struct
 <div class="page-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
-    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://yoursite.com/bcmf3/" alt="微信分享二维码">
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://hhuysqt.github.io/bcmf3/" alt="微信分享二维码">
 </div>
 
 

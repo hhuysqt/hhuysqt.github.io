@@ -25,41 +25,41 @@
 <meta name="keywords" content="ucpc">
 <meta property="og:type" content="article">
 <meta property="og:title" content="uc-PC[5] Linux设备驱动配置">
-<meta property="og:url" content="http://yoursite.com/ucpc5/index.html">
+<meta property="og:url" content="https://hhuysqt.github.io/ucpc5/index.html">
 <meta property="og:site_name" content="hhuysqt">
 <meta property="og:description" content="uc-PC板子上跑的是Linux 4.13.3，使用设备树。内核不经压缩，就地运行（XIP，全称execute in place）。 需要使能的功能有：网络、显示、USB、SD卡、摄像头、yaffs。这些功能全部开启的话，内核大小将为4MB以上，而片内flash只有2MB，不模块化的话只能跑在SDRAM上，这回导致性能低下，所以调通设备驱动之后应该进行模块化，将关键部分编译进内核，内核塞进片内fl">
-<meta property="og:image" content="http://yoursite.com/ucpc5/net-config.jpeg">
-<meta property="og:image" content="http://yoursite.com/ucpc5/net-config2.jpeg">
-<meta property="og:image" content="http://yoursite.com/ucpc5/net-config2.2.jpeg">
-<meta property="og:image" content="http://yoursite.com/ucpc5/net-config3.jpeg">
-<meta property="og:image" content="http://yoursite.com/ucpc5/scene3.jpeg">
-<meta property="og:image" content="http://yoursite.com/ucpc5/drm.jpeg">
-<meta property="og:image" content="http://yoursite.com/ucpc5/drm2.jpeg">
-<meta property="og:image" content="http://yoursite.com/ucpc5/drm3.jpeg">
-<meta property="og:image" content="http://yoursite.com/ucpc5/drm4.jpeg">
-<meta property="og:image" content="http://yoursite.com/ucpc5/fb.jpeg">
-<meta property="og:image" content="http://yoursite.com/ucpc5/usb.jpeg">
-<meta property="og:image" content="http://yoursite.com/ucpc5/usb2.jpeg">
-<meta property="og:image" content="http://yoursite.com/ucpc5/scene6.jpeg">
-<meta property="og:image" content="http://yoursite.com/ucpc5/usb3.jpeg">
-<meta property="og:image" content="http://yoursite.com/ucpc5/usb4.jpeg">
-<meta property="og:image" content="http://yoursite.com/ucpc5/usb5.jpeg">
-<meta property="og:image" content="http://yoursite.com/ucpc5/usb6.jpeg">
-<meta property="og:image" content="http://yoursite.com/ucpc5/usb7.jpeg">
-<meta property="og:image" content="http://yoursite.com/ucpc5/usb8.jpeg">
-<meta property="og:image" content="http://yoursite.com/ucpc5/usb9.jpeg">
-<meta property="og:image" content="http://yoursite.com/ucpc5/mmc.jpeg">
-<meta property="og:image" content="http://yoursite.com/ucpc5/dcmi.jpeg">
-<meta property="og:image" content="http://yoursite.com/ucpc5/dcmi2.jpeg">
-<meta property="og:image" content="http://yoursite.com/ucpc5/dcmi3.jpeg">
-<meta property="og:image" content="http://yoursite.com/ucpc5/scene5.jpeg">
-<meta property="og:image" content="http://yoursite.com/ucpc5/yaffs.jpeg">
-<meta property="og:image" content="http://yoursite.com/ucpc5/yaffs2.jpeg">
+<meta property="og:image" content="https://hhuysqt.github.io/ucpc5/net-config.jpeg">
+<meta property="og:image" content="https://hhuysqt.github.io/ucpc5/net-config2.jpeg">
+<meta property="og:image" content="https://hhuysqt.github.io/ucpc5/net-config2.2.jpeg">
+<meta property="og:image" content="https://hhuysqt.github.io/ucpc5/net-config3.jpeg">
+<meta property="og:image" content="https://hhuysqt.github.io/ucpc5/scene3.jpeg">
+<meta property="og:image" content="https://hhuysqt.github.io/ucpc5/drm.jpeg">
+<meta property="og:image" content="https://hhuysqt.github.io/ucpc5/drm2.jpeg">
+<meta property="og:image" content="https://hhuysqt.github.io/ucpc5/drm3.jpeg">
+<meta property="og:image" content="https://hhuysqt.github.io/ucpc5/drm4.jpeg">
+<meta property="og:image" content="https://hhuysqt.github.io/ucpc5/fb.jpeg">
+<meta property="og:image" content="https://hhuysqt.github.io/ucpc5/usb.jpeg">
+<meta property="og:image" content="https://hhuysqt.github.io/ucpc5/usb2.jpeg">
+<meta property="og:image" content="https://hhuysqt.github.io/ucpc5/scene6.jpeg">
+<meta property="og:image" content="https://hhuysqt.github.io/ucpc5/usb3.jpeg">
+<meta property="og:image" content="https://hhuysqt.github.io/ucpc5/usb4.jpeg">
+<meta property="og:image" content="https://hhuysqt.github.io/ucpc5/usb5.jpeg">
+<meta property="og:image" content="https://hhuysqt.github.io/ucpc5/usb6.jpeg">
+<meta property="og:image" content="https://hhuysqt.github.io/ucpc5/usb7.jpeg">
+<meta property="og:image" content="https://hhuysqt.github.io/ucpc5/usb8.jpeg">
+<meta property="og:image" content="https://hhuysqt.github.io/ucpc5/usb9.jpeg">
+<meta property="og:image" content="https://hhuysqt.github.io/ucpc5/mmc.jpeg">
+<meta property="og:image" content="https://hhuysqt.github.io/ucpc5/dcmi.jpeg">
+<meta property="og:image" content="https://hhuysqt.github.io/ucpc5/dcmi2.jpeg">
+<meta property="og:image" content="https://hhuysqt.github.io/ucpc5/dcmi3.jpeg">
+<meta property="og:image" content="https://hhuysqt.github.io/ucpc5/scene5.jpeg">
+<meta property="og:image" content="https://hhuysqt.github.io/ucpc5/yaffs.jpeg">
+<meta property="og:image" content="https://hhuysqt.github.io/ucpc5/yaffs2.jpeg">
 <meta property="og:updated_time" content="2019-04-27T15:20:06.959Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="uc-PC[5] Linux设备驱动配置">
 <meta name="twitter:description" content="uc-PC板子上跑的是Linux 4.13.3，使用设备树。内核不经压缩，就地运行（XIP，全称execute in place）。 需要使能的功能有：网络、显示、USB、SD卡、摄像头、yaffs。这些功能全部开启的话，内核大小将为4MB以上，而片内flash只有2MB，不模块化的话只能跑在SDRAM上，这回导致性能低下，所以调通设备驱动之后应该进行模块化，将关键部分编译进内核，内核塞进片内fl">
-<meta name="twitter:image" content="http://yoursite.com/ucpc5/net-config.jpeg">
+<meta name="twitter:image" content="https://hhuysqt.github.io/ucpc5/net-config.jpeg">
     
         <link rel="alternate" type="application/atom+xml" title="hhuysqt" href="/atom.xml">
     
@@ -154,7 +154,7 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="検索">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
@@ -849,7 +849,7 @@ static struct mtd_partition stm32_nand_partitions[] = {
     <div class="content">
         
 <span class="post-time">
-    最終更新：<time datetime="2019-04-27T15:20:06.959Z" itemprop="dateUpdated">2019-04-27 23:20:06</time>
+    Last updated: <time datetime="2019-04-27T15:20:06.959Z" itemprop="dateUpdated">2019-04-27 23:20:06</time>
 </span><br>
 
 
@@ -859,7 +859,7 @@ static struct mtd_partition stm32_nand_partitions[] = {
     </div>
     
     <footer>
-        <a href="http://yoursite.com">
+        <a href="https://hhuysqt.github.io">
             <img src="/img/avatar.jpg" alt="hhuysqt">
             hhuysqt
         </a>
@@ -881,7 +881,7 @@ static struct mtd_partition stm32_nand_partitions[] = {
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/ucpc5/&title=《uc-PC[5] Linux设备驱动配置》 — hhuysqt&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://hhuysqt.github.io/ucpc5/&title=《uc-PC[5] Linux设备驱动配置》 — hhuysqt&pic=https://hhuysqt.github.io/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -891,23 +891,23 @@ static struct mtd_partition stm32_nand_partitions[] = {
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/ucpc5/&title=《uc-PC[5] Linux设备驱动配置》 — hhuysqt&source=uc-PC板子上跑的是Linux 4.13.3，使用设备树。内核不经压缩，就地运行（XIP，全称execute in place）。
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://hhuysqt.github.io/ucpc5/&title=《uc-PC[5] Linux设备驱动配置》 — hhuysqt&source=uc-PC板子上跑的是Linux 4.13.3，使用设备树。内核不经压缩，就地运行（XIP，全称execute in place）。
 需要使能的功能有：网..." data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/ucpc5/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://hhuysqt.github.io/ucpc5/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《uc-PC[5] Linux设备驱动配置》 — hhuysqt&url=http://yoursite.com/ucpc5/&via=http://yoursite.com" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《uc-PC[5] Linux设备驱动配置》 — hhuysqt&url=https://hhuysqt.github.io/ucpc5/&via=https://hhuysqt.github.io" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/ucpc5/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://hhuysqt.github.io/ucpc5/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -1010,7 +1010,7 @@ static struct mtd_partition stm32_nand_partitions[] = {
             
                 <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
             
-            <span>このブログの内容物は<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ja">クリエイティブ・コモンズ 表示 - 非営利 - 継承 4.0 国際ライセンスの下に提供されています</a></span>
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
         </p>
     </div>
     <div class="bottom">
@@ -1032,7 +1032,7 @@ static struct mtd_partition stm32_nand_partitions[] = {
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/ucpc5/&title=《uc-PC[5] Linux设备驱动配置》 — hhuysqt&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://hhuysqt.github.io/ucpc5/&title=《uc-PC[5] Linux设备驱动配置》 — hhuysqt&pic=https://hhuysqt.github.io/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -1042,23 +1042,23 @@ static struct mtd_partition stm32_nand_partitions[] = {
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/ucpc5/&title=《uc-PC[5] Linux设备驱动配置》 — hhuysqt&source=uc-PC板子上跑的是Linux 4.13.3，使用设备树。内核不经压缩，就地运行（XIP，全称execute in place）。
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://hhuysqt.github.io/ucpc5/&title=《uc-PC[5] Linux设备驱动配置》 — hhuysqt&source=uc-PC板子上跑的是Linux 4.13.3，使用设备树。内核不经压缩，就地运行（XIP，全称execute in place）。
 需要使能的功能有：网..." data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/ucpc5/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://hhuysqt.github.io/ucpc5/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《uc-PC[5] Linux设备驱动配置》 — hhuysqt&url=http://yoursite.com/ucpc5/&via=http://yoursite.com" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《uc-PC[5] Linux设备驱动配置》 — hhuysqt&url=https://hhuysqt.github.io/ucpc5/&via=https://hhuysqt.github.io" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/ucpc5/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://hhuysqt.github.io/ucpc5/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -1069,7 +1069,7 @@ static struct mtd_partition stm32_nand_partitions[] = {
 <div class="page-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
-    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://yoursite.com/ucpc5/" alt="微信分享二维码">
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://hhuysqt.github.io/ucpc5/" alt="微信分享二维码">
 </div>
 
 
