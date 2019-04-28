@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>zynq[3] bootstrap Ubuntu | hhuysqt</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="zynq">
+    <meta name="description" content="Ubuntu、Debian之类的不同的发行版，其实就是不同的rootfs。Debian系的发行版有个工具叫debootstrap，可以从源那里下载最小的根文件系统。Arch相应的工具则是packstrap。 下完根文件系统之后chroot进去进行相应的配置，为了chroot到一个ARM的rootfs，我们需要用qemu-arm-static。进去之后apt-get你想要安装的东西。配完了之后烧进s">
+<meta name="keywords" content="zynq">
+<meta property="og:type" content="article">
+<meta property="og:title" content="zynq[3] bootstrap Ubuntu">
+<meta property="og:url" content="http://yoursite.com/zynq3/index.html">
+<meta property="og:site_name" content="hhuysqt">
+<meta property="og:description" content="Ubuntu、Debian之类的不同的发行版，其实就是不同的rootfs。Debian系的发行版有个工具叫debootstrap，可以从源那里下载最小的根文件系统。Arch相应的工具则是packstrap。 下完根文件系统之后chroot进去进行相应的配置，为了chroot到一个ARM的rootfs，我们需要用qemu-arm-static。进去之后apt-get你想要安装的东西。配完了之后烧进s">
+<meta property="og:image" content="http://yoursite.com/zynq3/screenfetch.jpeg">
+<meta property="og:image" content="http://yoursite.com/zynq3/screenfetch2.jpeg">
+<meta property="og:updated_time" content="2019-04-27T19:01:32.613Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="zynq[3] bootstrap Ubuntu">
+<meta name="twitter:description" content="Ubuntu、Debian之类的不同的发行版，其实就是不同的rootfs。Debian系的发行版有个工具叫debootstrap，可以从源那里下载最小的根文件系统。Arch相应的工具则是packstrap。 下完根文件系统之后chroot进去进行相应的配置，为了chroot到一个ARM的rootfs，我们需要用qemu-arm-static。进去之后apt-get你想要安装的东西。配完了之后烧进s">
+<meta name="twitter:image" content="http://yoursite.com/zynq3/screenfetch.jpeg">
+    
+        <link rel="alternate" type="application/atom+xml" title="hhuysqt" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/m.png">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+  <!-- highlight.js代码高亮主题 css 引入-->
+  <link rel="stylesheet" href="/plugins/highlight/styles/github.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+<!--
+  <script src="/plugins/highlight/highlight.pack.js"></script>
+-->
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- highlight.js代码高亮主题 css 引入-->
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">hhuysqt</h5>
+          <a href="mailto:1020988872@qq.com" title="1020988872@qq.com" class="mail">1020988872@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                所有文章
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                索引
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/hhuysqt" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.zhihu.com/people/hhuysqt/activities" target="_blank" >
+                <i class="icon icon-lg icon-search-plus"></i>
+                知乎
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">zynq[3] bootstrap Ubuntu</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="検索">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">zynq[3] bootstrap Ubuntu</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-04-27T09:05:56.000Z" itemprop="datePublished" class="page-time">
+  2019-04-27
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>目录</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#准备工作"><span class="post-toc-number">1.</span> <span class="post-toc-text">准备工作</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#准备镜像文件"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">准备镜像文件</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#uboot和设备树改动"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">uboot和设备树改动</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#安装最小系统"><span class="post-toc-number">2.</span> <span class="post-toc-text">安装最小系统</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#烧录SD卡"><span class="post-toc-number">3.</span> <span class="post-toc-text">烧录SD卡</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#上机测试"><span class="post-toc-number">4.</span> <span class="post-toc-text">上机测试</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#参考资料"><span class="post-toc-number">5.</span> <span class="post-toc-text">参考资料</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-zynq3"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">zynq[3] bootstrap Ubuntu</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-04-27 17:05:56" datetime="2019-04-27T09:05:56.000Z"  itemprop="datePublished">2019-04-27</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>Ubuntu、Debian之类的不同的发行版，其实就是不同的<code>rootfs</code>。Debian系的发行版有个工具叫<code>debootstrap</code>，可以从<code>源</code>那里下载最小的根文件系统。Arch相应的工具则是<code>packstrap</code>。</p>
+<p>下完根文件系统之后<code>chroot</code>进去进行相应的配置，为了chroot到一个ARM的rootfs，我们需要用<code>qemu-arm-static</code>。进去之后<code>apt-get</code>你想要安装的东西。配完了之后烧进sd卡，通过内核参数<code>root=xxxx</code>告诉内核要挂载哪个rootfs，即可启动了。</p>
+<p>要制作一个叉叉派的镜像都是这样的套路：bootstrap一个最小系统，安装内核模块，安装必要的应用程序，然后安装不同的桌面环境，最后打包。于是就制作出各种水果派的n多镜像，像Ubuntu core、Ubuntu mate、xubuntu、lubuntu、Debian，Arch等等，应有尽有。。</p>
+<p>然而这些大型发行版的“最小系统”都相当的大，几百兆的样子，而我们的EBAZ4205只有128M的nand flash，所以只好从sd卡启动才能维持得了生活。</p>
+<a id="more"></a>
+<h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><p>我们先在一台Ubuntu主机上安装<code>qemu-user-static</code>、<code>debootstrap</code>，然后继续。后文一些命令如果没有安装，随时apt-get一下。</p>
+<h4 id="准备镜像文件"><a href="#准备镜像文件" class="headerlink" title="准备镜像文件"></a>准备镜像文件</h4><p>我们<code>dd</code>一个3.7G的空白镜像，这样可以烧录进一个标明4G的SD卡。姑且叫它<code>ubuntu1804.img</code>吧：</p>
+<pre><code class="bash">dd if=/dev/zero of=ubuntu1804.img bs=1M count=3500
+</code></pre>
+<p>然后我们将它挂载为<code>loop</code>设备：</p>
+<pre><code class="bash">sudo losetup -f --show ubuntu1804.img
+</code></pre>
+<p>如果你之前没有挂过别的回环设备的话，一般它会挂在<code>/dev/loop0</code>。</p>
+<p>然后我们给它分区。可以用图形界面的工具如<code>gparted</code>，也可以用命令行工具如<code>parted</code>、<code>fdisk</code>等。比方说我们用fdisk。</p>
+<pre><code class="bash">sudo fdisk /dev/loop0
+</code></pre>
+<p>用<code>n</code>来添加新分区。顺着它的指示走下去即可。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left"></th>
+<th style="text-align:left">文件系统</th>
+<th style="text-align:left">大小</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">启动分区</td>
+<td style="text-align:left">vfat</td>
+<td style="text-align:left">256MB就够了</td>
+</tr>
+<tr>
+<td style="text-align:left">文件系统</td>
+<td style="text-align:left">ext4</td>
+<td style="text-align:left">3.2G</td>
+</tr>
+</tbody>
+</table>
+<p>同步这些分区。这样会在<code>/dev/mapper/</code>下面生成对应的节点：</p>
+<pre><code class="bash">sudo kpartx -av /dev/loop0
+</code></pre>
+<p>格式化它们：</p>
+<pre><code class="bash">sudo mkfs.vfat /dev/mapper/loop0p1
+sudo mkfs.ext4 /dev/mapper/loop0p2
+</code></pre>
+<p>挂载它们：</p>
+<pre><code class="bash">mkdir boot rootfs
+sudo mount /dev/mapper/loop0p1 boot
+sudo mount /dev/mapper/loop0p2 rootfs
+</code></pre>
+<h4 id="uboot和设备树改动"><a href="#uboot和设备树改动" class="headerlink" title="uboot和设备树改动"></a>uboot和设备树改动</h4><p>我们要修改uboot环境变量，让它从SD卡里面读取内核和设备树。不过zc702工程的默认启动设备就是sd卡，我们只需要留意<code>sdboot</code>这个环境变量以及各种地址就好了：</p>
+<pre><code class="diff">-    &quot;kernel_load_address=0x2080000\0&quot; \
++    &quot;kernel_load_address=0x8000\0&quot; \
+...
+-    &quot;devicetree_image=devicetree.dtb\0&quot;    \
+-    &quot;devicetree_load_address=0x2000000\0&quot;    \
++    &quot;devicetree_image=zynq-zc702.dtb\0&quot;    \
++    &quot;devicetree_load_address=0x0\0&quot;    \
+...
+     &quot;sdboot=if mmcinfo; then &quot; \
+-        &quot;run uenvboot; &quot; \
+         &quot;echo Copying Linux from SD to RAM... &amp;&amp; &quot; \
+         &quot;load mmc 0 ${kernel_load_address} ${kernel_image} &amp;&amp; &quot; \
+         &quot;load mmc 0 ${devicetree_load_address} ${devicetree_image} &amp;&amp; &quot; \
+-        &quot;load mmc 0 ${ramdisk_load_address} ${ramdisk_image} &amp;&amp; &quot; \
+-        &quot;bootm ${kernel_load_address} ${ramdisk_load_address} ${devicetree_load_address}; &quot; \
++        &quot;bootm ${kernel_load_address} - ${devicetree_load_address}; &quot; \
+     &quot;fi\0&quot; \
+</code></pre>
+<p>我们还要修改设备树，添加启动参数，让内核挂载Ubuntu文件系统。其中<code>rootwait</code>这个参数表示需要等待根文件系统的挂载，不然内核启动很快，一看还没有挂上文件系统就会kernel panic了：</p>
+<pre><code class="diff">     chosen {
+-        bootargs = &quot;&quot;;
++        bootargs = &quot;root=/dev/mmcblk0p2 rw rootwait&quot;;
+         stdout-path = &quot;serial0:115200n8&quot;;
+     };
+</code></pre>
+<p>将<code>BOOT.bin</code>、<code>uImage</code>、<code>zynq-zc702.dtb</code>放进启动分区。</p>
+<h3 id="安装最小系统"><a href="#安装最小系统" class="headerlink" title="安装最小系统"></a>安装最小系统</h3><p>接着就可以愉快地debootstrap了。不过可惜的是，国内Ubuntu源都没有同步<code>armhf</code>的port，只有x86的，所以只能用官方源了。</p>
+<pre><code class="bash">sudo debootstrap --arch=armhf --foreign bionic ./rootfs
+</code></pre>
+<p>但是国内的Debian就同步了arm的分支，比方说清华源：</p>
+<pre><code class="bash">sudo debootstrap --arch=armhf --foreign stretch ./rootfs https://mirrors.tuna.tsinghua.edu.cn/debian/
+</code></pre>
+<p>等一段时间下完基本系统，然后拷贝<code>qemu</code>进去：</p>
+<pre><code class="bash">sudo cp -av /usr/bin/qemu-arm-static rootfs/usr/bin/
+</code></pre>
+<p>还需要拷贝<code>resolv.conf</code>，以便联网：</p>
+<pre><code class="bash">sudo cp /run/systemd/resolve/stub-resolv.conf rootfs/etc/resolv.conf 
+</code></pre>
+<p>然后<code>chroot</code>进去：</p>
+<pre><code class="bash">sudo chroot ./rootfs
+</code></pre>
+<p>在里面进行<code>second-stage</code>：</p>
+<pre><code class="bash"># chroot环境下面：
+export LANG=C
+/debootstrap/debootstrap --second-stage
+</code></pre>
+<p>安装完成之后，补全<code>/etc/apt/source.list</code>：</p>
+<pre><code>deb http://ports.ubuntu.com/ubuntu-ports bionic main restricted universe multiverse
+deb http://ports.ubuntu.com/ubuntu-ports bionic-security main restricted universe multiverse
+deb http://ports.ubuntu.com/ubuntu-ports bionic-updates main restricted universe multiverse
+deb http://ports.ubuntu.com/ubuntu-ports bionic-proposed main restricted universe multiverse
+deb http://ports.ubuntu.com/ubuntu-ports bionic-backports main restricted universe multiverse
+deb-src http://ports.ubuntu.com/ubuntu-ports bionic main restricted universe multiverse
+deb-src http://ports.ubuntu.com/ubuntu-ports bionic-security main restricted universe multiverse
+deb-src http://ports.ubuntu.com/ubuntu-ports bionic-updates main restricted universe multiverse
+deb-src http://ports.ubuntu.com/ubuntu-ports bionic-proposed main restricted universe multiverse
+deb-src http://ports.ubuntu.com/ubuntu-ports bionic-backports main restricted universe multiverse
+</code></pre><p>然后装一些基本的软件：</p>
+<pre><code class="bash">apt-get update
+apt-get install sudo ifupdown net-tools ethtool udev wireless-tools iputils-ping resolvconf wget apt-utils wpasupplicant vim git gcc build-essential openssh-server
+</code></pre>
+<p>新建用户，就叫它ubuntu吧，密码也是ubuntu：</p>
+<pre><code class="bash">useradd -G sudo -m -s /bin/bash ubuntu
+echo ubuntu:ubuntu | chpasswd
+</code></pre>
+<p>更改root密码：</p>
+<pre><code class="bash">passwd root
+</code></pre>
+<p>设置主机名为<code>armhf</code>：</p>
+<pre><code class="bash">echo armhf &gt; /etc/hostname
+</code></pre>
+<p>设置网络，改<code>/etc/network/interfaces</code>文件：</p>
+<pre><code>auto lo
+iface lo inet loopback
+
+allow-hotplug eth0
+iface eth0 inet dhcp
+</code></pre><p>终端配色：将<code>/home/ubuntu/.bashrc</code>里面的<code>force_color_prompt=yes</code>注释删掉即可。</p>
+<p>设置默认挂载目录：改<code>/etc/fstab</code>，将启动分区挂载到<code>/boot</code>目录上：</p>
+<pre><code>/dev/mmcblk0p1 /boot vfat defaults 0 0
+</code></pre><p>如果没什么别的想要配置的话，就可以<code>exit</code>退出了。</p>
+<h3 id="烧录SD卡"><a href="#烧录SD卡" class="headerlink" title="烧录SD卡"></a>烧录SD卡</h3><p>我们将镜像文件卸载：</p>
+<pre><code class="bash">sudo umount ./boot
+sudo umount ./rootfs
+sudo kpartx -d /dev/loop0
+sudo losetup -d /dev/loop0
+</code></pre>
+<p>我们看到这个镜像文件有3.7G那么大，但是世界上它占用的磁盘空间没那么大，它是个<code>sparse file</code>，将它打包压缩之后就没看上去那么大了。可以用<code>ls -s</code>来看到它实际上多大：</p>
+<pre><code>$ ls -sh ubuntu1804.img 
+1.2G ubuntu1804.img
+</code></pre><p>现在我们直接将这个文件dd到一张SD卡里面：</p>
+<pre><code class="bash">dd if=ubuntu1804.img of=/dev/sd某
+</code></pre>
+<p>如果你的SD卡不只有4G，那么可以通过像<code>gparted</code>、<code>parted</code>、<code>fdisk</code>等等的分区工具将第二个分区拉大，然后<code>resize2fs</code>重新设置分区大小。gparted一般会自动帮你resize2fs。</p>
+<h3 id="上机测试"><a href="#上机测试" class="headerlink" title="上机测试"></a>上机测试</h3><p>可以从串口看到完整的启动过程：uboot、kernel、systemd，然后是login：</p>
+<pre><code>U-Boot 2018.01 (Apr 24 2019 - 00:24:09 +0800) Xilinx Zynq ZC702
+
+Model: Zynq ZC702 Development Board
+Board: Xilinx Zynq
+Silicon: v3.1
+I2C:   ready
+DRAM:  ECC disabled 256 MiB
+NAND:  128 MiB
+
+...
+
+## Booting kernel from Legacy Image at 00008000 ...
+  Image Name:   Linux-4.19.0-xilinx
+  Image Type:   ARM Linux Kernel Image (uncompressed)
+  Data Size:    4322424 Bytes = 4.1 MiB
+  Load Address: 00008000
+  Entry Point:  00008000
+  Verifying Checksum ... OK
+## Flattened Device Tree blob at 00000000
+  Booting using the fdt blob at 0x000000
+  Loading Kernel Image ... OK
+  Loading Device Tree to 0eafd000, end 0eb037a6 ... OK
+
+Starting kernel ...
+
+Booting Linux on physical CPU 0x0
+Linux version 4.19.0-xilinx (hyq@ict) (gcc version 6.2.1 20161114 (Linaro GCC Snapshot 6.2-2016.11))
+#19 SMP PREEMPT Wed Apr 24 21:55:25 CST 2019
+CPU: ARMv7 Processor [413fc090] revision 0 (ARMv7), cr=18c5387d
+CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
+OF: fdt: Machine model: Xilinx ZC702 board
+
+...
+
+VFS: Mounted root (ext4 filesystem) on device 179:2.
+devtmpfs: mounted
+Freeing unused kernel memory: 1024K
+Run /sbin/init as init process
+random: fast init done
+systemd[1]: System time before build time, advancing clock.
+systemd[1]: Failed to insert module &#39;autofs4&#39;: No such file or directory
+systemd[1]: systemd 237 running in system mode. (+PAM +AUDIT +SELINUX +IMA +APPARMOR +SMACK +SYSVINIT
++UTMP +LIBCRYPTSETUP +GCRYPT +GNUTLS +ACL +XZ +LZ4 +SECCOMP +BLKID +ELFUTILS +KMOD -IDN2 +IDN -PCRE2
+default-hierarchy=hybrid)
+systemd[1]: Detected architecture arm.
+
+Welcome to Ubuntu 18.04 LTS!
+
+systemd[1]: Set hostname to &lt;armhf&gt;.
+systemd[1]: File /lib/systemd/system/systemd-journald.service:36 configures an IP firewall (IPAddress
+Deny=any), but the local system does not support BPF/cgroup based firewalling.
+systemd[1]: Proceeding WITHOUT firewalling in effect! (This warning is only shown for the first loade
+d unit using IP firewalling.)
+random: systemd: uninitialized urandom read (16 bytes read)
+systemd[1]: Reached target Swap.
+[  OK  ] Reached target Swap.
+
+...
+
+[  OK  ] Started resolvconf-pull-resolved.service.
+
+Ubuntu 18.04 LTS armhf ttyPS0
+
+armhf login: ubuntu
+Password:
+Last login: Fri Apr 26 17:35:14 UTC 2019 on ttyPS0
+Welcome to Ubuntu 18.04 LTS (GNU/Linux 4.19.0-xilinx armv7l)
+
+* Documentation:  https://help.ubuntu.com
+* Management:     https://landscape.canonical.com
+* Support:        https://ubuntu.com/advantage
+
+ubuntu@armhf:~$ 
+</code></pre><p>跑个screenfetch来看看：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/zynq3/screenfetch.jpeg" alt="sf" title="">
+                </div>
+                <div class="image-caption">sf</div>
+            </figure>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/zynq3/screenfetch2.jpeg" alt="gcc" title="">
+                </div>
+                <div class="image-caption">gcc</div>
+            </figure>
+<p>gcc真的能用。。但是真是慢。。</p>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><ul>
+<li><a href="http://www.orangepi.org/Docs/Makingabootable.html" target="_blank" rel="noopener">http://www.orangepi.org/Docs/Makingabootable.html</a></li>
+<li><a href="https://a-delacruz.github.io/debian/debian-arm64.html" target="_blank" rel="noopener">https://a-delacruz.github.io/debian/debian-arm64.html</a></li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最終更新：<time datetime="2019-04-27T19:01:32.613Z" itemprop="dateUpdated">2019-04-28 03:01:32</time>
+</span><br>
+
+
+        
+        欢迎留言，大佬轻拍。。
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/avatar.jpg" alt="hhuysqt">
+            hhuysqt
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/zynq/">zynq</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/zynq3/&title=《zynq[3] bootstrap Ubuntu》 — hhuysqt&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/zynq3/&title=《zynq[3] bootstrap Ubuntu》 — hhuysqt&source=Ubuntu、Debian之类的不同的发行版，其实就是不同的rootfs。Debian系的发行版有个工具叫debootstrap，可以从源那里下载最小的根..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/zynq3/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《zynq[3] bootstrap Ubuntu》 — hhuysqt&url=http://yoursite.com/zynq3/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/zynq3/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/zynq2/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">zynq[2] Linux from scratch</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+<section class="comments" id="comments">
+    <div id="gitment_thread"></div>
+    <link rel="stylesheet" href="//unpkg.com/gitment/style/default.css">
+    <script src="//unpkg.com/gitment/dist/gitment.browser.js"></script>
+    <script>
+        var gitment = new Gitment({
+            owner: 'hhuysqt',
+            repo: 'hhuysqt.github.io',
+            oauth: {
+                client_id: 'f3accf3be337dcd6d61d',
+                client_secret: 'af75b9e501d76dc85f1f0417d7307419df49aeec',
+            },
+        })
+        gitment.render('comments')
+    </script>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>このブログの内容物は<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ja">クリエイティブ・コモンズ 表示 - 非営利 - 継承 4.0 国際ライセンスの下に提供されています</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>hhuysqt &copy; 2015 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/zynq3/&title=《zynq[3] bootstrap Ubuntu》 — hhuysqt&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/zynq3/&title=《zynq[3] bootstrap Ubuntu》 — hhuysqt&source=Ubuntu、Debian之类的不同的发行版，其实就是不同的rootfs。Debian系的发行版有个工具叫debootstrap，可以从源那里下载最小的根..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/zynq3/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《zynq[3] bootstrap Ubuntu》 — hhuysqt&url=http://yoursite.com/zynq3/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/zynq3/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://yoursite.com/zynq3/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>
