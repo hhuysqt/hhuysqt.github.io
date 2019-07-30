@@ -34,8 +34,6 @@
 <meta name="twitter:title" content="zynq[2] Linux from scratch">
 <meta name="twitter:description" content="Xilinx有个工具叫PetaLinux，它可以一键生成uboot、Linux、根文件系统。但是按照惯例我们还是自己敲命令一个个来吧。 Xilinx有个wiki讲述如何一步步做Linux from scratch。有些步骤是多余的，比如编译设备树的工具链。鉴于我们的EBAZ4205是块野生的板子，需要稍微做一些配置。 安装vivado、SDK时候顺便安装了arm-linux-gnueabihf-以">
     
-        <link rel="alternate" type="application/atom+xml" title="hhuysqt" href="/atom.xml">
-    
     <link rel="shortcut icon" href="/img/m.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
@@ -200,17 +198,18 @@
             <p>Xilinx有个工具叫<code>PetaLinux</code>，它可以一键生成uboot、Linux、根文件系统。但是按照惯例我们还是自己敲命令一个个来吧。</p>
 <p>Xilinx有个<a href="https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18841738/Getting+Started" target="_blank" rel="noopener">wiki</a>讲述如何一步步做<code>Linux from scratch</code>。有些步骤是多余的，比如编译设备树的工具链。鉴于我们的EBAZ4205是块野生的板子，需要稍微做一些配置。</p>
 <p>安装vivado、SDK时候顺便安装了<code>arm-linux-gnueabihf-</code>以及其他Xilinx自家的工具链，不妨将其export到PATH：</p>
-<pre><code class="bash"># gcc
+<pre><code class="lang-bash"># gcc
 export PATH=/某某某/SDK/2017.4/gnu/aarch32/lin/gcc-arm-linux-gnueabi/bin/:$PATH
 # bootgen etc.
 export PATH=/某某某/SDK/2017.4/bin:$PATH
 </code></pre>
 <p>所有工作开始之前，还要export <code>ARCH</code>和<code>CROSS_COMPILE</code>两个环境变量：</p>
-<pre><code class="bash">export ARCH=arm
+<pre><code class="lang-bash">export ARCH=arm
 export CROSS_COMPILE=arm-linux-gnueabihf-
 </code></pre>
 <a id="more"></a>
 <h3 id="uboot"><a href="#uboot" class="headerlink" title="uboot"></a>uboot</h3><p>uboot只需要极少量的配置，就基本上works out of the box了。现在我们先用<code>tftp</code>来启动内核。各部分的地址如下：</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -237,9 +236,10 @@ export CROSS_COMPILE=arm-linux-gnueabihf-
 </tr>
 </tbody>
 </table>
+</div>
 <p>从<a href="https://github.com/Xilinx/u-boot-xlnx" target="_blank" rel="noopener">https://github.com/Xilinx/u-boot-xlnx</a>上下载Xilinx家的uboot，当然也可以选择去下载<a href="https://github.com/Xilinx/u-boot-xlnx/releases" target="_blank" rel="noopener">release</a>版本的。</p>
 <h4 id="改改配置"><a href="#改改配置" class="headerlink" title="改改配置"></a>改改配置</h4><p><a href="https://github.com/Xilinx/u-boot-xlnx/blob/master/arch/arm/dts/zynq-zc702.dts#L22" target="_blank" rel="noopener">arch/arm/dts/zynq-zc702.dts</a>的<code>memory</code>节点，内存大小改为256MB</p>
-<pre><code class="diff">@@ -21,7 +21,7 @@
+<pre><code class="lang-diff">@@ -21,7 +21,7 @@
 
      memory@0 {
          device_type = &quot;memory&quot;;
@@ -280,14 +280,14 @@ bootgen -image boot.bif -o i BOOT.bin -w
 </code></pre><h3 id="Linux内核"><a href="#Linux内核" class="headerlink" title="Linux内核"></a>Linux内核</h3><p>内核很大程度上也是work out of the box了，改改设备树就好。</p>
 <p>从<a href="https://github.com/Xilinx/linux-xlnx" target="_blank" rel="noopener">https://github.com/Xilinx/linux-xlnx</a>上下载Xilinx家的内核。目前版本是4.19.0，还是挺新的。</p>
 <h4 id="设备树"><a href="#设备树" class="headerlink" title="设备树"></a>设备树</h4><p>首先还是得将内存大小改对：</p>
-<pre><code class="diff">        memory@0 {
+<pre><code class="lang-diff">        memory@0 {
                 device_type = &quot;memory&quot;;
 -               reg = &lt;0x0 0x40000000&gt;;
 +               reg = &lt;0x0 0x10000000&gt;;
         };
 </code></pre>
 <p>因为我们的野生板子外设很少，必须将不用的外设<code>disabled</code>掉，不然引脚配置会打架。</p>
-<pre><code class="diff"> &amp;can0 {
+<pre><code class="lang-diff"> &amp;can0 {
 -       status = &quot;okay&quot;;
 +       status = &quot;disabled&quot;;
 
@@ -307,7 +307,7 @@ bootgen -image boot.bif -o i BOOT.bin -w
 +       status = &quot;disabled&quot;;
 </code></pre>
 <p>串口的引脚要改对：</p>
-<pre><code class="diff">@@ -368,12 +382,12 @@
+<pre><code class="lang-diff">@@ -368,12 +382,12 @@
          };
 
          conf-rx {
@@ -324,7 +324,7 @@ bootgen -image boot.bif -o i BOOT.bin -w
      };
 </code></pre>
 <p>网口通过<code>EMIO</code>引出，因此<code>gem0</code>的引脚声明应该删掉，否则会跟串口引脚打架，导致启动到一半串口没输出了。。并且<code>ethernet_phy</code>节点的<code>reg</code>参数应改为0，不然会枚举不到那个网卡：</p>
-<pre><code class="diff">&amp;gem0 {
+<pre><code class="lang-diff">&amp;gem0 {
     status = &quot;okay&quot;;
     phy-mode = &quot;rgmii-id&quot;;
     phy-handle = &lt;&amp;ethernet_phy&gt;;
@@ -342,7 +342,7 @@ bootgen -image boot.bif -o i BOOT.bin -w
 };
 </code></pre>
 <p>SDIO接口也在fsbl初始化完成了，所以它的引脚声明也要删掉：</p>
-<pre><code class="diff"> &amp;sdhci0 {
+<pre><code class="lang-diff"> &amp;sdhci0 {
      u-boot,dm-pre-reloc;
      status = &quot;okay&quot;;
 -    pinctrl-names = &quot;default&quot;;
@@ -361,7 +361,7 @@ bootgen -image boot.bif -o i BOOT.bin -w
 0x000006a20000-0x000007e00000 : &quot;nand-release&quot;
 0x000007e00000-0x000008000000 : &quot;nand-reserve&quot;
 </code></pre><p>所以我们这样设置<code>nand0</code>节点：</p>
-<pre><code class="dts">&amp;nand0 {
+<pre><code class="lang-dts">&amp;nand0 {
     status = &quot;okay&quot;;
     pinctrl-names = &quot;default&quot;;
     pinctrl-0 = &lt;&amp;pinctrl_nand0_default&gt;;
@@ -404,7 +404,7 @@ bootgen -image boot.bif -o i BOOT.bin -w
 };
 </code></pre>
 <p>它的引脚配置<code>pinctrl_nand0_default</code>如下：</p>
-<pre><code class="dts">    pinctrl_nand0_default: nand0-default {
+<pre><code class="lang-dts">    pinctrl_nand0_default: nand0-default {
         mux {
             groups = &quot;smc0_nand8_grp&quot;;
             function = &quot;smc0_nand&quot;;
@@ -418,12 +418,12 @@ bootgen -image boot.bif -o i BOOT.bin -w
 </code></pre>
 <p>groups的名字是在<a href="https://github.com/Xilinx/linux-xlnx/blob/master/drivers/pinctrl/pinctrl-zynq.c#L715" target="_blank" rel="noopener">pinctrl-zynq.c第715行</a>找到的。</p>
 <p>由于在<a href="https://github.com/Xilinx/linux-xlnx/blob/master/arch/arm/boot/dts/zynq-7000.dtsi#L220" target="_blank" rel="noopener">zynq-7000.dtsi</a>里，<code>nand0</code>是<code>smcc</code>的子节点，所以还要使能<code>smcc</code>节点：</p>
-<pre><code class="dts">&amp;smcc {
+<pre><code class="lang-dts">&amp;smcc {
     status = &quot;okay&quot;;
 };
 </code></pre>
 <p>为了避免<code>pinctrl_gpio0_default</code>跟<code>pinctrl_nand0_default</code>引脚打架，前者的引脚都应该删掉：</p>
-<pre><code class="diff">     pinctrl_gpio0_default: gpio0-default {
+<pre><code class="lang-diff">     pinctrl_gpio0_default: gpio0-default {
          mux {
              function = &quot;gpio0&quot;;
 -            groups = &quot;gpio0_7_grp&quot;, &quot;gpio0_8_grp&quot;, &quot;gpio0_9_grp&quot;,
@@ -707,8 +707,6 @@ Xilinx有个w..." data-title=" QQ">
 
         <p>
             
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
             <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
         </p>
     </div>
@@ -805,6 +803,27 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
 
 
 
@@ -814,5 +833,20 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 </body>
 </html>

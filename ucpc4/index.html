@@ -37,8 +37,6 @@
 <meta name="twitter:description" content="讲设备树的文章不少。以下是一些挺有意思的文章：  蜗窝科技的博客紧扣Linux内核来讲设备树的来历与用法； Thomas Petazzoni是Bootlin公司（以前叫Free Electrons，一家很有水平的专注Linux的法国公司）的CTO，他写过一份讲义叫《傻瓜都懂的设备树》，详细地介绍了设备树的语法与Linux内核中现实的用例； device tree kernel internals这">
 <meta name="twitter:image" content="https://hhuysqt.github.io/ucpc4/block-pc.jpeg">
     
-        <link rel="alternate" type="application/atom+xml" title="hhuysqt" href="/atom.xml">
-    
     <link rel="shortcut icon" href="/img/m.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
@@ -214,7 +212,7 @@
 <p>C语言可以实现相当多的面向对象的概念，有相当多的书籍讲述了object oriented C（OOC），关键就是使用struct去封装成员对象和函数指针，函数指针就是方法；指针很自由，可以表达各种概念。其中，<a href="http://customers.hbci.com/~rpopp/Books/Object-oriented%20Programming%20With%20ANSI-C.pdf" target="_blank" rel="noopener"><strong><em><code>Object-oriented Programming With ANSI-C</code></em></strong></a>这本书里的实现方法相当优雅，它并不局限于struct，而且它将void指针玩出花来了，可以说离仅使用基本面向对象语法的C++就差个class关键字了。</p>
 <h4 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h4><p>声明一个<code>struct</code>就是声明一个<code>类</code>。定义一个struct就是将类<code>实例化</code>为<code>对象</code>。</p>
 <p>一个类里面声明有<code>属性</code>和<code>方法</code>。使用struct的话，属性就照常写，方法就写为<code>函数指针</code>。比方说在<strong>一个头文件里</strong>声明foo类，里面有一个成员叫bar，然后有一个方法get_bar，返回实际对象里的bar值：</p>
-<pre><code class="c">struct foo {
+<pre><code class="lang-c">struct foo {
     // 属性
     int bar;
     // 接口
@@ -222,13 +220,13 @@
 };
 </code></pre>
 <p>get_bar()函数一般在<strong>某一个C文件里</strong>实现为static函数：</p>
-<pre><code class="c">static int my_get_bar(struct foo* f)
+<pre><code class="lang-c">static int my_get_bar(struct foo* f)
 {
     return f-&gt;bar;
 }
 </code></pre>
 <p>然后，在<strong>同一个C文件里面</strong>实现<strong>全局可见</strong>的<code>构造函数</code>：</p>
-<pre><code class="c">struct foo* new_foo(void)
+<pre><code class="lang-c">struct foo* new_foo(void)
 {
     struct foo* f = (struct foo*)
     malloc(sizeof(struct foo));
@@ -242,7 +240,7 @@
 }
 </code></pre>
 <p>最后，这样使用这个类：</p>
-<pre><code class="c">// new一个对象：
+<pre><code class="lang-c">// new一个对象：
 struct foo* f = new_foo();
 // 通过接口访问该对象
 int the_bar = f-&gt;get_bar(f);
@@ -257,12 +255,12 @@ free(f);
 </ul>
 <h4 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h4><p>（继承也称泛化。“A<code>泛化</code>为B”，跟“B<code>继承</code>了A”是一个意思。）</p>
 <p>现在假设另一个类foo2<code>继承</code>了foo，可以这样声明：</p>
-<pre><code class="c">struct foo2 {
+<pre><code class="lang-c">struct foo2 {
     struct foo *super;
 };
 </code></pre>
 <p>然后foo2的构造函数如下：</p>
-<pre><code class="c">struct foo2 *new_foo2(void)
+<pre><code class="lang-c">struct foo2 *new_foo2(void)
 {
     struct foo2 *f2 = (struct foo2)
         malloc(sizeof(struct foo2));
@@ -279,7 +277,7 @@ free(f);
 </code></pre>
 <p>如果需要访问foo2继承自foo的属性，则通过foo2-&gt;super的接口来访问。也可以在foo2里面重新造轮子，先做一些自己的东西，然后再调用super的方法（Linux内核里面经常这样做）。</p>
 <p><strong>可见，要实现继承，一般在子类里面定义一个父类（或它的指针）</strong>。如果是<code>多继承</code>，那就多构造几个父类。值得注意的是，要逐个构造不同的类时，只要有一个类没有成功构造，之前所成功构造的类都得析构。这样的话会写得很麻烦，于是Linux内核推荐使用<code>goto</code>语句：</p>
-<pre><code class="c">    struct f1 *f1 = new_f1();
+<pre><code class="lang-c">    struct f1 *f1 = new_f1();
     if (!f1) goto NULL_F1;
     struct f2 *f2 = new_f2();
     if (!f2) goto NULL_F2;
@@ -302,14 +300,14 @@ NULL_F1:
 <h4 id="举个例子：内核中STM32的串口驱动"><a href="#举个例子：内核中STM32的串口驱动" class="headerlink" title="举个例子：内核中STM32的串口驱动"></a>举个例子：内核中STM32的串口驱动</h4><p>其实不只是STM32，其他片子的串口都实现为一个tty驱动。tty不只有串口终端，还有framebuffer终端、网络终端等等，它们都统一为一个相当复杂的tty架构，不过下面仅简单探讨一些类的继承关系。</p>
 <p>它涉及到<code>tty_driver</code>、<code>uart_port</code>、<code>stm32_port</code>这3个类，它们这样定义：</p>
 <p><a href="https://elixir.bootlin.com/linux/v4.13.3/source/include/linux/tty_driver.h#L296" target="_blank" rel="noopener">include/linux/tty_driver.h</a></p>
-<pre><code class="c">struct tty_driver {
+<pre><code class="lang-c">struct tty_driver {
     ...
     const struct tty_operations *ops;
     ...
 };
 </code></pre>
 <p><a href="https://elixir.bootlin.com/linux/v4.13.3/source/include/linux/serial_core.h#L117" target="_blank" rel="noopener">include/linux/serial_core.h</a></p>
-<pre><code class="c">struct uart_port {
+<pre><code class="lang-c">struct uart_port {
     ...
     const struct uart_ops *ops;
     ...
@@ -317,7 +315,7 @@ NULL_F1:
 };
 </code></pre>
 <p><a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/tty/serial/stm32-usart.h#L214" target="_blank" rel="noopener">drivers/tty/serial/stm32-usart.h</a></p>
-<pre><code class="c">struct stm32_port {
+<pre><code class="lang-c">struct stm32_port {
     struct uart_port port;
     ...
 };
@@ -328,14 +326,14 @@ NULL_F1:
 <p>还应注意到的是，它们构造父类的风格并不统一：uart_port想要继承tty_driver，则通过<code>alloc_tty_driver()</code>来new一个父类，然后<code>tty_set_operations()</code>等建立与父类的联系，最后<code>tty_register_driver()</code>注册驱动函数。而stm32_port要继承uart_port就直接在子类内部定义一个父类对象就完事了。</p>
 <h4 id="container-of（）"><a href="#container-of（）" class="headerlink" title="container-of（）"></a>container-of（）</h4><p>写驱动时常需要继承一些已有的类，比方说一个字符设备驱动继承cdev，或者如1.4的例子stm32串口设备继承uart_port。C语言里父类定义在子类内部，而内核的基础设施传参时只将父类对象的指针传进来，但是驱动程序要用到的又是子类对象。所以问题就是，如何通过父类对象找到子类对象。</p>
 <p>有一个解决办法是，将父类定义为子类的<strong>第一个成员</strong>，这样的话就可以通过强制类型转换，直接得到子类。比如：</p>
-<pre><code class="c">struct son {
+<pre><code class="lang-c">struct son {
     struct father father;
     ...
 };
 </code></pre>
 <p>如果有一个指针<code>struct father *f</code>，而且知道它肯定是被继承为son的对象，那么这个指针可以强转为<code>struct son*</code>指针。</p>
 <p>但是多继承的情况就无法这样做了；而且只能将父类定义为第一个成员，简直太死板了。于是Linux内核里面定义了一个<code>contailer_of()</code>宏，通过结构体成员的地址找到整个结构体的地址。定义在<a href="https://elixir.bootlin.com/linux/v4.13.3/source/include/linux/kernel.h#L858" target="_blank" rel="noopener">include/linux/kernel.h</a>：</p>
-<pre><code class="c">#define container_of(ptr, type, member) ({   \
+<pre><code class="lang-c">#define container_of(ptr, type, member) ({   \
     void *__mptr = (void *)(ptr); \
     ((type *)(__mptr - offsetof(type, member))); })
 </code></pre>
@@ -356,7 +354,7 @@ NULL_F1:
                 <div class="image-caption">system</div>
             </figure></p>
 <p>经过抽象，引入<code>device</code>、<code>device_driver</code>、<code>bus_type</code>这三个类；现实世界中device通过bus挂载到CPU上，device通过bus_type与device_driver联系起来。它们都声明在<a href="https://elixir.bootlin.com/linux/v4.13.3/source/include/linux/device.h" target="_blank" rel="noopener">include/linux/device.h</a>中：</p>
-<pre><code class="c">struct device {
+<pre><code class="lang-c">struct device {
     ...
     struct bus_type    *bus;
     struct device_driver *driver;
@@ -393,14 +391,14 @@ struct bus_type {
 <p>但是对于像ARM这种将内存空间和设备空间统一编址的架构来说，很多设备并不挂载在可以动态探知设备的总线上，而是有固定的地址供CPU寻址。<strong>STM32所有外设都这样</strong>（当然也有不少ARM架构的SOC有PCI总线）。这些设备都叫<code>平台设备（platform device）</code>。为符合Linux设备模型，就专门造出了一个虚拟的总线叫<code>平台总线（platform bus)</code>，上面注册有平台设备与<code>平台驱动（platform driver）</code>。它们分别继承自device、bus_type、device_driver。</p>
 <p>由于平台设备不能动态探知，所以内核应该事先知道这些设备，于是platform_device对象应该写死在内核里面。2.6.x内核里面就是这样干的。所以当年如果你要实现一个驱动，除了要实现platform_driver，还要在某一个地方定义一个static的platform_device（或者继承它的子类），然后在使用<code>MODULE_init()</code>宏修饰的构造函数里面注册driver和device（MODULE_init的工作方式是将一堆函数指针存到某一个section里，形成一个数组，以便内核初始化时候逐个调用）。</p>
 <p>平台总线的match()方法，对比的是平台设备和平台驱动的<strong>name字段是否相同</strong>，以此来配对设备和驱动。比方说，我在一个地方定义一个设备：</p>
-<pre><code class="c">static struct platform_device 
+<pre><code class="lang-c">static struct platform_device 
 foo_device = {
     .name        = &quot;foo&quot;,
     ...
 };
 </code></pre>
 <p>然后在另一个地方定义一个驱动：</p>
-<pre><code class="c">static struct platform_driver 
+<pre><code class="lang-c">static struct platform_driver 
 foo_driver = {
     .driver    = {
         .name        = &quot;foo&quot;,
@@ -410,7 +408,7 @@ foo_driver = {
 };
 </code></pre>
 <p>在构造函数里面注册设备和驱动：</p>
-<pre><code class="c">// 在一个地方添加设备
+<pre><code class="lang-c">// 在一个地方添加设备
 platform_add_devices(&amp;foo_device, 1);
 ...
 // 在另一个地方添加驱动
@@ -423,7 +421,7 @@ platform_driver_register(&amp;foo_driver);
 <p>一个设备就是一个<code>对象</code>，世间万物都是对象。每个对象拥有一系列<code>属性</code>，属性即是<code>名</code>和<code>值</code>的对应；现在<strong>不想声明类而直接把对象表达出来</strong>。</p>
 <h4 id="可选用的语言"><a href="#可选用的语言" class="headerlink" title="可选用的语言"></a>可选用的语言</h4><p>假若我们要表达一个名字为”serial1”，波特率为115200的串口，当然现实世界的串口属性远不止这些，还有它寄存器组的地址、中断源、DMA通道、时钟源等等。</p>
 <p>如果直接用c语言数据结构来表示的话，显然就要先声明一个类再实例化：</p>
-<pre><code class="c">struct usart_struct {
+<pre><code class="lang-c">struct usart_struct {
     const char *name;
     unsigned baudrate;
 }
@@ -434,13 +432,13 @@ usart = {
 </code></pre>
 <p>因为设备实在太千奇百怪多种多样了，如果每一种芯片的外设都这么搞的话，那代码就相当臃肿了。其实不少语言都能直接<strong>随心所欲地</strong>定义对象，它们可有两种风格：</p>
 <ul>
-<li>标签式的风格，标签接标签，标签套标签。如XML：<pre><code class="xml">&lt;usart&gt;
+<li>标签式的风格，标签接标签，标签套标签。如XML：<pre><code class="lang-xml">&lt;usart&gt;
   &lt;name&gt;serial1&lt;/name&gt;
   &lt;baudrate&gt;115200&lt;/baudrate&gt;
 &lt;/usart&gt;
 </code></pre>
 </li>
-<li>数据结构式的风格。如json：<pre><code class="json">{
+<li>数据结构式的风格。如json：<pre><code class="lang-json">{
 &quot;usart&quot;: {
   &quot;name&quot;: &quot;serial1&quot;,
   &quot;baudrate&quot;: 115200
@@ -485,7 +483,7 @@ usart = {
 <li><strong>怎么引用别的节点（phandel，&amp;符号）</strong></li>
 </ul>
 <p>dts文件里面的节点里，一系列同名的节点描述的都是同一个对象，它们的属性相互叠加，若有冲突，则以最后出现的描述为准，是谓“后来居上”。比方说在<strong>靠前</strong>的地方这样描述这个串口：</p>
-<pre><code class="dts">/ {
+<pre><code class="lang-dts">/ {
     soc {
         ...
         serial@40011000 {
@@ -497,7 +495,7 @@ usart = {
 };
 </code></pre>
 <p>然后在<strong>靠后</strong>的地方又这样描述一遍：</p>
-<pre><code class="dts">/ {
+<pre><code class="lang-dts">/ {
     soc {
         // 记得要重新画一次设备树，然后
         // 在相同的枝干下面写同名节点
@@ -508,7 +506,7 @@ usart = {
 };
 </code></pre>
 <p>最后生成的效果是：</p>
-<pre><code class="dts">/ {
+<pre><code class="lang-dts">/ {
     soc {
         ...
         serial@40011000 {
@@ -522,7 +520,7 @@ usart = {
 <p>注意到，status属性被改为okay了。</p>
 <p>特别要强调的是，如果要在两个文件里面这样干，那么两个文件里面都得画上<strong>结构相同的设备树</strong>，然后在<strong>相同的枝干上写同名的节点</strong>，这才有效。就像上面例子中画了两次设备树，在根节点下soc节点下重写了serial节点。这显然很麻烦。不过可以使用<code>标号</code>和<code>引用</code>来简化。</p>
 <p>还有这种操作：拿STM32的设备树作为例子：<br>在<a href="https://elixir.bootlin.com/linux/v4.13.3/source/arch/arm/boot/dts/stm32f429.dtsi#L422" target="_blank" rel="noopener">arch/arm/boot/dts/stm32f429.dtsi</a>里面这样定义串口：</p>
-<pre><code class="dts">/ {
+<pre><code class="lang-dts">/ {
     soc {
         ...
         // 跟上面相比，加了标号
@@ -535,7 +533,7 @@ usart = {
 };
 </code></pre>
 <p>然后在<a href="https://elixir.bootlin.com/linux/v4.13.3/source/arch/arm/boot/dts/stm32429i-eval.dts#L286" target="_blank" rel="noopener">arch/arm/boot/dts/stm32f429i-eval.dts</a>里面，include刚才那个设备树，接着使用标号改写这个节点：</p>
-<pre><code class="dts">#include &lt;stm32f429.dtsi&gt;
+<pre><code class="lang-dts">#include &lt;stm32f429.dtsi&gt;
 ...
 // 直接引用那个标号就行了
 &amp;usart1 {
@@ -544,14 +542,14 @@ usart = {
 </code></pre>
 <p>最后达到相同的效果。</p>
 <h4 id="设备树对应到驱动程序"><a href="#设备树对应到驱动程序" class="headerlink" title="设备树对应到驱动程序"></a>设备树对应到驱动程序</h4><p>设备树会展开为平台设备，但是它并不通过name字段去与平台驱动相匹配，而是通过<code>compatible</code>属性与driver中的<code>compatible</code>相匹配。compatible都是一个字符串。<br>比方说STM32F429的串口在设备树中这样写：</p>
-<pre><code class="c">usart1: serial@40011000 {
+<pre><code class="lang-c">usart1: serial@40011000 {
     compatible = &quot;st,stm32-usart&quot;, 
         &quot;st,stm32-uart&quot;;
     ...
 };
 </code></pre>
 <p>在<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/tty/serial/stm32-usart.c#L709" target="_blank" rel="noopener">drivers/tty/serial/stm32-usart.c</a>中这样定义compatible：</p>
-<pre><code class="c">static const struct of_device_id stm32_match[] = {
+<pre><code class="lang-c">static const struct of_device_id stm32_match[] = {
     { .compatible = &quot;st,stm32-usart&quot;, .data = &amp;stm32f4_info},
     { .compatible = &quot;st,stm32-uart&quot;, .data = &amp;stm32f4_info},
     { .compatible = &quot;st,stm32f7-usart&quot;, .data = &amp;stm32f7_info},
@@ -569,7 +567,7 @@ static struct platform_driver stm32_serial_driver = {
 <p>设备树和驱动中的compatible字段都可以不只有一个，只要<strong>任何一个字符串相同</strong>，就可以匹配上了。</p>
 <p>注意到<code>of_device_id</code>列表里面，每一个compatible项目都对应了一个data成员。驱动匹配上设备后，可以顺藤摸瓜找到相关的data，从而在一个驱动程序里面实现多个相似设备的驱动。</p>
 <h4 id="“设备树绑定”，以及“设备树绑定”的文档"><a href="#“设备树绑定”，以及“设备树绑定”的文档" class="headerlink" title="“设备树绑定”，以及“设备树绑定”的文档"></a>“设备树绑定”，以及“设备树绑定”的文档</h4><p>设备树中应该描述哪些属性，属性值应该怎么设置？写BSP的程序员可以自由去定义，然后通过一系列设备树相关接口找到设备树中设置的值。比方说STM32的串口：</p>
-<pre><code class="c">usart1: serial@40011000 {
+<pre><code class="lang-c">usart1: serial@40011000 {
     compatible = &quot;st,stm32-usart&quot;, 
         &quot;st,stm32-uart&quot;;
     reg = &lt;0x40011000 0x400&gt;;
@@ -802,8 +800,6 @@ Thomas Petazzoni是Bootli..." data-title=" QQ">
 
         <p>
             
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
             <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
         </p>
     </div>
@@ -902,6 +898,27 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
 
 
 
@@ -911,5 +928,20 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 </body>
 </html>

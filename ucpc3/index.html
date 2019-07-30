@@ -40,8 +40,6 @@
 <meta name="twitter:description" content="稍微复杂一点的的嵌入式系统，底层初始化和操作系统的引导都由bootloader完成。bootloader可以很简单，只需要将内存初始化好、将操作系统加载好就行；也可以比较复杂，比如大名鼎鼎的u-boot，或者不那么有名的barebox等等，都有大量的功能，管理着大量的外设，可以从各种各样的地方启动系统（flash、SD卡、U盘、网络服务器等等），并且有一个简单的或许可以跑脚本的shell。相当复杂">
 <meta name="twitter:image" content="https://hhuysqt.github.io/ucpc3/sdrammrs.jpeg">
     
-        <link rel="alternate" type="application/atom+xml" title="hhuysqt" href="/atom.xml">
-    
     <link rel="shortcut icon" href="/img/m.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
@@ -212,7 +210,7 @@
 <p><em>（手机请横屏看代码）</em><br><a id="more"></a></p>
 <h3 id="uboot改动"><a href="#uboot改动" class="headerlink" title="uboot改动"></a>uboot改动</h3><p>这个uboot是老版本的，没有引入kbuild，配置板子靠的是<code>include/configs/</code>下面一系列头文件里面的宏定义。这里直接沿用<code>include/configs/stm32429-disco.h</code>的配置头文件。</p>
 <h4 id="时钟配置"><a href="#时钟配置" class="headerlink" title="时钟配置"></a>时钟配置</h4><p>改配置文件即可。将其配置为168MHz：</p>
-<pre><code class="c">#define CONFIG_STM32_SYS_CLK_PLL
+<pre><code class="lang-c">#define CONFIG_STM32_SYS_CLK_PLL
 #define CONFIG_STM32_PLL_SRC_HSE
 #define CONFIG_STM32_HSE_HZ 25000000
 #define CONFIG_STM32_PLL_M  25
@@ -223,13 +221,13 @@
 <p>其实，不管外面的晶振频率几何，进PLL第一步就是将频率分频降为1MHz，然后再倍频。这里倍频到336MHz。然后2分频为168MHz到HCLK，7分频为48MHz给USB。</p>
 <h4 id="SDRAM初始化"><a href="#SDRAM初始化" class="headerlink" title="SDRAM初始化"></a>SDRAM初始化</h4><p>在<code>cpu/arm_cortexm3/stm32/fmc.c</code>里，首先修改<code>ext_ram_fmc_gpio</code>数组中的引脚。</p>
 <p>然后<code>ExtMemInit()</code>函数里面改内存时序参数：</p>
-<pre><code class="c">// burst, 84MHz, CAS=2, 4 banks, 16 bits data, 13 bit RA, 10 bit CA
+<pre><code class="lang-c">// burst, 84MHz, CAS=2, 4 banks, 16 bits data, 13 bit RA, 10 bit CA
 STM32_FMC_DRAM-&gt;sdcr[0] = 0x0000195A;
 // TRCD=2, TRP=2, TWR=2, TRC=6, TRAS=4, TXSR=6, TMRD=2
 STM32_FMC_DRAM-&gt;sdtr[0] = 0x01115351;
 </code></pre>
 <p>内存<code>MRS</code>和刷新频率设置。</p>
-<pre><code class="c">// single write burst, CAS = 2, burst length = 2
+<pre><code class="lang-c">// single write burst, CAS = 2, burst length = 2
 STM32_FMC_DRAM-&gt;sdcmr = 0x00044214;
 STM32_FMC_DRAM-&gt;sdrtr = ((636*8) &lt;&lt; 1);
 </code></pre>
@@ -241,7 +239,7 @@ STM32_FMC_DRAM-&gt;sdrtr = ((636*8) &lt;&lt; 1);
                 <div class="image-caption">SDRAM的MRS设置</div>
             </figure></p>
 <p>最后是<strong>SDRAM</strong>重定位！原本SDRAM bank1的地址是0xC0000000以上的，在所谓<code>片外外设区</code>里，按照ARM的意思是不可以执行代码的；STM32可以通过<code>SYSCFG</code>寄存器将它重定位到0x80000000以及0x00000000地址上，就可以在上面执行代码了。不过诡异的是，我的429 discovery板子即使不重定位也能执行代码，但是我买的芯片不重定位就不能执行代码（会引发busfault）。</p>
-<pre><code class="c">/*
+<pre><code class="lang-c">/*
  * Remapping SDRAM bank1 to 0x80000000 and 0x00000000
  */
 STM32_RCC-&gt;apb2enr  |= ((uint32_t)0x00004000);
@@ -264,7 +262,7 @@ STM32429-DISCO&gt; md 0x80000000
 ...
 </code></pre><p>如果读写数据不对，那么多半是芯片没焊好。。简单测得SDRAM顺序读写速度约70MB每秒。</p>
 <h4 id="增加nand-flash驱动"><a href="#增加nand-flash驱动" class="headerlink" title="增加nand-flash驱动"></a>增加nand-flash驱动</h4><p>首先在SDRAM初始化完成之后，顺便初始化nand flash：</p>
-<pre><code class="c">// ECC 2k, TAR=TCLR=1, ECC disable, 8 bits, NAND flash, wait feature
+<pre><code class="lang-c">// ECC 2k, TAR=TCLR=1, ECC disable, 8 bits, NAND flash, wait feature
 STM32_FMC_NAND-&gt;pcrx  = 0x00060008;
 // SET = 2, WAIT = 4, HOLD = 2, HIZ = 2
 STM32_FMC_NAND-&gt;pmemx = 0x02020402;
@@ -274,7 +272,7 @@ STM32_FMC_NAND-&gt;pattx = 0x02020402;
 STM32_FMC_NAND-&gt;pcrx |= 0x00000004;
 </code></pre>
 <p>然后，自行添加必要函数。我在<code>drivers/mtd/nand/stm32_nand.c</code>里面添加：</p>
-<pre><code class="c">#define FSMC_NAND_REG_DATA ((volatile uint8_t*)0x70000000)
+<pre><code class="lang-c">#define FSMC_NAND_REG_DATA ((volatile uint8_t*)0x70000000)
 #define FSMC_NAND_REG_CMD  ((volatile uint8_t*)0x70010000)
 #define FSMC_NAND_REG_ADDR ((volatile uint8_t*)0x70020000)
 
@@ -301,7 +299,7 @@ static int fmc_read_rb(struct mtd_info *mtd)
 </code></pre>
 <p>其实STM32的nand flash控制器并没有忙的标志，所以只好读GPIO的忙电平；ST官方例程也是这么干的。。</p>
 <p>随后，向MTD层注册上面的两个函数：</p>
-<pre><code class="c">int board_nand_init(struct nand_chip *nand)
+<pre><code class="lang-c">int board_nand_init(struct nand_chip *nand)
 {
     // 设置读写寄存器的地址
     nand-&gt;IO_ADDR_R = nand-&gt;IO_ADDR_W = FSMC_NAND_REG_DATA;
@@ -317,7 +315,7 @@ static int fmc_read_rb(struct mtd_info *mtd)
 }
 </code></pre>
 <p>最后，在配置文件里面添加nand命令的宏定义：</p>
-<pre><code class="c">#define CONFIG_CMD_NAND
+<pre><code class="lang-c">#define CONFIG_CMD_NAND
 #define CONFIG_NAND_STM32_UCPC
 #define CONFIG_MTD_DEVICE
 #define CONFIG_SYS_MAX_NAND_DEVICE  1
@@ -422,7 +420,7 @@ STM32429-DISCO&gt; md 0x80000000
                 <div class="image-caption">LTDC时序图</div>
             </figure></p>
 <p>最终设置的LTDC寄存器如下。首先是时钟配置，像素时钟设为25MHz：</p>
-<pre><code class="c">// Configure PLLSAI prescalers for LCD
+<pre><code class="lang-c">// Configure PLLSAI prescalers for LCD
 // Enable Pixel Clock
 // PLLSAI_VCO Input = HSE_VALUE/PLL_M = 1 Mhz
 // PLLSAI_VCO Output = PLLSAI_VCO Input * PLLSAI_N = 200 Mhz
@@ -440,13 +438,13 @@ STM32_RCC-&gt;dckcfgr |=  0x00000000;      // /2
 while ((STM32_RCC-&gt;cr &amp; 0x20000000) == 0);
 </code></pre>
 <p>然后是VGA时序的设置：</p>
-<pre><code class="c">STM32_LTDC-&gt;sscr = ((96) &lt;&lt; 16)           | (2);
+<pre><code class="lang-c">STM32_LTDC-&gt;sscr = ((96) &lt;&lt; 16)           | (2);
 STM32_LTDC-&gt;bpcr = ((96+48) &lt;&lt; 16)        | (2+33);
 STM32_LTDC-&gt;awcr = ((96+48+640) &lt;&lt; 16)    | (2+33+480); // 640 x 480
 STM32_LTDC-&gt;twcr = ((96+48+640+16) &lt;&lt; 16) | (2+33+480+10);
 </code></pre>
 <p>只用LAYER1。主要是设置640x480的窗口，以及<code>帧缓存</code>的地址：</p>
-<pre><code class="c">STM32_LTDC_LAYER1-&gt;whpcr  = ((95+48+641) &lt;&lt; 16) | (95+48+2);
+<pre><code class="lang-c">STM32_LTDC_LAYER1-&gt;whpcr  = ((95+48+641) &lt;&lt; 16) | (95+48+2);
 STM32_LTDC_LAYER1-&gt;wvpcr  = ((1+33+480) &lt;&lt; 16) | (1+33);
 STM32_LTDC_LAYER1-&gt;pfcr   = 2;  // RGB565
 ...
@@ -470,20 +468,20 @@ STM32429-DISCO&gt; mw 80478000 ffffffff 5000
                 <div class="image-caption">VGA显示效果</div>
             </figure></p>
 <h4 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h4><p>首先在配置文件里面使能网络命令：</p>
-<pre><code class="c">#define  CONFIG_CMD_NET
+<pre><code class="lang-c">#define  CONFIG_CMD_NET
 #define  CONFIG_NET_MULTI
 #define  CONFIG_STM32_ETH
 #define  CONFIG_STM32_ETH_RMII
 </code></pre>
 <p>然后在<code>drivers/net/stm32_eth.c</code>里面更改GPIO。包括在<code>mac_gpio</code>里面修改RMII的GPIO，<strong>以及以太网复位的GPIO</strong>。然后其他可以照旧。</p>
 <h5 id="在上位机上搭建tftp服务器"><a href="#在上位机上搭建tftp服务器" class="headerlink" title="在上位机上搭建tftp服务器"></a>在上位机上搭建tftp服务器</h5><ul>
-<li>如果上位机上运行着Ubuntu，则可以直接通过包管理安装tftp服务器：<pre><code class="bash">$ sudo apt-get install tftp-hpa tftpd-hpa
+<li>如果上位机上运行着Ubuntu，则可以直接通过包管理安装tftp服务器：<pre><code class="lang-bash">$ sudo apt-get install tftp-hpa tftpd-hpa
 </code></pre>
 </li>
 <li>新建你的tftp目录，修改权限+rw（或者直接设为777，反正没人攻击你）。</li>
 <li>更改配置文件/etc/default/tftpd-hpa<pre><code>TFTP_DIRECTORY=&quot;&lt;那个目录&gt;&quot;
 </code></pre></li>
-<li>重启服务：<pre><code class="bash">$ sudo service tftpd-hpa restart
+<li>重启服务：<pre><code class="lang-bash">$ sudo service tftpd-hpa restart
 </code></pre>
 </li>
 </ul>
@@ -527,7 +525,7 @@ STM32429-DISCO&gt;
 <p>原版的afboot已经移植到429 discovery上，对于uc-PC来说，需要修改GPIO引脚、修改SDRAM初始化、增加nand flash初始化、增加LTDC初始化。这些东西都与上文详述的uboot移植过程大同小异，不再赘述。况且afboot中所有的初始化都写在同一个c文件里面，改起来也相当方便。</p>
 <h4 id="跳转Linux-1"><a href="#跳转Linux-1" class="headerlink" title="跳转Linux"></a>跳转Linux</h4><p><code>start_kernel.c</code>里面是最终跳转到Linux的代码，很简单，就一个跳转。</p>
 <p>按照afboot的逻辑，bootloader烧写在片内flash第一个扇区里面（0～16k），然后设备树烧写在第二个扇区（16~32k），剩下的所有空间都留给Linux内核。但是新的内核里设备树越来越庞大，以至于超过了一个扇区的16k大小，如果接着占用下一个扇区就要多占用32k了。所以最好便是设备树紧挨着afboot，一同放在头两个扇区里面。为此start_kernel.c更改如下：</p>
-<pre><code class="c">#include &lt;stdlib.h&gt;
+<pre><code class="lang-c">#include &lt;stdlib.h&gt;
 #include &lt;stdint.h&gt;
 
 extern unsigned int _end_text;
@@ -553,10 +551,10 @@ void start_kernel(void)
   _start_data = .;
   *(.data)
   _end_data = .;
-} &gt;SRAM1 AT &gt;FLASH 
+} &gt;SRAM1 AT &gt;FLASH
 </code></pre><p>所以设备树的地址就是<code>_end_text + _end_data - _start_data</code>了。</p>
 <p>afboot和内核编译之后，用下面的命令将bootloader和设备树组合到<code>loader.bin</code>一个文件里面：</p>
-<pre><code class="bash">$ cat stm32429i-ucpc.bin \
+<pre><code class="lang-bash">$ cat stm32429i-ucpc.bin \
   内核/arch/arm/boot/dts/stm32f429-disco.dtb \
   &gt; loader.bin
 $ ls loader.bin -l
@@ -760,8 +758,6 @@ $ ls loader.bin -l
 
         <p>
             
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
             <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
         </p>
     </div>
@@ -857,6 +853,27 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
 
 
 
@@ -866,5 +883,20 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 </body>
 </html>

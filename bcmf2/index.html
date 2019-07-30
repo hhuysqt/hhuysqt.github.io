@@ -39,8 +39,6 @@
 <meta name="twitter:description" content="本文总结BCM43438的初始化流程，初始化成功的标志是连上WiFi。 参考WICED SDK、NuttX，以及Linux的源码，它们的流程略有不同。Linux的驱动面面俱到；WICED的驱动虽只针对物联网设备，却写得相当冗杂；nuttx的驱动则相当简洁恰好能用。  WICED可从Cypress官网上下载，注册个账号就好了。这份软件架构简直是一切以WICED为中心，有bootloader、dct（">
 <meta name="twitter:image" content="https://hhuysqt.github.io/bcmf2/sdio.jpeg">
     
-        <link rel="alternate" type="application/atom+xml" title="hhuysqt" href="/atom.xml">
-    
     <link rel="shortcut icon" href="/img/m.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
@@ -282,6 +280,7 @@
 </ul>
 <p>使能了F1之后可以随时读F1的<code>0x18000000</code>地址处读到设备ID号，在Linux的brcmfmac的驱动中，该地址处的结构体为<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/net/wireless/broadcom/brcm80211/include/chipcommon.h#L24" target="_blank" rel="noopener">struct chipregs</a>，第一个元素是chipid。而WICED和nuttx的驱动里面没发现这种结构体——它们都用的是一大堆宏定义的寄存器地址。不同的模块chipid可见Linux内核的drivers/net/wireless/broadcom/brcm80211/include/ <a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/net/wireless/broadcom/brcm80211/include/brcm_hw_ids.h" target="_blank" rel="noopener">brcm_hw_ids.h</a>，其中BCM43438的ID是<strong>十进制的43430</strong>。</p>
 <p><em>0x18000000这个地址在brcmfmac里被命名为<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/net/wireless/broadcom/brcm80211/include/soc.h#L20" target="_blank" rel="noopener">SI_ENUM_BASE</a>，在老版SSB驱动里被命名为<a href="https://elixir.bootlin.com/linux/v4.13.3/source/include/linux/ssb/ssb_regs.h#L12" target="_blank" rel="noopener">SSB_ENUM_BASE</a>。brcmfmac里SSB总线、AXI总线分别实现了，体现了bcm网卡内部总线的发展历史。。。</em></p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -306,6 +305,7 @@
 </tr>
 </tbody>
 </table>
+</div>
 <h4 id="传输固件"><a href="#传输固件" class="headerlink" title="传输固件"></a>传输固件</h4><p>固件有三种：</p>
 <ul>
 <li>两三百kb的大固件</li>
@@ -671,8 +671,6 @@ nsh&gt;
 
         <p>
             
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
             <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
         </p>
     </div>
@@ -769,6 +767,27 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
 
 
 
@@ -778,5 +797,20 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 </body>
 </html>

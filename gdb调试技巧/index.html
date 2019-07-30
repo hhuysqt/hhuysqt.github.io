@@ -36,8 +36,6 @@
 <meta name="twitter:description" content="很多人开发C程序就像写脚本那样，查错，靠的是眼睛看；但是作为系统开发程序员，bug单纯靠看是查不出来的，于是就用printf，于是每一次查错都不可避免要机械地写printf、编译、烧写、运行，没有IDE的时候烧写、运行还不太方便。如果能在命令行下面设断点、单步调试什么的，想必是极好的。 有时候开发一些程序还不得不在Ubuntu下弄，比方说国外的不少开源项目像px4、openmv之类的，又比方说Li">
 <meta name="twitter:image" content="https://hhuysqt.github.io/gdb调试技巧/segger.jpeg">
     
-        <link rel="alternate" type="application/atom+xml" title="hhuysqt" href="/atom.xml">
-    
     <link rel="shortcut icon" href="/img/m.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
@@ -339,7 +337,7 @@ Reading symbols from vmlinux...done.
 </ul>
 <h3 id="操作变量"><a href="#操作变量" class="headerlink" title="操作变量"></a>操作变量</h3><ul>
 <li><code>p</code>，后面跟变量，即查看这个变量。可以用c语言的语法，比方说查看指针指向的值，查看结构体成员变量，甚至强制类型转换。</li>
-<li><code>x</code>，查看内存区域的值，语法是<code>x /FMT 地址</code>。FMT处要填三个东西：个数、输出格式、长度；输出格式可以有二进制、八进制、十进制等等，长度有单字节、双字节、四字节等等。比方说：<code>x /1xw 0x40023830</code>，表示查看0x40023830处一个四字节整数，以十六进制输出。可以<code>help x</code>来查看详细内容：<br><code>`</code><br>(gdb) help x<br>Examine memory: x/FMT ADDRESS.<br>ADDRESS is an expression for the memory address to examine.<br>FMT is a repeat count followed by a format letter and a size letter.<br>Format letters are o(octal), x(hex), d(decimal), u(unsigned decimal),<br>t(binary), f(float), a(address), i(instruction), c(char), s(string)<br>and z(hex, zero padded on the left).<br>Size letters are b(byte), h(halfword), w(word), g(giant, 8 bytes).<br>The specified number of objects of the specified size are printed<br>according to the format.  If a negative number is specified, memory is<br>examined backward from the address.            </li>
+<li><code>x</code>，查看内存区域的值，语法是<code>x /FMT 地址</code>。FMT处要填三个东西：个数、输出格式、长度；输出格式可以有二进制、八进制、十进制等等，长度有单字节、双字节、四字节等等。比方说：<code>x /1xw 0x40023830</code>，表示查看0x40023830处一个四字节整数，以十六进制输出。可以<code>help x</code>来查看详细内容：<br>```<br>(gdb) help x<br>Examine memory: x/FMT ADDRESS.<br>ADDRESS is an expression for the memory address to examine.<br>FMT is a repeat count followed by a format letter and a size letter.<br>Format letters are o(octal), x(hex), d(decimal), u(unsigned decimal),<br>t(binary), f(float), a(address), i(instruction), c(char), s(string)<br>and z(hex, zero padded on the left).<br>Size letters are b(byte), h(halfword), w(word), g(giant, 8 bytes).<br>The specified number of objects of the specified size are printed<br>according to the format.  If a negative number is specified, memory is<br>examined backward from the address.            </li>
 </ul>
 <p>Defaults for format and size letters are those previously used.<br>Default count is 1.  Default address is following last thing printed<br>with this command or “print”.</p>
 <pre><code>* `set`，设置变量；语法：`set 变量=值`。
@@ -590,8 +588,6 @@ $2 = ...
 
         <p>
             
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
             <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
         </p>
     </div>
@@ -687,6 +683,27 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
 
 
 
@@ -696,5 +713,20 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 </body>
 </html>

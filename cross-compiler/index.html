@@ -33,8 +33,6 @@
 <meta name="twitter:title" content="制作arm-uclinuxeabi的交叉编译工具链">
 <meta name="twitter:description" content="交叉编译的常识制作交叉工具链，会涉及到三个架构的机器：  build，哪个机器制作的这个编译器 host，哪个机器将运行编译器 target，编译器生成代码将会跑在哪个机器上  如果build == host == target，就叫native编译器。这是最正常的情况。如果build == host != target，就叫cross编译器。这就是常规意义下的交叉编译器。如果build != h">
     
-        <link rel="alternate" type="application/atom+xml" title="hhuysqt" href="/atom.xml">
-    
     <link rel="shortcut icon" href="/img/m.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
@@ -220,7 +218,7 @@
 <li>如果碰到arm2010q1的工具链里面缺乏某些Linux头文件（比方说v4l2）的情况，或者要弄新版本的Linux内核，或者单纯想换新版本的gcc、新版本内核，那就自己动手丰衣足食吧。</li>
 </ul>
 <h2 id="首先，稍微研究一下arm-xxxxxxxx-gcc吧"><a href="#首先，稍微研究一下arm-xxxxxxxx-gcc吧" class="headerlink" title="首先，稍微研究一下arm-xxxxxxxx-gcc吧"></a>首先，稍微研究一下arm-xxxxxxxx-gcc吧</h2><p>编译一个应用程序需要经过<strong>编译</strong>、<strong>链接</strong>两步骤。<strong>编译</strong>这一步生成obj文件，这个文件里面已经是可执行的代码了，不过并没有启动、结束的代码，也没有库文件的代码，只是在需要调用库文件的函数的地方做了记号；<strong>链接</strong>这一步，将库文件里的函数复制到最终的elf文件里面，各个记号换成对应函数的地址，是谓“链接”。比方说这样一个简单的程序<strong><em>hello.c</em></strong>：</p>
-<pre><code class="c">#include &lt;stdio.h&gt;
+<pre><code class="lang-c">#include &lt;stdio.h&gt;
 int main(void)
 {
     double d = 0.12345;
@@ -229,7 +227,7 @@ int main(void)
 }
 </code></pre>
 <p>用下面的命令编译：</p>
-<pre><code class="bash">$ arm-uclinuxeabi-gcc -g -mthumb -march=armv7-m -c hello.c -o hello.o
+<pre><code class="lang-bash">$ arm-uclinuxeabi-gcc -g -mthumb -march=armv7-m -c hello.c -o hello.o
 </code></pre>
 <p>这条命令其实是，<code>arm-uclinuxeabi-gcc hello.c</code>，加上下列参数：</p>
 <ul>
@@ -240,10 +238,10 @@ int main(void)
 </ul>
 <p>如果编译时候还加上<code>-mfloat-abi=hard</code>这个参数，那么将会生成使用fpu的代码。</p>
 <p>我们反汇编一下hello.o看看：</p>
-<pre><code class="bash">$ arm-uclinuxeabi-objdump -S hello.o
+<pre><code class="lang-bash">$ arm-uclinuxeabi-objdump -S hello.o
 </code></pre>
 <p>然后输出这些东西：</p>
-<pre><code class="c">hello.o：     文件格式 elf32-littlearm
+<pre><code class="lang-c">hello.o：     文件格式 elf32-littlearm
 
 
 Disassembly of section .text:
@@ -285,7 +283,7 @@ int main(void)
 </code></pre>
 <p>这是thumb2的汇编代码。可以看到，<code>printf (&quot;%lf\n&quot;, d*2.0)</code>引出了两个函数调用：<code>__aeabi_dadd</code>和<code>printf</code>；前者是为实现<code>d*2.0</code>这个浮点数乘法的，后者就是格式化输出的。编译器还是挺聪明的，知道乘以2可以用加法代替。</p>
 <p>使用fpu的代码反汇编时候长这样：</p>
-<pre><code class="c">...
+<pre><code class="lang-c">...
     printf (&quot;%lf\n&quot;, d*2.0);
   10:    ed97 7b00     vldr    d7, [r7]
   14:    ee37 7b07     vadd.f64    d7, d7, d7
@@ -306,7 +304,7 @@ $ file ./*
 ./hello.c:     C source, ASCII text
 ./hello.gdb:   ELF 32-bit LSB executable, ARM, EABI5 version 1 (SYSV), statically linked, with debug_info, not stripped
 </code></pre><p>其中，<code>hello</code>是最终下载到板子上运行的flt文件；<code>hello.gdb</code>是一个正常的elf文件，有它就可以在上位机上运行gdb来调试了。对它反汇编可以看到上述的待链接的标号都已经填上了。</p>
-<pre><code class="c">    printf (&quot;%lf\n&quot;, d*2.0);
+<pre><code class="lang-c">    printf (&quot;%lf\n&quot;, d*2.0);
       c8:    e9d7 0100     ldrd    r0, r1, [r7]
       cc:    4602          mov    r2, r0
       ce:    460b          mov    r3, r1
@@ -388,16 +386,16 @@ libraries: =某某某/lib/gcc/arm-uclinuxeabi/6.4.0/:某某某/lib/gcc/:某某�
 <li><a href="https://sourceforge.net/projects/uclinux/files/Tools/m68k-uclinux-20160822/elf2flt-20160818.tar.gz/download" target="_blank" rel="noopener">elf2flt</a>；这是SourceForge下载页面，不能wget。。。</li>
 </ul>
 <h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><p>首先，需要安装一些软件包。如果是Ubuntu的话，用这条命令就够了，无需逐个安装bison之类的软件包：</p>
-<pre><code class="bash">$ sudo apt-get build-dep gcc binutils
+<pre><code class="lang-bash">$ sudo apt-get build-dep gcc binutils
 </code></pre>
 <p>然后，新建你的安装目录和编译目录</p>
-<pre><code class="bash">$ mkdir 某某某安装目录 某某编译目录
+<pre><code class="lang-bash">$ mkdir 某某某安装目录 某某编译目录
 </code></pre>
 <p>将下载的源码解压到编译目录下面</p>
-<pre><code class="bash">$ tar xf balabalabala -C 某某编译目录
+<pre><code class="lang-bash">$ tar xf balabalabala -C 某某编译目录
 </code></pre>
 <p>其中，将cloog、gmp、isl、mpc、mpfr这几个包都复制到gcc源码目录下面，重命名以去掉版本后缀</p>
-<pre><code class="bash">$ mv cloog-0.18.1/ gcc-6.3.0/cloog
+<pre><code class="lang-bash">$ mv cloog-0.18.1/ gcc-6.3.0/cloog
 $ mv gmp-6.1.2/    gcc-6.3.0/gmp
 $ mv isl-0.18/     gcc-6.3.0/isl
 $ mv mpc-1.0.3/    gcc-6.3.0/mpc
@@ -406,19 +404,19 @@ $ mv mpfr-3.1.6/   gcc-6.3.0/mpfr
 <p>binutils、gcc最好不要在源码目录下面编译。为此在它源码目录外面新建编译文件夹</p>
 <pre><code>$ mkdir build_binutils build_gcc
 </code></pre><p>方便起见，建立几个环境变量</p>
-<pre><code class="bash">$ export PREFIX=某某某安装目录
+<pre><code class="lang-bash">$ export PREFIX=某某某安装目录
 $ export TARGET=arm-uclinuxeabi
 $ export PATH=$PATH:$PREFIX/bin
 </code></pre>
 <p><code>TARGET</code>设为arm-uclinuxeabi，配置binutils、gcc时传入<code>--target=$TARGET</code>，就可以配置出arm-uclinuxeabi-xxx的工具链啦！</p>
 <h3 id="binutils"><a href="#binutils" class="headerlink" title="binutils"></a>binutils</h3><p>在build_bintuils编译文件夹里面configure；只需要prefix和target参数就行了。然后编译安装</p>
-<pre><code class="bash">$ ../binutils-2.25/configure --prefix=$PREFIX --target=$TARGET
+<pre><code class="lang-bash">$ ../binutils-2.25/configure --prefix=$PREFIX --target=$TARGET
 $ make -j4
 $ make install
 </code></pre>
 <p>因为安装目录已经添加到<code>PATH</code>环境变量，所以此时有arm-uclinuxeabi-as之类的命令了。</p>
 <h3 id="gcc"><a href="#gcc" class="headerlink" title="gcc"></a>gcc</h3><p>前面已经将cloog、gmp、isl、mpc、mpfr放在源码目录下面了，编译时候就不用慢吞吞的从国外ftp下载了。</p>
-<p>不过<strong>配置之前要修改gcc源码的配置文件！</strong>在configure时候，我们使用<code>--with-multilib-list</code>来指定一批不同架构的配置。方便起见，我们使用代码里面原有的rtems的配置，来生成不同架构下面的库文件，即<strong>–with-multilib-list=<code>rtems</code></strong>。</p>
+<p>不过<strong>配置之前要修改gcc源码的配置文件！</strong>在configure时候，我们使用<code>--with-multilib-list</code>来指定一批不同架构的配置。方便起见，我们使用代码里面原有的rtems的配置，来生成不同架构下面的库文件，即<strong>—with-multilib-list=<code>rtems</code></strong>。</p>
 <p>rtems配置有一大堆不同arm架构的东西，有些配置不需要并且编译不过（可能因为binutils比较老），比方说cortex m0的专门配置（要知道Cortex M0比Cortex M3晚出），比方说一堆乱七八糟的fpu，比方说R系列的芯片等等。这些都删掉。配置文件是<code>gcc/config/arm/t-rtems</code>；注意下面的<code>MULTILIB_REQUIRED</code>，我只留了armv7-m的少量配置，足够Cortex M3、M4用了。这些都会在安装目录下面某个库文件夹下单独生成文件夹。</p>
 <pre><code># Custom RTEMS multilibs for ARM
 
@@ -454,14 +452,14 @@ MULTILIB_REQUIRED += mthumb
   --with-multilib-list=rtems
 </code></pre><p>这些参数都是一步步试错而得来的。</p>
 <p>然后，不能直接一股脑地make，要先编译gcc，再编译libgcc，最后install；不然的话会死在某些别的地方。</p>
-<pre><code class="bash">$ make -j4 all-gcc
+<pre><code class="lang-bash">$ make -j4 all-gcc
 $ make -j4 all-target-libgcc 
 $ make install-gcc
-$ make install-target-libgcc 
+$ make install-target-libgcc
 </code></pre>
 <p>然后就有arm-uclinuxeabi-gcc的命令了。</p>
 <h3 id="内核头文件"><a href="#内核头文件" class="headerlink" title="内核头文件"></a>内核头文件</h3><p>解压内核源代码，然后安装头文件</p>
-<pre><code class="bash">$ make ARCH=arm INSTALL_HDR_PATH=$PREFIX/arm-uclinuxeabi headers_install
+<pre><code class="lang-bash">$ make ARCH=arm INSTALL_HDR_PATH=$PREFIX/arm-uclinuxeabi headers_install
 </code></pre>
 <p>之所以装在这里，可详见上面<code>arm-uclinuxeabi-gcc -print-search-dirs</code>的输出。</p>
 <h3 id="uclibc"><a href="#uclibc" class="headerlink" title="uclibc"></a>uclibc</h3><p>uclibc使用kconfig，需要一个.config文件。这里需要注意的几个配置是：</p>
@@ -473,11 +471,11 @@ $ make install-target-libgcc
 <li><code>UCLIBC_EXTRA_CFLAGS</code>，填<code>-march=armv7-m -mthumb</code>，这样才能生成正确的thumb2指令，见本文开头的描述。</li>
 </ul>
 <p>然后，照常编译、安装：</p>
-<pre><code class="bash">$ make
+<pre><code class="lang-bash">$ make
 $ make install
 </code></pre>
 <h3 id="elf2flt"><a href="#elf2flt" class="headerlink" title="elf2flt"></a>elf2flt</h3><p>只适用于arm-uclinuxeabi工具链，而且只有arm-uclinuxeabi需要它。<br>它使用configure脚本，需要告诉它之前编译的binutils里面的libbfd、libiberty在哪。</p>
-<pre><code class="bash">$ ./configure --prefix=$PREFIX --target=$TARGET \
+<pre><code class="lang-bash">$ ./configure --prefix=$PREFIX --target=$TARGET \
   --with-bfd-include-dir=某某某/build-binutils/bfd \
   --with-libbfd=某某某/build-binutils/bfd/libbfd.a \
   --with-libiberty=某某某/build-binutils/libiberty/libiberty.a \
@@ -683,8 +681,6 @@ target，编译器生成代..." data-title=" QQ">
 
         <p>
             
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
             <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
         </p>
     </div>
@@ -784,6 +780,27 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
 
 
 
@@ -793,5 +810,20 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 </body>
 </html>

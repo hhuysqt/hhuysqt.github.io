@@ -44,8 +44,6 @@
 <meta name="twitter:description" content="对于搞Cortex M系列mcu开发的人来说，hardfault这种鬼东西，不遇到还好，倘若不幸遇到了，复位一下，瞎调一下，左右修补，或许碰巧就消除了。但是靠人品毕竟不是长久之计。下面记录我调试hardfault的一些简单的经验。 hardfault来源Cortex M3、M4的向量表中，3号异常是HardFault；接下来三个异常是MemFault、BusFault、UsageFault。发生了">
 <meta name="twitter:image" content="https://hhuysqt.github.io/hardfault/exceptiontable.jpeg">
     
-        <link rel="alternate" type="application/atom+xml" title="hhuysqt" href="/atom.xml">
-    
     <link rel="shortcut icon" href="/img/m.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
@@ -264,10 +262,10 @@
             </figure></p>
 <h2 id="一个例子"><a href="#一个例子" class="headerlink" title="一个例子"></a>一个例子</h2><p>C语言里面指针跟数组名不是一回事。指针<strong>是变量</strong>，但是数组名就<strong>不是变量</strong>。虽然有时候混用并没有语法错误，但是运行时候就不同了。。。</p>
 <p>假设我在<code>str.c</code>里面定义一个buff数组：</p>
-<pre><code class="c">char buff[10];
+<pre><code class="lang-c">char buff[10];
 </code></pre>
 <p>然后我在<code>main.c</code>里面才用到它；我声明它为一个指针，并且这样用它：</p>
-<pre><code class="c">extern char *buff;
+<pre><code class="lang-c">extern char *buff;
 
 int main(void)
 {
@@ -300,13 +298,13 @@ int main(void)
                 <div class="image-caption">char *buff的反汇编</div>
             </figure></p>
 <p>因为<strong>指针是变量</strong>，但凡变量都客观存在，都有一块实际的内存；引用一个变量要两步，先找到它的地址，再通过地址找它；所以若要给指针指向的值赋值，就要：<code>取指针地址</code>，<code>通过指针地址取指针值</code>，<code>用寄存器寻址方式去赋值</code>，所以它有两次<code>LDR</code>。<br>但是<strong>数组名不是变量</strong>，所以它不客观存在，它没有地址，引用它，就一步到位找到它的值了。<br>因为二者不是同一类型，所以如果你在同一个文件里面这样写的话就会出编译错误，说buff重复定义：</p>
-<pre><code class="c">char buff[10];
+<pre><code class="lang-c">char buff[10];
 extern char *buff;
 </code></pre>
 <p>将定义和声明分开在不同的文件里面写<strong>的确是良好的工程习惯</strong>。但是上面的东西分开来写之后，编译器<strong>先逐个文件编译再链接</strong>，每个c文件<strong>都没有</strong>语法错误；而链接器并不识别类型，只根据名字将符号组合在一起，所以也发现不了这样的错误。然后程序员就愉快地以为天下无事了。</p>
 <p>然后在运行时候，因为多了一次LDR命令，导致它将<code>buff</code>指向的值当做了<code>buff</code>本身，而现在这个值是0x00000000，然后将’a’写到0x00000000处，对STM32来说这是片内flash的地址。另外Cortex M将这个地址视为可写的，并不会立即出错；等到STM32的flash控制器发现flash没有解锁而写入了，就触发一个总线错误，然而此时CPU不知道已经跑了多久了。</p>
 <p>如果把声明为数组：</p>
-<pre><code class="c">extern char buff[];
+<pre><code class="lang-c">extern char buff[];
 </code></pre>
 <p>那么反汇编就没事：<br><figure class="image-bubble">
                 <div class="img-lightbox">
@@ -514,8 +512,6 @@ extern char *buff;
 
         <p>
             
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
             <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
         </p>
     </div>
@@ -611,6 +607,27 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
 
 
 
@@ -620,5 +637,20 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 </body>
 </html>

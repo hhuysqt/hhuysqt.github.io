@@ -37,8 +37,6 @@
 <meta name="twitter:description" content="Ubuntu、Debian之类的不同的发行版，其实就是不同的rootfs。Debian系的发行版有个工具叫debootstrap，可以从源那里下载最小的根文件系统。Arch相应的工具则是packstrap。 下完根文件系统之后chroot进去进行相应的配置，为了chroot到一个ARM的rootfs，我们需要用qemu-arm-static。进去之后apt-get你想要安装的东西。配完了之后烧进s">
 <meta name="twitter:image" content="https://hhuysqt.github.io/zynq3/screenfetch.jpeg">
     
-        <link rel="alternate" type="application/atom+xml" title="hhuysqt" href="/atom.xml">
-    
     <link rel="shortcut icon" href="/img/m.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
@@ -207,16 +205,17 @@
 <a id="more"></a>
 <h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><p>我们先在一台Ubuntu主机上安装<code>qemu-user-static</code>、<code>debootstrap</code>，然后继续。后文一些命令如果没有安装，随时apt-get一下。</p>
 <h4 id="准备镜像文件"><a href="#准备镜像文件" class="headerlink" title="准备镜像文件"></a>准备镜像文件</h4><p>我们<code>dd</code>一个3.7G的空白镜像，这样可以烧录进一个标明4G的SD卡。姑且叫它<code>ubuntu1804.img</code>吧：</p>
-<pre><code class="bash">dd if=/dev/zero of=ubuntu1804.img bs=1M count=3500
+<pre><code class="lang-bash">dd if=/dev/zero of=ubuntu1804.img bs=1M count=3500
 </code></pre>
 <p>然后我们将它挂载为<code>loop</code>设备：</p>
-<pre><code class="bash">sudo losetup -f --show ubuntu1804.img
+<pre><code class="lang-bash">sudo losetup -f --show ubuntu1804.img
 </code></pre>
 <p>如果你之前没有挂过别的回环设备的话，一般它会挂在<code>/dev/loop0</code>。</p>
 <p>然后我们给它分区。可以用图形界面的工具如<code>gparted</code>，也可以用命令行工具如<code>parted</code>、<code>fdisk</code>等。比方说我们用fdisk。</p>
-<pre><code class="bash">sudo fdisk /dev/loop0
+<pre><code class="lang-bash">sudo fdisk /dev/loop0
 </code></pre>
 <p>用<code>n</code>来添加新分区。顺着它的指示走下去即可。</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -238,20 +237,21 @@
 </tr>
 </tbody>
 </table>
+</div>
 <p>同步这些分区。这样会在<code>/dev/mapper/</code>下面生成对应的节点：</p>
-<pre><code class="bash">sudo kpartx -av /dev/loop0
+<pre><code class="lang-bash">sudo kpartx -av /dev/loop0
 </code></pre>
 <p>格式化它们：</p>
-<pre><code class="bash">sudo mkfs.vfat /dev/mapper/loop0p1
+<pre><code class="lang-bash">sudo mkfs.vfat /dev/mapper/loop0p1
 sudo mkfs.ext4 /dev/mapper/loop0p2
 </code></pre>
 <p>挂载它们：</p>
-<pre><code class="bash">mkdir boot rootfs
+<pre><code class="lang-bash">mkdir boot rootfs
 sudo mount /dev/mapper/loop0p1 boot
 sudo mount /dev/mapper/loop0p2 rootfs
 </code></pre>
 <h4 id="uboot和设备树改动"><a href="#uboot和设备树改动" class="headerlink" title="uboot和设备树改动"></a>uboot和设备树改动</h4><p>我们要修改uboot环境变量，让它从SD卡里面读取内核和设备树。不过zc702工程的默认启动设备就是sd卡，我们只需要留意<code>sdboot</code>这个环境变量以及各种地址就好了：</p>
-<pre><code class="diff">-    &quot;kernel_load_address=0x2080000\0&quot; \
+<pre><code class="lang-diff">-    &quot;kernel_load_address=0x2080000\0&quot; \
 +    &quot;kernel_load_address=0x8000\0&quot; \
 ...
 -    &quot;devicetree_image=devicetree.dtb\0&quot;    \
@@ -270,7 +270,7 @@ sudo mount /dev/mapper/loop0p2 rootfs
      &quot;fi\0&quot; \
 </code></pre>
 <p>我们还要修改设备树，添加启动参数，让内核挂载Ubuntu文件系统。其中<code>rootwait</code>这个参数表示需要等待根文件系统的挂载，不然内核启动很快，一看还没有挂上文件系统就会kernel panic了：</p>
-<pre><code class="diff">     chosen {
+<pre><code class="lang-diff">     chosen {
 -        bootargs = &quot;&quot;;
 +        bootargs = &quot;root=/dev/mmcblk0p2 rw rootwait&quot;;
          stdout-path = &quot;serial0:115200n8&quot;;
@@ -278,22 +278,22 @@ sudo mount /dev/mapper/loop0p2 rootfs
 </code></pre>
 <p>将<code>BOOT.bin</code>、<code>uImage</code>、<code>zynq-zc702.dtb</code>放进启动分区。</p>
 <h3 id="安装最小系统"><a href="#安装最小系统" class="headerlink" title="安装最小系统"></a>安装最小系统</h3><p>接着就可以愉快地debootstrap了。不过可惜的是，国内Ubuntu源都没有同步<code>armhf</code>的port，只有x86的，所以只能用官方源了。</p>
-<pre><code class="bash">sudo debootstrap --arch=armhf --foreign bionic ./rootfs
+<pre><code class="lang-bash">sudo debootstrap --arch=armhf --foreign bionic ./rootfs
 </code></pre>
 <p>但是国内的Debian就同步了arm的分支，比方说清华源：</p>
-<pre><code class="bash">sudo debootstrap --arch=armhf --foreign stretch ./rootfs https://mirrors.tuna.tsinghua.edu.cn/debian/
+<pre><code class="lang-bash">sudo debootstrap --arch=armhf --foreign stretch ./rootfs https://mirrors.tuna.tsinghua.edu.cn/debian/
 </code></pre>
 <p>等一段时间下完基本系统，然后拷贝<code>qemu</code>进去：</p>
-<pre><code class="bash">sudo cp -av /usr/bin/qemu-arm-static rootfs/usr/bin/
+<pre><code class="lang-bash">sudo cp -av /usr/bin/qemu-arm-static rootfs/usr/bin/
 </code></pre>
 <p>还需要拷贝<code>resolv.conf</code>，以便联网：</p>
-<pre><code class="bash">sudo cp /run/systemd/resolve/stub-resolv.conf rootfs/etc/resolv.conf 
+<pre><code class="lang-bash">sudo cp /run/systemd/resolve/stub-resolv.conf rootfs/etc/resolv.conf
 </code></pre>
 <p>然后<code>chroot</code>进去：</p>
-<pre><code class="bash">sudo chroot ./rootfs
+<pre><code class="lang-bash">sudo chroot ./rootfs
 </code></pre>
 <p>在里面进行<code>second-stage</code>：</p>
-<pre><code class="bash"># chroot环境下面：
+<pre><code class="lang-bash"># chroot环境下面：
 export LANG=C
 /debootstrap/debootstrap --second-stage
 </code></pre>
@@ -309,18 +309,18 @@ deb-src http://ports.ubuntu.com/ubuntu-ports bionic-updates main restricted univ
 deb-src http://ports.ubuntu.com/ubuntu-ports bionic-proposed main restricted universe multiverse
 deb-src http://ports.ubuntu.com/ubuntu-ports bionic-backports main restricted universe multiverse
 </code></pre><p>然后装一些基本的软件：</p>
-<pre><code class="bash">apt-get update
+<pre><code class="lang-bash">apt-get update
 apt-get install sudo ifupdown net-tools ethtool udev wireless-tools iputils-ping resolvconf wget apt-utils wpasupplicant vim git gcc build-essential openssh-server
 </code></pre>
 <p>新建用户，就叫它ubuntu吧，密码也是ubuntu：</p>
-<pre><code class="bash">useradd -G sudo -m -s /bin/bash ubuntu
+<pre><code class="lang-bash">useradd -G sudo -m -s /bin/bash ubuntu
 echo ubuntu:ubuntu | chpasswd
 </code></pre>
 <p>更改root密码：</p>
-<pre><code class="bash">passwd root
+<pre><code class="lang-bash">passwd root
 </code></pre>
 <p>设置主机名为<code>armhf</code>：</p>
-<pre><code class="bash">echo armhf &gt; /etc/hostname
+<pre><code class="lang-bash">echo armhf &gt; /etc/hostname
 </code></pre>
 <p>设置网络，改<code>/etc/network/interfaces</code>文件：</p>
 <pre><code>auto lo
@@ -336,7 +336,7 @@ iface eth0 inet dhcp
 <p>注意，因为Xilinx的内核配置默认将所有驱动都直接编译进内核，所以不需要将模块安装到文件系统中，就一个放在启动分区的内核就够了。</p>
 </blockquote>
 <h3 id="烧录SD卡"><a href="#烧录SD卡" class="headerlink" title="烧录SD卡"></a>烧录SD卡</h3><p>我们将镜像文件卸载：</p>
-<pre><code class="bash">sudo umount ./boot
+<pre><code class="lang-bash">sudo umount ./boot
 sudo umount ./rootfs
 sudo kpartx -d /dev/loop0
 sudo losetup -d /dev/loop0
@@ -345,7 +345,7 @@ sudo losetup -d /dev/loop0
 <pre><code>$ ls -sh ubuntu1804.img 
 1.2G ubuntu1804.img
 </code></pre><p>现在我们直接将这个文件dd到一张SD卡里面：</p>
-<pre><code class="bash">dd if=ubuntu1804.img of=/dev/sd某
+<pre><code class="lang-bash">dd if=ubuntu1804.img of=/dev/sd某
 </code></pre>
 <p>如果你的SD卡不只有4G，那么可以通过像<code>gparted</code>、<code>parted</code>、<code>fdisk</code>等等的分区工具将第二个分区拉大，然后<code>resize2fs</code>重新设置分区大小。gparted一般会自动帮你resize2fs。</p>
 <h3 id="上机测试"><a href="#上机测试" class="headerlink" title="上机测试"></a>上机测试</h3><p>可以从串口看到完整的启动过程：uboot、kernel、systemd，然后是login：</p>
@@ -531,7 +531,14 @@ ubuntu@armhf:~$
     </div>
 
     
-<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/kalman/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">卡尔曼滤波器</h4>
+      </a>
+    </div>
   
 
   
@@ -631,8 +638,6 @@ ubuntu@armhf:~$
 
         <p>
             
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
             <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
         </p>
     </div>
@@ -728,6 +733,27 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
 
 
 
@@ -737,5 +763,20 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 </body>
 </html>

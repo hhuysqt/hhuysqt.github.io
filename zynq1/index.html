@@ -58,8 +58,6 @@
 <meta name="twitter:description" content="最近矿难，某宝某鱼上都出现了大量矿机控制板。。。ASIC负责挖矿，控制板负责联网、监视、控制之类。控制板不乏有各种水果派，像香橙派、树莓派、狗骨头之类的所谓“极客玩具”在其之列，想必国内水果派厂家活的是相当滋润。。。光靠极客教育哪有什么赚头，极客大都很穷的，像我这样看到这么便宜的“zynq开发板”，便忍不住要跟风收一波垃圾了。。。 某鱼上EBAZ4205控制板泛滥，它出自翼比特E9+矿机。它的老版">
 <meta name="twitter:image" content="https://hhuysqt.github.io/zynq1/ebazE9p.jpg">
     
-        <link rel="alternate" type="application/atom+xml" title="hhuysqt" href="/atom.xml">
-    
     <link rel="shortcut icon" href="/img/m.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
@@ -239,6 +237,7 @@
                 </div>
                 <div class="image-caption">ebaz4205</div>
             </figure>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -273,6 +272,7 @@
 </tr>
 </tbody>
 </table>
+</div>
 <h3 id="开发工程"><a href="#开发工程" class="headerlink" title="开发工程"></a>开发工程</h3><h4 id="SOC启动配置"><a href="#SOC启动配置" class="headerlink" title="SOC启动配置"></a>SOC启动配置</h4><p>ZYNQ系列的SOC集成了双核ARM Cortex-A9和FPGA。整个SOC分为<code>PS</code>（processing system）和<code>PL</code>（programmable logic）两部分。PS包括处理器、片上AMBA总线、存储控制器、部分外设以及固定的IO口；PL就是FPGA。ZYNQ 7010处理器主频可以到约600MHz，FPGA有约28K个LE。<br><figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
@@ -679,8 +679,6 @@ set_property PACKAGE_PIN Y17 [get_ports {enet0_gmii_rxd[3]}]
 
         <p>
             
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
             <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
         </p>
     </div>
@@ -776,6 +774,27 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
 
 
 
@@ -785,5 +804,20 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 </body>
 </html>

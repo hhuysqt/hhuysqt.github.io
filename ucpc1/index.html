@@ -37,8 +37,6 @@
 <meta name="twitter:description" content="这是一个笼统的说法：Linux要有MMU才能跑，没有MMU的只能跑uclinux。但事实上自从2.6版本开始的Linux内核，arch/arm/Kconfig里就有了CONFIG_MMU的选项，因此严格地说，Linux内核早就能存活在没有MMU的ARM芯片上了。 uclinux严格意义上说是一个完整的发行版，它就是主流内核 + 大量应用程序。uclinux一直在慢慢悠悠地更新。最新的是2016年发">
 <meta name="twitter:image" content="https://hhuysqt.github.io/ucpc1/openmv.jpeg">
     
-        <link rel="alternate" type="application/atom+xml" title="hhuysqt" href="/atom.xml">
-    
     <link rel="shortcut icon" href="/img/m.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
@@ -228,6 +226,7 @@
 <p><a href="https://www.youtube.com/watch?v=shLbYdH02rA" target="_blank" rel="noopener">油管视频</a></p>
 <h3 id="性能几何？"><a href="#性能几何？" class="headerlink" title="性能几何？"></a>性能几何？</h3><p>实话说，Linux的性能比不上裸机程序和真正的嵌入式实时操作系统，这个根深蒂固为服务器设计的内核考虑的都是无数个CPU、无数内存、无数存储设备，以致于被人吐槽为怪物；比方说，<a href="http://ck.kolivas.org/patches/bfs/bfs-faq.txt" target="_blank" rel="noopener">Con Kolivas对它的CFS调度器相当不满，然后他自己写了个BFS，称为“脑残调度器”</a>。越是新版本的内核，占用资源越大（回报是功能越齐全，漏洞越得到修补）。</p>
 <p>就拿同一块STM32F429板子来说，只带有串口驱动的话：</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -254,6 +253,7 @@
 </tr>
 </tbody>
 </table>
+</div>
 <p>BogoMIPS是个挺娱乐的参数，内核启动时候自行测量，以校准udelay等延时的参数，数值越高意味着单位时间内跑的指令越多，意味着性能越强。参考AT91SAM9260这个ARM9芯片，时钟频率同样是180MHz，同样跑2.6的内核，而且它还有cache，但<a href="http://linux-arm-kernel.infradead.narkive.com/8KI4atsi/at91sam9260-bogomips" target="_blank" rel="noopener">它的BogoMIPS只有八九十</a>。所以可以说，Cortex M4性能还是挺强的。</p>
 <p>在2015年的ELC中有人做了一份<a href="https://www.youtube.com/watch?v=6F1eZKFzkUE" target="_blank" rel="noopener">如何优化uclinux的报告</a>，还有<a href="https://events.static.linuxfound.org/sites/events/files/slides/optimize-uclinux.pdf" target="_blank" rel="noopener">讲义</a>可供下载，干货满满。</p>
 <h3 id="裁剪提示"><a href="#裁剪提示" class="headerlink" title="裁剪提示"></a>裁剪提示</h3><p>因为f429没有cache，所以内核<strong>一定要塞进片内flash</strong>，否则在片外SDRAM上运行的性能感人：BogoMIPS只有个位数，刷屏时候能体会到相当明显的卡顿，并且摄像头会抱怨<strong>DMA下溢</strong>，USB会枚举不到设备。如果是f7的芯片大可不必担心，即使在片外SDRAM里跑，其BogoMIPS据说都可达三百余。</p>
@@ -454,8 +454,6 @@
 
         <p>
             
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
             <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
         </p>
     </div>
@@ -551,6 +549,27 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
 
 
 
@@ -560,5 +579,20 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 </body>
 </html>

@@ -39,8 +39,6 @@
 <meta name="twitter:description" content="PULPino是PULP的一个子项目，PULP全称“Parallel Ultra Low Power”，是一个RISC-V项目，旨在搭建低功耗的多核嵌入式SOC。PULPino是一个单核的单片机的架构，CPU内核除了实现RISCV的I、M、C指令集之外还扩展了一些类似于DSP的指令集，使其计算性能超过了ARM Cortex M4、硅片面积更小、功耗更低。。。 PULPino的例程用cmake来管理">
 <meta name="twitter:image" content="https://hhuysqt.github.io/pulpino1/nuttx1.jpeg">
     
-        <link rel="alternate" type="application/atom+xml" title="hhuysqt" href="/atom.xml">
-    
     <link rel="shortcut icon" href="/img/m.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
@@ -284,7 +282,7 @@ $ mv defconfig configs/xxboard/xxconf
                 <div class="image-caption">vector</div>
             </figure>
 <p>启动时，将31个寄存器清零，将bss段清零，初始化data段，然后跳转到c语言程序中（<em>由于目前用JTAG直接下载ELF，因此data段实际上不需要初始化</em>）。如果没什么特别的初始化的话，可以直接跳转到内核的os_start()函数。。</p>
-<pre><code class="c">reset_handler:
+<pre><code class="lang-c">reset_handler:
   /* 清零寄存器 */
   mv  x1, x0
   mv  x2, x1
@@ -312,13 +310,13 @@ main_entry:
   jal x1, os_start
 </code></pre>
 <h4 id="中断处理与任务切换"><a href="#中断处理与任务切换" class="headerlink" title="中断处理与任务切换"></a>中断处理与任务切换</h4><h5 id="nuttx内核API"><a href="#nuttx内核API" class="headerlink" title="nuttx内核API"></a>nuttx内核API</h5><p>nuttx的中断由内核统一管理，编写的ISR需要统一向内核注册，无论芯片是否支持向量中断：</p>
-<pre><code class="c">#include &lt;nuttx/irq.h&gt;
+<pre><code class="lang-c">#include &lt;nuttx/irq.h&gt;
 int foo_isr(int irq, FAR void *context, FAR void *arg);
     // 将foo_isr注册到编号为IRQN的中断线上
     irq_attach(IRQN, foo_isr);
 </code></pre>
 <p>所有中断程序有统一入口：</p>
-<pre><code class="c">#include &lt;nuttx/arch.h&gt;
+<pre><code class="lang-c">#include &lt;nuttx/arch.h&gt;
 // 传入中断号以及栈顶指针
 void irq_dispatch(int irq, FAR void *context);
 </code></pre>
@@ -326,6 +324,7 @@ void irq_dispatch(int irq, FAR void *context);
 <li>PULPino有向量中断。中断向量表的前32个即分别为其中断入口。中断向量表地址由<code>BOOTREG</code>寄存器设置，其地址为<code>0x1A107008</code>，默认地址是0x00000000。</li>
 <li>它还有一个简易中断控制器，名叫Event Unit，<em>是一个外设</em>。串口、SPI、I2C、定时器之类的中断都由它来处理：</li>
 </ul>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -352,9 +351,11 @@ void irq_dispatch(int irq, FAR void *context);
 </tr>
 </tbody>
 </table>
+</div>
 <ul>
 <li>内核方面，PULPino只实现了少量必要的CSR寄存器。以下是<code>老版pulpino</code>实现的与中断相关的寄存器：</li>
 </ul>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -376,10 +377,11 @@ void irq_dispatch(int irq, FAR void *context);
 </tr>
 </tbody>
 </table>
+</div>
 <ul>
 <li>PULPino扩展了循环指令，需要用到两组共6个循环计数器，它们都是CSR寄存器，CSR地址0x7B0-0x7B2和0x7B4-0x7B6；它们在中断时都需要保存。</li>
 </ul>
-<h5 id="nuttx任务的数据结构"><a href="#nuttx任务的数据结构" class="headerlink" title="nuttx任务的数据结构"></a>nuttx任务的数据结构</h5><pre><code class="c">#include &lt;nuttx/sched.h&gt;
+<h5 id="nuttx任务的数据结构"><a href="#nuttx任务的数据结构" class="headerlink" title="nuttx任务的数据结构"></a>nuttx任务的数据结构</h5><pre><code class="lang-c">#include &lt;nuttx/sched.h&gt;
 struct tcb_s {
   /* 一些架构无关的东西 */
   ...
@@ -388,7 +390,7 @@ struct tcb_s {
 };
 </code></pre>
 <p>其中<code>struct xcptcontext</code>每个架构都不同。riscv的在<code>arch/risc-v/include/rv32im/irq.h</code>：</p>
-<pre><code class="c">struct xcptcontext {
+<pre><code class="lang-c">struct xcptcontext {
   /* 信号等东西 */
   ...
   /* 寄存器组 */
@@ -396,6 +398,7 @@ struct tcb_s {
 }
 </code></pre>
 <p>其中<code>XCPTCONTEXT_REGS</code>定义为39，编制如下：</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -430,6 +433,7 @@ struct tcb_s {
 </tr>
 </tbody>
 </table>
+</div>
 <p>刚初始化任务时，<code>up_initial_state()</code>函数在<code>struct tcb_s</code>内设置入口地址和堆栈指针。</p>
 <h5 id="中断返回伴随着任务切换"><a href="#中断返回伴随着任务切换" class="headerlink" title="中断返回伴随着任务切换"></a>中断返回伴随着任务切换</h5><p>因为有可能某个进程正在睡眠等待某个事件，比方说串口接收中断来了，那么getchar()就可以返回了。另外显式的up_switchcontext()通过系统调用来切换任务。将syscall处理程序也注册为一个IRQ即可统一这个过程。</p>
 <p>扁平模式下的任务切换只需换堆栈。因此整个中断处理流程如下：</p>
@@ -460,6 +464,7 @@ struct tcb_s {
             </figure>
 <p>非得把寄存器组放在tcb里而不是直接留在堆栈，笔者认为这考虑到统一管理、便于调试。放在tcb里的话C语言程序就很方便操作，而且gdb可以直接打印整个结构体。另外gdb不认中断上下文，它不放在堆栈就不会干扰gdb找call stack，也便于通用的探针程序去操作。</p>
 <h4 id="定时器"><a href="#定时器" class="headerlink" title="定时器"></a>定时器</h4><p>PULPino没有实现RISCV内核的定时器，而是实现了两个简易的32位计数器作为外设。定时器的寄存器如下：</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -486,6 +491,7 @@ struct tcb_s {
 </tr>
 </tbody>
 </table>
+</div>
 <p>一个定时器有两个中断：</p>
 <ul>
 <li><code>TIMER</code>达到<code>CMP</code>寄存器的值时；</li>
@@ -767,8 +773,6 @@ SECTIONS
 
         <p>
             
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
             <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
         </p>
     </div>
@@ -864,6 +868,27 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
 
 
 
@@ -873,5 +898,20 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 </body>
 </html>

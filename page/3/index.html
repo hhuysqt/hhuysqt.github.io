@@ -14,7 +14,7 @@
     
     
     
-    <title>Tags: pulpino | hhuysqt</title>
+    <title>hhuysqt</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="theme-color" content="#3F51B5">
@@ -23,7 +23,7 @@
     <meta name="keywords" content="">
     <meta property="og:type" content="website">
 <meta property="og:title" content="hhuysqt">
-<meta property="og:url" content="https://hhuysqt.github.io/tags/pulpino/index.html">
+<meta property="og:url" content="https://hhuysqt.github.io/page/3/index.html">
 <meta property="og:site_name" content="hhuysqt">
 <meta property="og:locale" content="zh-CN">
 <meta name="twitter:card" content="summary">
@@ -82,7 +82,7 @@
               </a>
             </li>
         
-            <li class="waves-block waves-effect active">
+            <li class="waves-block waves-effect">
               <a href="/tags"  >
                 <i class="icon icon-lg icon-tags"></i>
                 索引
@@ -121,7 +121,7 @@
         <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
           <i class="icon icon-lg icon-navicon"></i>
         </a>
-        <div class="flex-col header-title ellipsis">Tags: pulpino</div>
+        <div class="flex-col header-title ellipsis">hhuysqt</div>
         
         <div class="search-wrap" id="search-wrap">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
@@ -140,133 +140,79 @@
         
     </div>
 </header>
-<header class="content-header tags-header">
+<header class="content-header index-header">
 
     <div class="container fade-scale">
-        <h1 class="title">Tags: pulpino</h1>
+        <h1 class="title">hhuysqt</h1>
         <h5 class="subtitle">
+            
+                
             
         </h5>
     </div>
 
     
-<div class="tabs-bar container">
-    <nav class="tags-list">
-        <a href="/tags" style="-webkit-order:-1;order:-1" class="tags-list-item waves-effect waves-button waves-light
-            ">全部</a>
-        
-
-            <a href="/tags/bcm-wifi/" style="-webkit-order:5;order:5" class="tags-list-item waves-effect waves-button waves-light">bcm-wifi</a>
-
-        
-
-            <a href="/tags/baytrail/" style="-webkit-order:6;order:6" class="tags-list-item waves-effect waves-button waves-light">baytrail</a>
-
-        
-
-            <a href="/tags/nuttx/" style="-webkit-order:0;order:0" class="tags-list-item waves-effect waves-button waves-light">nuttx</a>
-
-        
-
-            <a href="/tags/pulpino/" style="-webkit-order:1;order:1" class="tags-list-item waves-effect waves-button waves-light active">pulpino</a>
-
-        
-
-            <a href="/tags/riscv/" style="-webkit-order:2;order:2" class="tags-list-item waves-effect waves-button waves-light">riscv</a>
-
-        
-
-            <a href="/tags/ucpc/" style="-webkit-order:3;order:3" class="tags-list-item waves-effect waves-button waves-light">ucpc</a>
-
-        
-
-            <a href="/tags/zynq/" style="-webkit-order:4;order:4" class="tags-list-item waves-effect waves-button waves-light">zynq</a>
-
-        
-    </nav>
-    <!-- PC show more-->
-    <div class="tags-list-more">
-        <a href="javascript:;" onclick="BLOG.tabBar(this)" class="action tags-list-item waves-effect waves-circle waves-light"><i class="icon icon-ellipsis-h"></i></a>
-    </div>
-</div>
-
 
 
 </header>
 
-<div class="container body-wrap fade">
+<div class="container body-wrap">
+
+    <ul class="post-list">
     
-            <div class="waterfall">
-          
+        <li class="post-list-item fade">
+            <article id="post-uclinux-on-stm32f103"
+  class="article-card article-type-post" itemprop="blogPost">
 
-            <div class="waterfall-item">
-  <article class="article-card archive-article">
     <div class="post-meta">
-      <time class="post-time" title="2018-07-29 15:48:33" datetime="2018-07-29T07:48:33.000Z"  itemprop="datePublished">2018-07-29</time>
+        <time class="post-time" title="2018-02-22 23:30:11" datetime="2018-02-22T15:30:11.000Z"  itemprop="datePublished">2018-02-22</time>
 
-      
+        
 
 
     </div>
+
     
 
 
   
     <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/pulpino2/">pulpino[2] nuttx ELF</a>
+      <a class="post-title-link" href="/uclinux-on-stm32f103/">uclinux on STM32F103ZET6</a>
     </h3>
   
 
 
 
-    
-    <div class="post-footer">
-        
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nuttx/">nuttx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pulpino/">pulpino</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/riscv/">riscv</a></li></ul>
 
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        用哪个BSP？ST为他们STM3210E-EVAL的评估板制作了uClinux-dist-20080808的补丁。bootloader是一个莫名其妙的bin，kernel和rootfs放在片外nor flash里面，并且带有jffs。官方评估板又贵又买不到，不过我手上一块淘宝上一百多块钱的相似配置的板子也能玩。shell跑起来太慢了，跑个ls都要卡一两秒。
+Emcraft为一些ST的板子做了第三方的BSP，其中包括STM32F429I-disc的uclinux BSP。虽然是给STM32F4板子写的，但是它里面也包括一些STM32F1的驱动，比方说USART、DMA。做一些修改还是可以用的。这份BSP血统比较纯正，用uboot作为bootloader，uclinux内核单独抽出来编译，应用程序用的busybox，包装为ROMFS的镜像。这些东西全部都在片内flash里就地执行，性能颇高，在429 discovery板子上跑的很欢快。
+既然要build it from scratch，那就应该好好研究Emcraft的BSP，好好学学社区的玩法吧。github上有一个makefile，从头开始为429 discovery编译所有东西，它从robutest的仓库里面下载的uboot和uclinux，我猜Emcraft的东西来源也是这个，因为里面的驱动感觉是一样的。
+首先在我买的板子上跑通整个系统，然后再移植到自己的板子上。别人的板子配置颇高，有2MB的片外SRAM跟4MB的片外NOR flash，还有64MB的nand flash，完全可以跑通。我的板子只有1MB的SRAM，加上一个256MB的nand flash；配置之所以那么诡异是因为我芯片只能淘宝。。。
+    
+
+        <a href="/uclinux-on-stm32f103/" class="post-more waves-effect waves-button">
+            阅读全文…
+        </a>
     </div>
     
-  </article>
-</div>
+</article>
 
-        
+        </li>
+    
+    </ul>
 
-            <div class="waterfall-item">
-  <article class="article-card archive-article">
-    <div class="post-meta">
-      <time class="post-time" title="2018-07-23 21:19:06" datetime="2018-07-23T13:19:06.000Z"  itemprop="datePublished">2018-07-23</time>
-
-      
-
-
+    
+<nav id="page-nav">
+    <div class="inner">
+    <a class="extend prev" rel="prev" href="/page/2/">上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
     </div>
-    
+</nav>
 
 
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/pulpino1/">pulpino[1] nuttx：bring up</a>
-    </h3>
-  
-
-
-
-    
-    <div class="post-footer">
-        
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nuttx/">nuttx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pulpino/">pulpino</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/riscv/">riscv</a></li></ul>
-
-    </div>
-    
-  </article>
 </div>
-
-        
-            </div>
-        
-    
-</div>
-
 
         <footer class="footer">
     <div class="top">
@@ -305,7 +251,7 @@
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://hhuysqt.github.io/tags/pulpino/&title=hhuysqt&pic=https://hhuysqt.github.io/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://hhuysqt.github.io/page/3/&title=hhuysqt&pic=https://hhuysqt.github.io/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -315,22 +261,22 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://hhuysqt.github.io/tags/pulpino/&title=hhuysqt&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://hhuysqt.github.io/page/3/&title=hhuysqt&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://hhuysqt.github.io/tags/pulpino/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://hhuysqt.github.io/page/3/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=hhuysqt&url=https://hhuysqt.github.io/tags/pulpino/&via=https://hhuysqt.github.io" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=hhuysqt&url=https://hhuysqt.github.io/page/3/&via=https://hhuysqt.github.io" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://hhuysqt.github.io/tags/pulpino/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://hhuysqt.github.io/page/3/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -341,7 +287,7 @@
 <div class="page-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
-    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://hhuysqt.github.io/tags/pulpino/" alt="微信分享二维码">
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://hhuysqt.github.io/page/3/" alt="微信分享二维码">
 </div>
 
 

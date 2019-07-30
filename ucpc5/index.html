@@ -62,8 +62,6 @@
 <meta name="twitter:description" content="uc-PC板子上跑的是Linux 4.13.3，使用设备树。内核不经压缩，就地运行（XIP，全称execute in place）。 需要使能的功能有：网络、显示、USB、SD卡、摄像头、yaffs。这些功能全部开启的话，内核大小将为4MB以上，而片内flash只有2MB，不模块化的话只能跑在SDRAM上，这回导致性能低下，所以调通设备驱动之后应该进行模块化，将关键部分编译进内核，内核塞进片内fl">
 <meta name="twitter:image" content="https://hhuysqt.github.io/ucpc5/net-config.jpeg">
     
-        <link rel="alternate" type="application/atom+xml" title="hhuysqt" href="/atom.xml">
-    
     <link rel="shortcut icon" href="/img/m.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
@@ -237,12 +235,12 @@
 <p><em>（手机请横屏看代码）</em><br><a id="more"></a></p>
 <h3 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h3><p>Linux内核实现了相当完整而庞大的网络协议栈——对于单片机来说实在过于庞大；并且，协议栈部分是必须编译进内核而不能模块化的，因此这一块只能放置于片内flash中；而且，只在defconfig的基础上使能网络的话，内核就超过了2MB了。因此在调通板子上的驱动之前，内核都只能在SDRAM上面就地运行。。参考前文bootloader的配置。</p>
 <p>下面实现基本的网络功能：获取IP、跑通nfs。诸如DNS之类的暂时不弄。</p>
-<h4 id="上位机搭建NFS服务器"><a href="#上位机搭建NFS服务器" class="headerlink" title="上位机搭建NFS服务器"></a>上位机搭建NFS服务器</h4><pre><code class="bash">$ sudo apt install nfs-common
+<h4 id="上位机搭建NFS服务器"><a href="#上位机搭建NFS服务器" class="headerlink" title="上位机搭建NFS服务器"></a>上位机搭建NFS服务器</h4><pre><code class="lang-bash">$ sudo apt install nfs-common
 </code></pre>
 <p>我的nfs目录是<code>/home/hyq/nfs</code>，为此修改配置文件<code>/etc/exports</code>：</p>
 <pre><code>/home/hyq/nfs *(rw,sync,no_root_squash,no_subtree_check)
 </code></pre><p>重启服务以生效：</p>
-<pre><code class="bash">$ sudo /etc/init.d/nfs-kernel-server restart
+<pre><code class="lang-bash">$ sudo /etc/init.d/nfs-kernel-server restart
 </code></pre>
 <h5 id="一件小事："><a href="#一件小事：" class="headerlink" title="一件小事："></a>一件小事：</h5><p>有时候调板子是这种情况：电脑要连校园网WiFi来科学上网（因为有ipv6），板子连着一个不上网的路由器，电脑又需要通过网线来连那个路由器来访问板子。这时候电脑如果不插网线就能上网，插了就上不了网了。这是因为默认的路由指向了以太网。需要通过<code>route</code>命令来将路由改到WiFi上。首先查看路由表：</p>
 <pre><code>$ route
@@ -276,7 +274,7 @@ $ sudo route add default gw &lt;只连WiFi时候的网关&gt; wlp1s0
                 <div class="image-caption">网卡配置</div>
             </figure></p>
 <p>然后修改设备树：<br>首先在<code>stm32f429.dtsi</code>里的pinctrl节点下增加一个RMII引脚的配置，并且在ethernet节点下面添加mac地址；mac地址可以随便设置，只要不跟局域网里面的设备重合就行了：</p>
-<pre><code class="c">/ {
+<pre><code class="lang-c">/ {
     ...
     soc {
         ...
@@ -307,7 +305,7 @@ $ sudo route add default gw &lt;只连WiFi时候的网关&gt; wlp1s0
 };
 </code></pre>
 <p>然后在<code>stm32f429-disco.dts</code>里补充设置ethernet节点：</p>
-<pre><code class="c">&amp;mac {
+<pre><code class="lang-c">&amp;mac {
     status = &quot;okay&quot;;
     pinctrl-0   = &lt;&amp;ethernet_rmii&gt;;
     pinctrl-names = &quot;default&quot;;
@@ -319,7 +317,7 @@ $ sudo route add default gw &lt;只连WiFi时候的网关&gt; wlp1s0
 </code></pre>
 <p>这些设置的来源是<a href="https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bindings/net/stm32-dwmac.txt" target="_blank" rel="noopener">Documentation/devicetree/bindings/net/stm32-dwmac.txt</a>。这里并不需要像stm32429i-eval评估板设置的那么繁琐，只需要设置哪一套引脚、RMII模式，以及phy芯片的reset引脚即可。</p>
 <h5 id="源码里的小bug"><a href="#源码里的小bug" class="headerlink" title="源码里的小bug"></a>源码里的小bug</h5><p>stm32的MAC初始化是<code>drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c</code>的<code>stm32_dwmac_init()</code>，它根据配置将外设设置为MII模式或RMII模式。<a href="https://elixir.bootlin.com/linux/latest/source/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c#L42" target="_blank" rel="noopener">原代码第42行左右</a>RMII模式寄存器设置错误。本网卡只有RMII模式，而stm32429i-eval的网卡工作在MII模式，估计因此他们没查出这个bug。</p>
-<pre><code class="c">-  val = (plat_dat-&gt;interface == PHY_INTERFACE_MODE_MII) ? 0 : 1;
+<pre><code class="lang-c">-  val = (plat_dat-&gt;interface == PHY_INTERFACE_MODE_MII) ? 0 : 1;
 +  val = (plat_dat-&gt;interface == PHY_INTERFACE_MODE_MII) ? 0 : MII_PHY_SEL_MASK;
 </code></pre>
 <h5 id="启动的printk"><a href="#启动的printk" class="headerlink" title="启动的printk"></a>启动的printk</h5><pre><code>[    3.430000] libphy: Fixed MDIO Bus: probed
@@ -359,7 +357,6 @@ $ sudo route add default gw &lt;只连WiFi时候的网关&gt; wlp1s0
     };
     ...
 };
-
 </code></pre><p>其中，<code>ip</code>可以设置为<code>ip=dhcp</code>，也可以像上述那样设置一个固定的地址；<code>nfsroot</code>对应到上位机的ip地址和nfs目录。</p>
 <h4 id="ping"><a href="#ping" class="headerlink" title="ping"></a>ping</h4><p>因为没有DNS，所以不能ping百度之类的域名，只能ping IP地址。而且，如果内核参数是<code>ip=dhcp</code>的话，可以ping通外网；如果只是一个固定地址就只能ping局域网里面的东西。。下面ping的是114.114.114.114这个DNS服务器：<br><figure class="image-bubble">
                 <div class="img-lightbox">
@@ -392,7 +389,7 @@ $ sudo route add default gw &lt;只连WiFi时候的网关&gt; wlp1s0
                 <div class="image-caption">panel</div>
             </figure></p>
 <p>DRM架构需要有一个panel，即外接的那个液晶屏控制器。有些RGB的lcd也要用诸如I2C接口去配置一些奇怪的参数。板子上直接将RGB用DAC转化成VGA信号了，所以选择一个“哑”的panel，即CONFIG_PANEL_SIMPLE。在<a href="https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/panel/panel-simple.c" target="_blank" rel="noopener">drivers/gpu/drm/panel/panel-simple.c</a>里面实现了一大堆LCD，它们只需要开关背光灯就行了。于是在里面找一个想要的尺寸——比如标准VGA信号的640x480——的屏幕，这里选择了et057090dhu，然后稍微改一下那些时钟配置，适合60HZ的VGA：</p>
-<pre><code class="c">static const struct drm_display_mode edt_et057090dhu_mode = {
+<pre><code class="lang-c">static const struct drm_display_mode edt_et057090dhu_mode = {
     .clock = 31468,
     .hdisplay =    640,
     .hsync_start = 640 + 16,
@@ -407,7 +404,7 @@ $ sudo route add default gw &lt;只连WiFi时候的网关&gt; wlp1s0
 };
 </code></pre>
 <p>设备树需要增加panel-rgb节点，并且有两个endpoint相互指引。改写如下：</p>
-<pre><code class="c">/{
+<pre><code class="lang-c">/{
     panel_rgb: panel-rgb {
         compatible = &quot;edt,et057090dhu&quot;;
         status = &quot;okay&quot;;
@@ -442,7 +439,7 @@ $ sudo route add default gw &lt;只连WiFi时候的网关&gt; wlp1s0
             </figure></p>
 <p>接上显示器，启动之后，就可以看到它在屏幕上慢悠悠地printk()了。。</p>
 <h5 id="一个小问题"><a href="#一个小问题" class="headerlink" title="一个小问题"></a>一个小问题</h5><p>内核初始化结束后，会统一将未用到的外设的时钟关掉；但是这个ltdc的驱动并没有向内核注册时钟，于是它最后就被关掉了。。。于是在<a href="https://elixir.bootlin.com/linux/latest/source/drivers/clk/clk-stm32f4.c#L143" target="_blank" rel="noopener">drivers/clk/clk-stm32f4.c</a>里为ltdc时钟添加<code>CLK_IGNORE_UNUSED</code>的属性。</p>
-<pre><code class="c">static const struct stm32f4_gate_data 
+<pre><code class="lang-c">static const struct stm32f4_gate_data 
     stm32f429_gates[] __initconst = {
     ...
     { STM32F4_RCC_APB2ENR, 26, &quot;ltdc&quot;, &quot;apb2_div&quot;,
@@ -458,7 +455,7 @@ $ sudo route add default gw &lt;只连WiFi时候的网关&gt; wlp1s0
                 <div class="image-caption">simple-fb</div>
             </figure></p>
 <p>在设备树的chosen节点下增加一个framebuffer节点：</p>
-<pre><code class="c">/ {
+<pre><code class="lang-c">/ {
     chosen {
         framebuffer0: framebuffer@83f00000 {
             compatible = &quot;simple-framebuffer&quot;;
@@ -483,7 +480,7 @@ $ sudo route add default gw &lt;只连WiFi时候的网关&gt; wlp1s0
                 <div class="image-caption">stm32 dw usb</div>
             </figure></p>
 <p>设备树里面添加两个USB节点：</p>
-<pre><code class="c">&amp;usbotg_hs {
+<pre><code class="lang-c">&amp;usbotg_hs {
     compatible = &quot;st,stm32f4x9-fsotg&quot;;
     dr_mode = &quot;host&quot;;
     pinctrl-0 = &lt;&amp;usbotg_fs_pins_b&gt;;
@@ -503,7 +500,7 @@ $ sudo route add default gw &lt;只连WiFi时候的网关&gt; wlp1s0
 <pre><code>[4.320000] dwc2 40040000.usb: dwc2_core_reset() HANG! Soft Reset GRSTCTL=80000001
 </code></pre><p>这是因为，dwc的USB HS在配置之前需要复位：通过置位GRSTCTL的第0位，然后等待硬件清零。stm32的USB HS默认是外接PHY芯片的高速模式，软件复位时候需要等PHY芯片。但是板子只有内置PHY。选择内置PHY需要置位GUSBCFG的第6位。</p>
 <p><a href="https://elixir.bootlin.com/linux/latest/source/drivers/usb/dwc2/platform.c#L418" target="_blank" rel="noopener">drivers/usb/dwc2/platform.c:dwc2_driver_probe()</a>函数中，首先软件复位，然后在后面的<a href="https://elixir.bootlin.com/linux/latest/source/drivers/usb/dwc2/hcd.c#L136" target="_blank" rel="noopener">drivers/usb/dwc2/hcd.c:dwc2_fs_phy_init()</a>才设置为内置PHY。前面的软件复位等的是外部PHY，于是卡死，无论后面再怎么设置内置PHY。因此需要在前面先将其设置为全速USB模式：</p>
-<pre><code class="c">    // 第418行前面，先设置为全速USB模式
+<pre><code class="lang-c">    // 第418行前面，先设置为全速USB模式
     // 其实严格来说应该用writel接口的。。。
     *(uint32_t*)0x4004000c |= 0x00000040;
     msleep(1);
@@ -638,7 +635,7 @@ config.txt           overlays
                 <div class="image-caption">mmc配置</div>
             </figure></p>
 <p>设备树增加mmc节点，基本照抄emcraft的，不过并没用DMA，因为性能比较低下，DMA很容易下溢死掉：</p>
-<pre><code class="c">sdio:sdi@40012C00 {
+<pre><code class="lang-c">sdio:sdi@40012C00 {
     compatible = &quot;arm,primecell&quot;;
     reg = &lt;0x40012C00 0x400&gt;;
     interrupts = &lt;49&gt;;
@@ -697,7 +694,7 @@ config.txt           overlays
                 <div class="image-caption">OV2640驱动</div>
             </figure></p>
 <p>然后设备树中，<strong>在I2C节点下面</strong>添加OV2640的节点：</p>
-<pre><code class="c">&amp;i2c1 {
+<pre><code class="lang-c">&amp;i2c1 {
     status = &quot;okay&quot;;
 
     ov2640: camera@30 {
@@ -738,7 +735,7 @@ config.txt           overlays
 [    5.970000] ov2640 0-0030: ov2640 Product ID 26:42 Manufacturer ID 7f:a2
 [    5.990000] i2c i2c-0: OV2640 Probed
 </code></pre><h4 id="v4l2应用程序测试"><a href="#v4l2应用程序测试" class="headerlink" title="v4l2应用程序测试"></a>v4l2应用程序测试</h4><p>v4l2有个官方测试程序<a href="https://linuxtv.org/downloads/v4l-dvb-apis/uapi/v4l/capture.c.html" target="_blank" rel="noopener">capture.c</a>，它将摄像头数据写入文件中。可以改写一下，将裸RGB数据写到/dev/fb0中，那么就可以在显示器上看到摄像头的数据了。比方说这样写：</p>
-<pre><code class="c">// 先打开/dev/fb0
+<pre><code class="lang-c">// 先打开/dev/fb0
 fp = fopen(&quot;/dev/fb0&quot;, &quot;w&quot;);
 framebuffer = malloc(640*480*2);
 
@@ -788,7 +785,7 @@ static void process_image(const void *p, int size)
             </figure></p>
 <p>仿照<a href="https://elixir.bootlin.com/linux/v4.13.3/source/arch/arm/mach-omap1/board-h2.c" target="_blank" rel="noopener">arch/arm/mach-omap1/board-h2.c</a>，在<a href="https://elixir.bootlin.com/linux/v4.13.3/source/arch/arm/mach-stm32/board-dt.c" target="_blank" rel="noopener">arch/arm/mach-stm32/board-dt.c</a>里面定义分区表以及驱动信息。</p>
 <p>试探性的定义了三个分区：</p>
-<pre><code class="c">/* 分区表 */
+<pre><code class="lang-c">/* 分区表 */
 static struct mtd_partition stm32_nand_partitions[] = {
     {
         .name       = &quot;first&quot;,
@@ -810,7 +807,7 @@ static struct mtd_partition stm32_nand_partitions[] = {
 };
 </code></pre>
 <p>然后是platform data：</p>
-<pre><code class="c">static struct platform_nand_data stm32_nand_platdata = {
+<pre><code class="lang-c">static struct platform_nand_data stm32_nand_platdata = {
     .chip = {
         // 分区表
         .nr_partitions = ARRAY_SIZE(stm32_nand_partitions),
@@ -824,7 +821,7 @@ static struct mtd_partition stm32_nand_partitions[] = {
 };
 </code></pre>
 <p>接着是platform device：</p>
-<pre><code class="c">static struct platform_device stm32_nand_device = {
+<pre><code class="lang-c">static struct platform_device stm32_nand_device = {
     .name = &quot;gen_nand&quot;,
     .dev  = {
         .platform_data = &amp;stm32_nand_platdata,
@@ -832,7 +829,7 @@ static struct mtd_partition stm32_nand_partitions[] = {
 };
 </code></pre>
 <p>最后，在模块构造函数里面注册platform device：</p>
-<pre><code class="c">static void __init board_stm32_ucpc_init(void)
+<pre><code class="lang-c">static void __init board_stm32_ucpc_init(void)
 {
     printk(&quot;STM32 UCPC: nand platform device&quot;);
     platform_add_devices(stm32_devices, ARRAY_SIZE(stm32_devices));
@@ -1046,8 +1043,6 @@ static struct mtd_partition stm32_nand_partitions[] = {
 
         <p>
             
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
             <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
         </p>
     </div>
@@ -1144,6 +1139,27 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
 
 
 
@@ -1153,5 +1169,20 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 </body>
 </html>

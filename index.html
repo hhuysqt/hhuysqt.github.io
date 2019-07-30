@@ -29,8 +29,6 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="hhuysqt">
     
-        <link rel="alternate" type="application/atom+xml" title="hhuysqt" href="/atom.xml">
-    
     <link rel="shortcut icon" href="/img/m.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
@@ -161,6 +159,45 @@
 <div class="container body-wrap">
 
     <ul class="post-list">
+    
+        <li class="post-list-item fade">
+            <article id="post-kalman"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2019-07-30 15:30:40" datetime="2019-07-30T07:30:40.000Z"  itemprop="datePublished">2019-07-30</time>
+
+        
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/kalman/">卡尔曼滤波器</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        卡尔曼滤波器有无数种推导方法：你可以将因果IIR维纳滤波器写成递推的形式，那么就是卡尔曼滤波器；你可以将估计值测量值等等都假设为高斯分布，通过最大后验估计(maximun a posterior)得到批量最小二乘法(batch least-squares)：$(H^TW^{-1}H)x = H^TW^{-1}z$，利用$H^TW^{-1}H$的稀疏性，通过Cholesky分解并发现其中的递推...
+    
+
+        <a href="/kalman/" class="post-more waves-effect waves-button">
+            阅读全文…
+        </a>
+    </div>
+    
+</article>
+
+        </li>
     
         <li class="post-list-item fade">
             <article id="post-zynq3"
@@ -621,60 +658,12 @@ Linux可以直接访问Bootlin的Linux Cross Reference。在Linux内核中，博
 
         </li>
     
-        <li class="post-list-item fade">
-            <article id="post-ucpc6"
-  class="article-card article-type-post" itemprop="blogPost">
-
-    <div class="post-meta">
-        <time class="post-time" title="2018-03-13 20:57:51" datetime="2018-03-13T12:57:51.000Z"  itemprop="datePublished">2018-03-13</time>
-
-        
-
-
-    </div>
-
-    
-
-
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/ucpc6/">uc-PC[6] 构建rootfs</a>
-    </h3>
-  
-
-
-
-
-    <div class="post-content" id="post-content" itemprop="postContent">
-
-    
-        简单来讲，内核、文件系统、应用程序，三者构成一个完整可用的系统。发行版之间不同之处不在于内核啥的，而在于rootfs——它的一套系统工具；比如包管理，Ubuntu上面就是apt-get，Arch上面就是pacman，OpenWRT上面就是opkg，等等。
-内核可以放在文件系统里面，如果bootloader支持文件系统的话就可以找到内核在哪里，树莓派啥的就是这样的风格。而不少嵌入式设备bootloader不会关注文件系统的事情，它只需有引导、更新内核的能力即可。所以不少板子直接将内核放在nand flash的某一个或几个block里面，如用uboot，则只需要nand read xxxx xxxx xxxx就可以了。而对于ucpc这块板子来说，内核在片内flash里面就地运行，文件系统完全可以放在别的地方。
-更完整的系统还需要包括各种运行时库（如C库）和链接器等，而且编译器是其中的重要软件，再不济也得有个解释器（比如Sylixos里面有个C解释器）。不过编译器在嵌入式设备上面几乎无用，即使性能强如智能手机也一样，没多少人愿意在板子上做native编译，毕竟上位机工具功能才全面。而对于ucpc这块板子来说，因为现成的arm-uclinuxeabi工具链都不能编译动态链接库，所以所有应用程序都是静态链接的，于是rootfs里面就连C库和链接器都不需要了。
-（手机请横屏看代码）
-    
-
-        <a href="/ucpc6/" class="post-more waves-effect waves-button">
-            阅读全文…
-        </a>
-    </div>
-    
-    <div class="post-footer">
-        
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ucpc/">ucpc</a></li></ul>
-
-    </div>
-    
-</article>
-
-        </li>
-    
     </ul>
 
     
 <nav id="page-nav">
     <div class="inner">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">下一页</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">下一页</a>
     </div>
 </nav>
 
@@ -695,8 +684,6 @@ Linux可以直接访问Bootlin的Linux Cross Reference。在Linux内核中，博
 
 
         <p>
-            
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
             
             <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
         </p>
@@ -793,6 +780,27 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
 
 
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
 
 
 
@@ -802,5 +810,20 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
 
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 </body>
 </html>

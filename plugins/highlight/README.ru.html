@@ -33,8 +33,6 @@
 <meta name="twitter:title" content="hhuysqt">
 <meta name="twitter:description" content="Highlight.jsHighlight.js — это инструмент для подсветки синтаксиса, написанный на JavaScript. Он работаети в браузере, и на сервере. Он работает с практически любой HTML разметкой, независит от каких-">
     
-        <link rel="alternate" type="application/atom+xml" title="hhuysqt" href="/atom.xml">
-    
     <link rel="shortcut icon" href="/img/m.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
@@ -166,27 +164,27 @@
         <div class="post-content page-content" id="page-content" itemprop="pageContent">
             <h1 id="Highlight-js"><a href="#Highlight-js" class="headerlink" title="Highlight.js"></a>Highlight.js</h1><p>Highlight.js — это инструмент для подсветки синтаксиса, написанный на JavaScript. Он работает<br>и в браузере, и на сервере. Он работает с практически любой HTML разметкой, не<br>зависит от каких-либо фреймворков и умеет автоматически определять язык.</p>
 <h2 id="Начало-работы"><a href="#Начало-работы" class="headerlink" title="Начало работы"></a>Начало работы</h2><p>Минимум, что нужно сделать для использования highlight.js на веб-странице — это<br>подключить библиотеку, CSS-стили и вызывать <a href="http://highlightjs.readthedocs.io/en/latest/api.html#inithighlightingonload" target="_blank" rel="noopener"><code>initHighlightingOnLoad</code></a>:</p>
-<pre><code class="html">&lt;link rel=&quot;stylesheet&quot; href=&quot;/path/to/styles/default.css&quot;&gt;
+<pre><code class="lang-html">&lt;link rel=&quot;stylesheet&quot; href=&quot;/path/to/styles/default.css&quot;&gt;
 &lt;script src=&quot;/path/to/highlight.pack.js&quot;&gt;&lt;/script&gt;
 &lt;script&gt;hljs.initHighlightingOnLoad();&lt;/script&gt;
 </code></pre>
 <p>Библиотека найдёт и раскрасит код внутри тегов <code>&lt;pre&gt;&lt;code&gt;</code>, попытавшись<br>автоматически определить язык. Когда автоопределение не срабатывает, можно явно<br>указать язык в атрибуте class:</p>
-<pre><code class="html">&lt;pre&gt;&lt;code class=&quot;html&quot;&gt;...&lt;/code&gt;&lt;/pre&gt;
+<pre><code class="lang-html">&lt;pre&gt;&lt;code class=&quot;html&quot;&gt;...&lt;/code&gt;&lt;/pre&gt;
 </code></pre>
 <p>Список поддерживаемых классов языков доступен в <a href="http://highlightjs.readthedocs.io/en/latest/css-classes-reference.html" target="_blank" rel="noopener">справочнике по классам</a>.<br>Класс также можно предварить префиксами <code>language-</code> или <code>lang-</code>.</p>
 <p>Чтобы отключить подсветку для какого-то блока, используйте класс <code>nohighlight</code>:</p>
-<pre><code class="html">&lt;pre&gt;&lt;code class=&quot;nohighlight&quot;&gt;...&lt;/code&gt;&lt;/pre&gt;
+<pre><code class="lang-html">&lt;pre&gt;&lt;code class=&quot;nohighlight&quot;&gt;...&lt;/code&gt;&lt;/pre&gt;
 </code></pre>
 <h2 id="Инициализация-вручную"><a href="#Инициализация-вручную" class="headerlink" title="Инициализация вручную"></a>Инициализация вручную</h2><p>Чтобы иметь чуть больше контроля за инициализацией подсветки, вы можете<br>использовать функции <a href="http://highlightjs.readthedocs.io/en/latest/api.html#highlightblock-block" target="_blank" rel="noopener"><code>highlightBlock</code></a> и <a href="http://highlightjs.readthedocs.io/en/latest/api.html#configure-options" target="_blank" rel="noopener"><code>configure</code></a>. Таким образом<br>можно управлять тем, <em>что</em> и <em>когда</em> подсвечивать.</p>
 <p>Вот пример инициализации, эквивалентной вызову <a href="http://highlightjs.readthedocs.io/en/latest/api.html#inithighlightingonload" target="_blank" rel="noopener"><code>initHighlightingOnLoad</code></a>, но<br>с использованием <code>document.addEventListener</code>:</p>
-<pre><code class="js">document.addEventListener(&#39;DOMContentLoaded&#39;, (event) =&gt; {
+<pre><code class="lang-js">document.addEventListener(&#39;DOMContentLoaded&#39;, (event) =&gt; {
   document.querySelectorAll(&#39;pre code&#39;).forEach((block) =&gt; {
     hljs.highlightBlock(block);
   });
 });
 </code></pre>
 <p>Вы можете использовать любые теги разметки вместо <code>&lt;pre&gt;&lt;code&gt;</code>. Если<br>используете контейнер, не сохраняющий переводы строк, вам нужно сказать<br>highlight.js использовать для них тег <code>&lt;br&gt;</code>:</p>
-<pre><code class="js">hljs.configure({useBR: true});
+<pre><code class="lang-js">hljs.configure({useBR: true});
 
 document.querySelectorAll(&#39;div.code&#39;).forEach((block) =&gt; {
   hljs.highlightBlock(block);
@@ -195,7 +193,7 @@ document.querySelectorAll(&#39;div.code&#39;).forEach((block) =&gt; {
 <p>Другие опции можно найти в документации функции <a href="http://highlightjs.readthedocs.io/en/latest/api.html#configure-options" target="_blank" rel="noopener"><code>configure</code></a>.</p>
 <h2 id="Web-Workers"><a href="#Web-Workers" class="headerlink" title="Web Workers"></a>Web Workers</h2><p>Подсветку можно запустить внутри web worker’а, чтобы окно<br>браузера не подтормаживало при работе с большими кусками кода.</p>
 <p>В основном скрипте:</p>
-<pre><code class="js">addEventListener(&#39;load&#39;, () =&gt; {
+<pre><code class="lang-js">addEventListener(&#39;load&#39;, () =&gt; {
   const code = document.querySelector(&#39;#code&#39;);
   const worker = new Worker(&#39;worker.js&#39;);
   worker.onmessage = (event) =&gt; { code.innerHTML = event.data; }
@@ -203,7 +201,7 @@ document.querySelectorAll(&#39;div.code&#39;).forEach((block) =&gt; {
 });
 </code></pre>
 <p>В worker.js:</p>
-<pre><code class="js">onmessage = (event) =&gt; {
+<pre><code class="lang-js">onmessage = (event) =&gt; {
   importScripts(&#39;&lt;path&gt;/highlight.pack.js&#39;);
   const result = self.hljs.highlightAuto(event.data);
   postMessage(result.value);
@@ -212,7 +210,7 @@ document.querySelectorAll(&#39;div.code&#39;).forEach((block) =&gt; {
 <h2 id="Установка-библиотеки"><a href="#Установка-библиотеки" class="headerlink" title="Установка библиотеки"></a>Установка библиотеки</h2><p>Highlight.js можно использовать в браузере прямо с CDN хостинга или скачать<br>индивидуальную сборку, а также установив модуль на сервере. На<br><a href="https://highlightjs.org/download/" target="_blank" rel="noopener">странице загрузки</a> подробно описаны все варианты.</p>
 <p><strong>Не подключайте GitHub напрямую.</strong> Библиотека не предназначена для<br>использования в виде исходного кода, а требует отдельной сборки. Если вам не<br>подходит ни один из готовых вариантов, читайте <a href="http://highlightjs.readthedocs.io/en/latest/building-testing.html" target="_blank" rel="noopener">документацию по сборке</a>.</p>
 <p><strong>Файл на CDN содержит не все языки.</strong> Иначе он будет слишком большого размера.<br>Если нужного вам языка нет в <a href="https://highlightjs.org/download/" target="_blank" rel="noopener">категории “Common”</a>, можно дообавить его<br>вручную:</p>
-<pre><code class="html">&lt;script src=&quot;//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/languages/go.min.js&quot;&gt;&lt;/script&gt;
+<pre><code class="lang-html">&lt;script src=&quot;//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/languages/go.min.js&quot;&gt;&lt;/script&gt;
 </code></pre>
 <p><strong>Про Almond.</strong> Нужно задать имя модуля в оптимизаторе, например:</p>
 <pre><code>r.js -o name=hljs paths.hljs=/path/to/highlight out=highlight.js
@@ -374,8 +372,6 @@ document.querySelectorAll(&#39;div.code&#39;).forEach((block) =&gt; {
 
         <p>
             
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
             <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
         </p>
     </div>
@@ -471,6 +467,27 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
 
 
 
@@ -480,5 +497,20 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 </body>
 </html>

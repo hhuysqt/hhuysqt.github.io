@@ -40,8 +40,6 @@
 <meta name="twitter:description" content="简单来讲，内核、文件系统、应用程序，三者构成一个完整可用的系统。发行版之间不同之处不在于内核啥的，而在于rootfs——它的一套系统工具；比如包管理，Ubuntu上面就是apt-get，Arch上面就是pacman，OpenWRT上面就是opkg，等等。 内核可以放在文件系统里面，如果bootloader支持文件系统的话就可以找到内核在哪里，树莓派啥的就是这样的风格。而不少嵌入式设备bootloa">
 <meta name="twitter:image" content="https://hhuysqt.github.io/ucpc6/initramfs.jpeg">
     
-        <link rel="alternate" type="application/atom+xml" title="hhuysqt" href="/atom.xml">
-    
     <link rel="shortcut icon" href="/img/m.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
@@ -211,7 +209,7 @@
 <p>ucpc上试过的根文件系统类型有：initramfs、romfs、nfs、yaffs。如果将SD卡、USB大容量设备等的驱动编译进内核的话，那么fatfs、ext4等等的东西也可以作为根文件系统，不然的话就只能手动mount然后chroot，才能说是所谓根文件系统了。</p>
 <p>现成的initramfs可以从<a href="https://elinux.org/File:Stm32_mini_rootfs.cpio.bz2" target="_blank" rel="noopener">eLinux</a>这里下载，里面是busybox的一堆命令以及/etc下面的简单的配置文件，如果不想自己配置一遍busybox编译的话可以直接解压这份rootfs来用。</p>
 <p>下面我们做一个最最简单的rootfs作为例子，让内核启动之后打印hello world！</p>
-<pre><code class="c">#include &lt;stdio.h&gt;
+<pre><code class="lang-c">#include &lt;stdio.h&gt;
 #include &lt;unistd.h&gt;
 int main(void)
 {
@@ -293,7 +291,7 @@ $
       -&gt; Generic uClinux RAM/ROM filesystem support
 </code></pre><p>上面最后一个选项编译的是<a href="https://elixir.bootlin.com/linux/v4.13.3/source/drivers/mtd/maps/uclinux.c" target="_blank" rel="noopener">drivers/mtd/maps/uclinux.c</a>，负责将ROM mapped的东西注册为mtd设备。而开启了CONFIG_MTD_BLOCK之后它就能生成/dev/mtdblock0、1、2等等了。</p>
 <p>uclinux.c里面有一个参数：</p>
-<pre><code class="c">static unsigned long physaddr = -1;
+<pre><code class="lang-c">static unsigned long physaddr = -1;
 module_param(physaddr, ulong, S_IRUGO);
 </code></pre>
 <p>这是romfs的地址。上面我们将它烧到了0x081E0000了，因此在设备树里面要将其传入bootargs中。</p>
@@ -558,8 +556,6 @@ tty0::respawn:/bin/sh
 
         <p>
             
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
             <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
         </p>
     </div>
@@ -655,6 +651,27 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
 
 
 
@@ -664,5 +681,20 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 </body>
 </html>

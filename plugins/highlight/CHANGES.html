@@ -33,8 +33,6 @@
 <meta name="twitter:title" content="hhuysqt">
 <meta name="twitter:description" content="MasterNew languages: New styles: Improvements: Version 9.15.6New languages:    none.New styles:    none.Improvements:  Move dependencies to be devDependencies. Fixed security issues in dev dependencie">
     
-        <link rel="alternate" type="application/atom+xml" title="hhuysqt" href="/atom.xml">
-    
     <link rel="shortcut icon" href="/img/m.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
@@ -387,7 +385,7 @@
 <h2 id="Version-9-4-0"><a href="#Version-9-4-0" class="headerlink" title="Version 9.4.0"></a>Version 9.4.0</h2><p>New languages:</p>
 <ul>
 <li><em>PureBASIC</em> by <a href="https://github.com/tajmone" target="_blank" rel="noopener">Tristano Ajmone</a></li>
-<li><em>BNF</em> by <a href="https://github.com/Sannis" target="_blank" rel="noopener">Oleg Efimov</a></li>
+<li><em>BNF</em> by <a href="https://github.com/sannis" target="_blank" rel="noopener">Oleg Efimov</a></li>
 <li><em>Ada</em> by <a href="https://github.com/captain-hanuta" target="_blank" rel="noopener">Lars Schulna</a></li>
 </ul>
 <p>New styles:</p>
@@ -528,7 +526,7 @@
 <li><em>Golo</em> by <a href="https://github.com/k33g" target="_blank" rel="noopener">Philippe Charrière</a></li>
 <li><em>GAMS</em> by <a href="https://github.com/b-pos465" target="_blank" rel="noopener">Stefan Bechert</a></li>
 <li><em>IRPF90</em> by <a href="https://github.com/scemama" target="_blank" rel="noopener">Anthony Scemama</a></li>
-<li><em>Access logs</em> by <a href="https://github.com/Sannis" target="_blank" rel="noopener">Oleg Efimov</a></li>
+<li><em>Access logs</em> by <a href="https://github.com/sannis" target="_blank" rel="noopener">Oleg Efimov</a></li>
 <li><em>Crystal</em> by <a href="https://github.com/MakeNowJust" target="_blank" rel="noopener">Tsuyusato Kitsune</a></li>
 </ul>
 <p>Notable fixes and improvements to existing languages:</p>
@@ -545,7 +543,7 @@
 </ul>
 <h2 id="Version-8-7"><a href="#Version-8-7" class="headerlink" title="Version 8.7"></a>Version 8.7</h2><p>New languages:</p>
 <ul>
-<li><em>Zephir</em> by <a href="https://github.com/Sannis" target="_blank" rel="noopener">Oleg Efimov</a></li>
+<li><em>Zephir</em> by <a href="https://github.com/sannis" target="_blank" rel="noopener">Oleg Efimov</a></li>
 <li><em>Elm</em> by <a href="https://github.com/jvoigtlaender" target="_blank" rel="noopener">Janis Voigtländer</a></li>
 <li><em>XQuery</em> by <a href="https://github.com/dirkk" target="_blank" rel="noopener">Dirk Kirsten</a></li>
 <li><em>Mojolicious</em> by <a href="https://github.com/dotandimet" target="_blank" rel="noopener">Dotan Dimet</a></li>
@@ -649,7 +647,7 @@
 <li>PHP and JavaScript mixed in HTML now live happily with each other.</li>
 <li>JavaScript regexes now understand ES6 flags “u” and “y”.</li>
 <li><code>throw</code> keyword is no longer detected as a method name in Java.</li>
-<li>Fixed parsing of numbers and symbols in Clojure thanks to <a href="https://twitter.com/IvanKleshnin/status/514041599484231680" target="_blank" rel="noopener">input from Ivan<br>Kleshnin</a>.</li>
+<li>Fixed parsing of numbers and symbols in Clojure thanks to <a href="http://kalnitsky.org.ua/" target="_blank" rel="noopener">input from Ivan<br>Kleshnin</a>.</li>
 </ul>
 <p>New languages in this release:</p>
 <ul>
@@ -691,7 +689,7 @@
 <li><em>Protocol Buffers</em> by <a href="https://github.com/dtao" target="_blank" rel="noopener">Dan Tao</a></li>
 <li><em>Nix</em> by <a href="https://github.com/iElectric" target="_blank" rel="noopener">Domen Kožar</a></li>
 <li><em>x86asm</em> by <a href="https://github.com/innocenat" target="_blank" rel="noopener">innocenat</a></li>
-<li><em>Cap’n Proto</em> and <em>Thrift</em> by <a href="https://github.com/Sannis" target="_blank" rel="noopener">Oleg Efimov</a></li>
+<li><em>Cap’n Proto</em> and <em>Thrift</em> by <a href="https://github.com/sannis" target="_blank" rel="noopener">Oleg Efimov</a></li>
 <li><em>Monkey</em> by <a href="https://github.com/devolonter" target="_blank" rel="noopener">Arthur Bikmullin</a></li>
 <li><em>TypeScript</em> by <a href="https://github.com/panuhorsmalahti" target="_blank" rel="noopener">Panu Horsmalahti</a></li>
 <li><em>Nimrod</em> by <a href="https://github.com/flaviut" target="_blank" rel="noopener">Flaviu Tamas</a></li>
@@ -725,7 +723,7 @@
 <p>Here’s what did change in an incompatible way:</p>
 <ul>
 <li><p>We’re now prefixing all classes located in <a href="http://highlightjs.readthedocs.org/en/latest/css-classes-reference.html" target="_blank" rel="noopener">CSS classes reference</a> with<br><code>hljs-</code>, by default, because some class names would collide with other<br>people’s stylesheets. If you were using an older version, you might still want<br>the previous behavior, but still want to upgrade. To suppress this new<br>behavior, you would initialize like so:</p>
-<pre><code class="html">&lt;script type=&quot;text/javascript&quot;&gt;
+<pre><code class="lang-html">&lt;script type=&quot;text/javascript&quot;&gt;
   hljs.configure({classPrefix: &#39;&#39;});
   hljs.initHighlightingOnLoad();
 &lt;/script&gt;
@@ -768,7 +766,7 @@
 <li>Big overhaul of relevance counting for a number of languages. Please do report<br>bugs about mis-detection of non-trivial code snippets!</li>
 </ul>
 <h2 id="Version-7-5"><a href="#Version-7-5" class="headerlink" title="Version 7.5"></a>Version 7.5</h2><p>A catch-up release dealing with some of the accumulated contributions. This one<br>is probably will be the last before the 8.0 which will be slightly backwards<br>incompatible regarding some advanced use-cases.</p>
-<p>One outstanding change in this version is the addition of 6 languages to the<br><a href="http://highlightjs.org/download/" target="_blank" rel="noopener">hosted script</a>: Markdown, ObjectiveC, CoffeeScript, Apache, Nginx and<br>Makefile. It now weighs about 6K more but we’re going to keep it under 30K.</p>
+<p>One outstanding change in this version is the addition of 6 languages to the<br><a href="/soft/highlight/en/download/">hosted script</a>: Markdown, ObjectiveC, CoffeeScript, Apache, Nginx and<br>Makefile. It now weighs about 6K more but we’re going to keep it under 30K.</p>
 <p>New languages:</p>
 <ul>
 <li>OCaml by <a href="https://github.com/mehdid" target="_blank" rel="noopener">Mehdi Dogguy</a> and <a href="https://github.com/nbraud" target="_blank" rel="noopener">Nicolas Braud-Santoni</a></li>
@@ -784,11 +782,12 @@
 <li>Miscellaneous fixes in PHP, Brainfuck, SCSS, Asciidoc, CMake, Python and F#.</li>
 </ul>
 <h2 id="New-core-developers"><a href="#New-core-developers" class="headerlink" title="New core developers"></a>New core developers</h2><p>The latest long period of almost complete inactivity in the project coincided<br>with growing interest to it led to a decision that now seems completely obvious:<br>we need more core developers.</p>
-<p>So without further ado let me welcome to the core team two long-time<br>contributors: <a href="https://github.com/sourrust" target="_blank" rel="noopener">Jeremy Hull</a> and <a href="https://github.com/Sannis" target="_blank" rel="noopener">Oleg<br>Efimov</a>.</p>
+<p>So without further ado let me welcome to the core team two long-time<br>contributors: <a href="https://github.com/sourrust" target="_blank" rel="noopener">Jeremy Hull</a> and <a href="https://github.com/sannis" target="_blank" rel="noopener">Oleg<br>Efimov</a>.</p>
 <p>Hope now we’ll be able to work through stuff faster!</p>
-<p>P.S. The historical commit is <a href="https://github.com/isagalaev/highlight.js/commit/f3056941bda56d2b72276b97bc0dd5f230f2473f" target="_blank" rel="noopener">here</a> for the record.</p>
+<p>P.S. The historical commit is <a href="http://roudakov.ru/" target="_blank" rel="noopener">here</a> for the record.</p>
 <h2 id="Version-7-4"><a href="#Version-7-4" class="headerlink" title="Version 7.4"></a>Version 7.4</h2><p>This long overdue version is a snapshot of the current source tree with all the<br>changes that happened during the past year. Sorry for taking so long!</p>
-<p>Along with the changes in code highlight.js has finally got its new home at<br><a href="http://highlightjs.org/" target="_blank" rel="noopener">http://highlightjs.org/</a>, moving from its cradle on Software Maniacs which it<br>outgrew a long time ago. Be sure to report any bugs about the site to<br><a href="mailto:info@highlightjs.org" target="_blank" rel="noopener">mailto:info@highlightjs.org</a>.</p>
+<p>Along with the changes in code highlight.js has finally got its new home at<br><a href="http://highlightjs.org/" target="_blank" rel="noopener">http://highlightjs.org/</a>, moving from its cradle on Software Maniacs which it<br>outgrew a long time ago. Be sure to report any bugs about the site to</p>
+<p><a href="&#x6d;&#97;&#x69;&#x6c;&#x74;&#111;&#58;&#x69;&#x6e;&#x66;&#111;&#x40;&#x68;&#105;&#103;&#104;&#108;&#105;&#x67;&#x68;&#x74;&#x6a;&#x73;&#x2e;&#111;&#114;&#x67;">&#x69;&#x6e;&#x66;&#111;&#x40;&#x68;&#105;&#103;&#104;&#108;&#105;&#x67;&#x68;&#x74;&#x6a;&#x73;&#x2e;&#111;&#114;&#x67;</a>.</p>
 <p>On to what’s new…</p>
 <p>New languages:</p>
 <ul>
@@ -851,26 +850,26 @@
 <ul>
 <li><p>The library now works not only in a browser but also with <a href="http://nodejs.org/" target="_blank" rel="noopener">node.js</a>. It is<br>installable with <code>npm install highlight.js</code>. <a href="http://softwaremaniacs.org/wiki/doku.php/highlight.js:api" target="_blank" rel="noopener">API</a> docs are available on our<br>wiki.</p>
 </li>
-<li><p>The new unique feature (apparently) among syntax highlighters is highlighting<br><em>HTTP</em> headers and an arbitrary language in the request body. The most useful<br>languages here are <em>XML</em> and <em>JSON</em> both of which highlight.js does support.<br>Here’s <a href="http://softwaremaniacs.org/blog/2012/05/10/http-and-json-in-highlight-js/en/" target="_blank" rel="noopener">the detailed post</a> about the feature.</p>
+<li><p>The new unique feature (apparently) among syntax highlighters is highlighting<br><em>HTTP</em> headers and an arbitrary language in the request body. The most useful<br>languages here are <em>XML</em> and <em>JSON</em> both of which highlight.js does support.<br>Here’s <a href="http://bazaar.launchpad.net/~isagalaev/+junk/highlight/annotate/342/src/wp_highlight.js.php" target="_blank" rel="noopener">the detailed post</a> about the feature.</p>
 </li>
 <li><p>Two new style themes: a dark “south” <em><a href="http://web-cms-designs.com/ftopict-10-pojoaque-style-for-highlight-js-code-highlighter.html" target="_blank" rel="noopener">Pojoaque</a></em> by Jason Tate and an<br>emulation of<em>XCode</em> IDE by <a href="https://github.com/angelolloqui" target="_blank" rel="noopener">Angel Olloqui</a>.</p>
 </li>
-<li><p>Three new languages: <em>D</em> by <a href="https://github.com/raleksandar" target="_blank" rel="noopener">Aleksandar Ružičić</a>, <em>R</em> by <a href="https://github.com/jcheng5" target="_blank" rel="noopener">Joe Cheng</a><br>and <em>GLSL</em> by <a href="https://github.com/tikhomirov" target="_blank" rel="noopener">Sergey Tikhomirov</a>.</p>
+<li><p>Three new languages: <em>D</em> by <a href="https://github.com/raleksandar" target="_blank" rel="noopener">Aleksandar Ružičić</a>, <em>R</em> by <a href="https://github.com/seejohnrun" target="_blank" rel="noopener">Joe Cheng</a><br>and <em>GLSL</em> by <a href="https://github.com/tikhomirov" target="_blank" rel="noopener">Sergey Tikhomirov</a>.</p>
 </li>
 <li><p><em>Nginx</em> syntax has become a million times smaller and more universal thanks to<br>remaking it in a more generic manner that doesn’t require listing all the<br>directives in the known universe.</p>
 </li>
 <li><p>Function titles are now highlighted in <em>PHP</em>.</p>
 </li>
-<li><p><em>Haskell</em> and <em>VHDL</em> were significantly reworked to be more rich and correct<br>by their respective maintainers <a href="https://github.com/sourrust" target="_blank" rel="noopener">Jeremy Hull</a> and <a href="https://twitter.com/IvanKleshnin/status/514041599484231680" target="_blank" rel="noopener">Igor Kalnitsky</a>.</p>
+<li><p><em>Haskell</em> and <em>VHDL</em> were significantly reworked to be more rich and correct<br>by their respective maintainers <a href="https://github.com/sourrust" target="_blank" rel="noopener">Jeremy Hull</a> and <a href="http://kalnitsky.org.ua/" target="_blank" rel="noopener">Igor Kalnitsky</a>.</p>
 </li>
 </ul>
 <p>And last but not least, many bugs have been fixed around correctness and<br>language detection.</p>
 <p>Overall highlight.js currently supports 51 languages and 20 style themes.</p>
 <h2 id="Version-6-2"><a href="#Version-6-2" class="headerlink" title="Version 6.2"></a>Version 6.2</h2><p>A lot of things happened in highlight.js since the last version! We’ve got nine<br>new contributors, the discussion group came alive, and the main branch on GitHub<br>now counts more than 350 followers. Here are most significant results coming<br>from all this activity:</p>
 <ul>
-<li><p>5 (five!) new languages: Rust, ActionScript, CoffeeScript, MatLab and<br>experimental support for markdown. Thanks go to <a href="https://github.com/vlasovskikh" target="_blank" rel="noopener">Andrey Vlasovskikh</a>,<br><a href="https://github.com/myadzel" target="_blank" rel="noopener">Alexander Myadzel</a>, <a href="https://github.com/dnagir" target="_blank" rel="noopener">Dmytrii Nagirniak</a>, <a href="https://github.com/Sannis" target="_blank" rel="noopener">Oleg Efimov</a>, <a href="https://github.com/btd" target="_blank" rel="noopener">Denis<br>Bardadym</a> and <a href="https://github.com/jcheng5" target="_blank" rel="noopener">John Crepezzi</a>.</p>
+<li><p>5 (five!) new languages: Rust, ActionScript, CoffeeScript, MatLab and<br>experimental support for markdown. Thanks go to <a href="https://github.com/vlasovskikh" target="_blank" rel="noopener">Andrey Vlasovskikh</a>,<br><a href="https://github.com/myadzel" target="_blank" rel="noopener">Alexander Myadzel</a>, <a href="https://github.com/dnagir" target="_blank" rel="noopener">Dmytrii Nagirniak</a>, <a href="https://github.com/Sannis" target="_blank" rel="noopener">Oleg Efimov</a>, <a href="https://github.com/btd" target="_blank" rel="noopener">Denis<br>Bardadym</a> and <a href="https://github.com/seejohnrun" target="_blank" rel="noopener">John Crepezzi</a>.</p>
 </li>
-<li><p>2 new style themes: Monokai by <a href="http://grigio.org/" target="_blank" rel="noopener">Luigi Maselli</a> and stylistic imitation of<br>another well-known highlighter Google Code Prettify by <a href="https://github.com/geekpanth3r" target="_blank" rel="noopener">Aahan Krish</a>.</p>
+<li><p>2 new style themes: Monokai by <a href="http://grigio.org/" target="_blank" rel="noopener">Luigi Maselli</a> and stylistic imitation of<br>another well-known highlighter Google Code Prettify by <a href="http://anton.kovalyov.net/" target="_blank" rel="noopener">Aahan Krish</a>.</p>
 </li>
 <li><p>A vast number of <a href="https://github.com/isagalaev/highlight.js/commits/" target="_blank" rel="noopener">correctness fixes and code refactorings</a>, mostly made<br>by <a href="https://github.com/Sannis" target="_blank" rel="noopener">Oleg Efimov</a> and <a href="https://github.com/bolknote" target="_blank" rel="noopener">Evgeny Stepanischev</a>.</p>
 </li>
@@ -888,7 +887,7 @@
 </ul>
 <p>Also this version is marginally faster and fixes a number of small long-standing<br>bugs.</p>
 <p>Developer overview of the new language syntax is available in a <a href="http://softwaremaniacs.org/blog/2011/04/25/highlight-js-60-beta/en/" target="_blank" rel="noopener">blog post about<br>recent beta release</a>.</p>
-<p>P.S. New version is not yet available on a Yandex CDN, so for now you have to<br>download <a href="http://highlightjs.org/download/" target="_blank" rel="noopener">your own copy</a>.</p>
+<p>P.S. New version is not yet available on a Yandex CDN, so for now you have to<br>download <a href="/soft/highlight/en/download/">your own copy</a>.</p>
 <h2 id="Version-5-14"><a href="#Version-5-14" class="headerlink" title="Version 5.14"></a>Version 5.14</h2><p>Fixed bugs in HTML/XML detection and relevance introduced in previous<br>refactoring.</p>
 <p>Also test.html now shows the second best result of language detection by<br>relevance.</p>
 <h2 id="Version-5-13"><a href="#Version-5-13" class="headerlink" title="Version 5.13"></a>Version 5.13</h2><p>Past weekend began with a couple of simple additions for existing languages but<br>ended up in a big code refactoring bringing along nice improvements for language<br>developers.</p>
@@ -896,7 +895,7 @@
 <li>Description of C++ has got new keywords from the upcoming <a href="http://ru.wikipedia.org/wiki/C%2B%2B0x" target="_blank" rel="noopener">C++ 0x</a> standard.</li>
 <li>Description of HTML has got new tags from <a href="http://en.wikipedia.org/wiki/HTML5" target="_blank" rel="noopener">HTML 5</a>.</li>
 <li>CSS-styles have been unified to use consistent padding and also have lost<br>pop-outs with names of detected languages.</li>
-<li><a href="https://twitter.com/IvanKleshnin/status/514041599484231680" target="_blank" rel="noopener">Igor Kalnitsky</a> has sent two new language descriptions: CMake &amp; VHDL.</li>
+<li><a href="http://kalnitsky.org.ua/" target="_blank" rel="noopener">Igor Kalnitsky</a> has sent two new language descriptions: CMake &amp; VHDL.</li>
 </ul>
 <p>This makes total number of languages supported by highlight.js to reach 35.</p>
 <p>Bug fixes:</p>
@@ -932,7 +931,7 @@
 <li>the definition of SQL has become more solid and now it shouldn’t be overly<br>greedy when it comes to language detection</li>
 </ul>
 <p>The highlighter has become more usable as a library allowing to do highlighting<br>from initialization code of JS frameworks and in ajax methods (see.<br>readme.eng.txt).</p>
-<p>Also this version drops support for the <a href="http://wordpress.org/" target="_blank" rel="noopener">WordPress</a> plugin. Everyone is<br>welcome to <a href="http://softwaremaniacs.org/blog/2012/05/10/http-and-json-in-highlight-js/en/" target="_blank" rel="noopener">pick up its maintenance</a> if needed.</p>
+<p>Also this version drops support for the <a href="http://wordpress.org/" target="_blank" rel="noopener">WordPress</a> plugin. Everyone is<br>welcome to <a href="http://bazaar.launchpad.net/~isagalaev/+junk/highlight/annotate/342/src/wp_highlight.js.php" target="_blank" rel="noopener">pick up its maintenance</a> if needed.</p>
 <h2 id="Version-5-8"><a href="#Version-5-8" class="headerlink" title="Version 5.8"></a>Version 5.8</h2><ul>
 <li>Jan Berkel has contributed a definition for Scala. +1 to hotness!</li>
 <li>All CSS-styles are rewritten to work only inside <code>&lt;pre&gt;</code> tags to avoid<br>conflicts with host site styles.</li>
@@ -941,7 +940,7 @@
 <h2 id="Version-5-5"><a href="#Version-5-5" class="headerlink" title="Version 5.5"></a>Version 5.5</h2><p>This version brings a small change: now .ini-files allow digits, underscores and<br>square brackets in key names.</p>
 <h2 id="Version-5-4"><a href="#Version-5-4" class="headerlink" title="Version 5.4"></a>Version 5.4</h2><p>Fixed small but upsetting bug in the packer which caused incorrect highlighting<br>of explicitly specified languages. Thanks to Andrew Fedorov for precise<br>diagnostics!</p>
 <h2 id="Version-5-3"><a href="#Version-5-3" class="headerlink" title="Version 5.3"></a>Version 5.3</h2><p>The version to fulfil old promises.</p>
-<p>The most significant change is that highlight.js now preserves custom user<br>markup in code along with its own highlighting markup. This means that now it’s<br>possible to use, say, links in code. Thanks to <a href="http://dolzhenko.blogspot.com/" target="_blank" rel="noopener">Vladimir Dolzhenko</a> for the<br><a href="https://github.com/isagalaev/highlight.js/commit/f3056941bda56d2b72276b97bc0dd5f230f2473f" target="_blank" rel="noopener">initial proposal</a> and for making a proof-of-concept patch.</p>
+<p>The most significant change is that highlight.js now preserves custom user<br>markup in code along with its own highlighting markup. This means that now it’s<br>possible to use, say, links in code. Thanks to <a href="http://dolzhenko.blogspot.com/" target="_blank" rel="noopener">Vladimir Dolzhenko</a> for the<br><a href="http://roudakov.ru/" target="_blank" rel="noopener">initial proposal</a> and for making a proof-of-concept patch.</p>
 <p>Also in this version:</p>
 <ul>
 <li><a href="http://vasily.polovnyov.ru/" target="_blank" rel="noopener">Vasily Polovnyov</a> has sent a GitHub-like style and has implemented<br>support for CSS @-rules and Ruby symbols.</li>
@@ -969,7 +968,7 @@
 <li>Visual Studio-like highlighting style</li>
 </ul>
 <p>Plus there are a couple of minor bug fixes for parsing HTML and XML attributes.</p>
-<h2 id="Version-4-2"><a href="#Version-4-2" class="headerlink" title="Version 4.2"></a>Version 4.2</h2><p>The biggest news is highlighting for Lisp, courtesy of Vasily Polovnyov. It’s<br>somewhat experimental meaning that for highlighting “keywords” it doesn’t use<br>any pre-defined set of a Lisp dialect. Instead it tries to highlight first word<br>in parentheses wherever it makes sense. I’d like to ask people programming in<br>Lisp to confirm if it’s a good idea and send feedback to <a href="http://softwaremaniacs.org/forum/highlightjs/" target="_blank" rel="noopener">the forum</a>.</p>
+<h2 id="Version-4-2"><a href="#Version-4-2" class="headerlink" title="Version 4.2"></a>Version 4.2</h2><p>The biggest news is highlighting for Lisp, courtesy of Vasily Polovnyov. It’s<br>somewhat experimental meaning that for highlighting “keywords” it doesn’t use<br>any pre-defined set of a Lisp dialect. Instead it tries to highlight first word<br>in parentheses wherever it makes sense. I’d like to ask people programming in<br>Lisp to confirm if it’s a good idea and send feedback to <a href="http://softwaremaniacs.org/forum/viewforum.php?id=6" target="_blank" rel="noopener">the forum</a>.</p>
 <p>Other changes:</p>
 <ul>
 <li>Smalltalk was excluded from DEFAULT_LANGUAGES to save traffic</li>
@@ -1005,7 +1004,7 @@
 <li>Performance is further increased by about 15%.</li>
 </ul>
 <p>Changing of a major version number caused by a new format of language definition<br>files. If you use some third-party language files they should be updated.</p>
-<h2 id="Version-3-5"><a href="#Version-3-5" class="headerlink" title="Version 3.5"></a>Version 3.5</h2><p>A very nice version in my opinion fixing a number of small bugs and slightly<br>increased speed in a couple of corner cases. Thanks to everybody who reports<br>bugs in he <a href="http://softwaremaniacs.org/forum/highlightjs/" target="_blank" rel="noopener">forum</a> and by email!</p>
+<h2 id="Version-3-5"><a href="#Version-3-5" class="headerlink" title="Version 3.5"></a>Version 3.5</h2><p>A very nice version in my opinion fixing a number of small bugs and slightly<br>increased speed in a couple of corner cases. Thanks to everybody who reports<br>bugs in he <a href="http://softwaremaniacs.org/forum/viewforum.php?id=6" target="_blank" rel="noopener">forum</a> and by email!</p>
 <p>There is also a new language — XML. A custom XML formerly was detected as HTML<br>and didn’t highlight custom tags. In this version I tried to make custom XML to<br>be detected and highlighted by its own rules. Which by the way include such<br>things as CDATA sections and processing instructions (<code>&lt;? ... ?&gt;</code>).</p>
 <h2 id="Version-3-3"><a href="#Version-3-3" class="headerlink" title="Version 3.3"></a>Version 3.3</h2><p><a href="http://xonixx.blogspot.com/" target="_blank" rel="noopener">Vladimir Gubarkov</a> has provided an interesting and useful addition.<br>File export.html contains a little program that shows and allows to copy and<br>paste an HTML code generated by the highlighter for any code snippet. This can<br>be useful in situations when one can’t use the script itself on a site.</p>
 <h2 id="Version-3-2-consists-completely-of-contributions"><a href="#Version-3-2-consists-completely-of-contributions" class="headerlink" title="Version 3.2 consists completely of contributions:"></a>Version 3.2 consists completely of contributions:</h2><ul>
@@ -1015,7 +1014,7 @@
 <li>Vladimir Ermakov has compiled a mod for phpBB</li>
 </ul>
 <p>Many thanks to you all!</p>
-<h2 id="Version-3-1"><a href="#Version-3-1" class="headerlink" title="Version 3.1"></a>Version 3.1</h2><p>Three new languages are available: Django templates, SQL and Axapta. The latter<br>two are sent by <a href="https://github.com/isagalaev/highlight.js/commit/f3056941bda56d2b72276b97bc0dd5f230f2473f" target="_blank" rel="noopener">Dmitri Roudakov</a>. However I’ve almost entirely rewrote an<br>SQL definition but I’d never started it be it from the ground up :-)</p>
+<h2 id="Version-3-1"><a href="#Version-3-1" class="headerlink" title="Version 3.1"></a>Version 3.1</h2><p>Three new languages are available: Django templates, SQL and Axapta. The latter<br>two are sent by <a href="http://roudakov.ru/" target="_blank" rel="noopener">Dmitri Roudakov</a>. However I’ve almost entirely rewrote an<br>SQL definition but I’d never started it be it from the ground up :-)</p>
 <p>The engine itself has got a long awaited feature of grouping keywords<br>(“keyword”, “built-in function”, “literal”). No more hacks!</p>
 <h2 id="Version-3-0"><a href="#Version-3-0" class="headerlink" title="Version 3.0"></a>Version 3.0</h2><p>It is major mainly because now highlight.js has grown large and has become<br>modular. Now when you pass it a list of languages to highlight it will<br>dynamically load into a browser only those languages.</p>
 <p>Also:</p>
@@ -1027,7 +1026,7 @@
 <p>There is also a small backwards incompatible change in the new version. The<br>function initHighlighting that was used to initialize highlighting instead of<br>initHighlightingOnLoad a long time ago no longer works. If you by chance still<br>use it — replace it with the new one.</p>
 <h2 id="Version-2-9"><a href="#Version-2-9" class="headerlink" title="Version 2.9"></a>Version 2.9</h2><p>Highlight.js is a parser, not just a couple of regular expressions. That said<br>I’m glad to announce that in the new version 2.9 has support for:</p>
 <ul>
-<li>in-string substitutions for Ruby – <code>#{...}</code></li>
+<li>in-string substitutions for Ruby — <code>#{...}</code></li>
 <li>strings from from numeric symbol codes (like #XX) for Delphi</li>
 </ul>
 <h2 id="Version-2-8"><a href="#Version-2-8" class="headerlink" title="Version 2.8"></a>Version 2.8</h2><p>A maintenance release with more tuned heuristics. Fully backwards compatible.</p>
@@ -1049,12 +1048,12 @@
 <li>in Ruby fixed highlighting of keywords ‘def’ and ‘class’, same for ‘sub’ in<br>Perl</li>
 </ul>
 <h2 id="Version-2-0"><a href="#Version-2-0" class="headerlink" title="Version 2.0"></a>Version 2.0</h2><ul>
-<li>Ruby support by <a href="https://github.com/geekpanth3r" target="_blank" rel="noopener">Anton Kovalyov</a></li>
+<li>Ruby support by <a href="http://anton.kovalyov.net/" target="_blank" rel="noopener">Anton Kovalyov</a></li>
 <li>speed increased by orders of magnitude due to new way of parsing</li>
 <li>this same way allows now correct highlighting of keywords in some tricky<br>places (like keyword “End” at the end of Delphi classes)</li>
 </ul>
 <h2 id="Version-1-0"><a href="#Version-1-0" class="headerlink" title="Version 1.0"></a>Version 1.0</h2><p>Version 1.0 of javascript syntax highlighter is released!</p>
-<p>It’s the first version available with English description. Feel free to post<br>your comments and question to <a href="http://softwaremaniacs.org/forum/viewforum.php?id=6" target="_blank" rel="noopener">highlight.js forum</a>. And don’t be afraid<br>if you find there some fancy Cyrillic letters – it’s for Russian users too :-)</p>
+<p>It’s the first version available with English description. Feel free to post<br>your comments and question to <a href="http://softwaremaniacs.org/forum/viewforum.php?id=6" target="_blank" rel="noopener">highlight.js forum</a>. And don’t be afraid<br>if you find there some fancy Cyrillic letters — it’s for Russian users too :-)</p>
 
         </div>
 
@@ -1209,8 +1208,6 @@
 
         <p>
             
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
             <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
         </p>
     </div>
@@ -1306,6 +1303,27 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
 
 
 
@@ -1315,5 +1333,20 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 </body>
 </html>

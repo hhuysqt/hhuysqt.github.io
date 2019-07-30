@@ -42,8 +42,6 @@
 <meta name="twitter:description" content="用哪个BSP？ST为他们STM3210E-EVAL的评估板制作了uClinux-dist-20080808的补丁。bootloader是一个莫名其妙的bin，kernel和rootfs放在片外nor flash里面，并且带有jffs。官方评估板又贵又买不到，不过我手上一块淘宝上一百多块钱的相似配置的板子也能玩。shell跑起来太慢了，跑个ls都要卡一两秒。 Emcraft为一些ST的板子做了第三方">
 <meta name="twitter:image" content="https://hhuysqt.github.io/uclinux-on-stm32f103/board1.jpg">
     
-        <link rel="alternate" type="application/atom+xml" title="hhuysqt" href="/atom.xml">
-    
     <link rel="shortcut icon" href="/img/m.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
@@ -229,17 +227,17 @@
 <h2 id="工具链"><a href="#工具链" class="headerlink" title="工具链"></a>工具链</h2><p>老代码用老编译器，新代码用新编译器。比方说新版的uboot编译时候如果用gcc 4.4，就会抱怨说将来不会支持小于6的gcc了。但是6点几的gcc编译老uboot时候，就会报错说，别名不行，以及链接文件里面不能使用变量。<br>目前的编译工具链是<a href="https://sourcery.mentor.com/GNUToolchain/package6503/public/arm-uclinuxeabi/arm-2010q1-189-arm-uclinuxeabi-i686-pc-linux-gnu.tar.bz2" target="_blank" rel="noopener">Emcraft推荐的arm-uclinuxeabi-2010q1</a>。</p>
 <h2 id="跑通基本uboot"><a href="#跑通基本uboot" class="headerlink" title="跑通基本uboot"></a>跑通基本uboot</h2><p>正统的uboot跟<a href="https://github.com/robutest/u-boot" target="_blank" rel="noopener">robutest的</a>都有STM32F429的配置，不过并没有STM32F1的驱动。后者是老版本的uboot，还没有引入Kbuild，新增板子要改Makefile，配置全靠写头文件宏定义，但是编译出来的镜像更小，也比较容易裁剪。</p>
 <p>Makefile里面添加：</p>
-<pre><code class="makefile">stm32f103zet6_config : unconfig
+<pre><code class="lang-makefile">stm32f103zet6_config : unconfig
     @$(MKCONFIG) $(@:_config=) arm arm_cortexm3 stm32f103zet6 \
     stm stm32
 </code></pre>
 <p>要想在F1板子上跑起来，首先得搞定基本的驱动：时钟、串口、GPIO。为方便起见，直接在ST官方库包装一层便是了。不过ST库跟uboot都定义了一些类型，比方说u8、u32等等；如果include了两方的头文件，就会说类型重复定义。所以封装层只能够包含ST库头文件。</p>
 <p>RCC封装层：</p>
-<pre><code class="c">void clock_init(void);
+<pre><code class="lang-c">void clock_init(void);
 unsigned long clock_get(int);
 </code></pre>
 <p>USART封装层：</p>
-<pre><code class="c">s32 serial_init(void);
+<pre><code class="lang-c">s32 serial_init(void);
 void serial_setbrg(void); // 设置波特率
 s32 serial_getc(void);
 void serial_putc(const char c);
@@ -247,12 +245,12 @@ void serial_puts(const char *s);
 s32 serial_tstc(void); // 获取串口接收状态
 </code></pre>
 <p>板级初始化里面，初始化所有的GPIO：</p>
-<pre><code class="c">int board_init(void);
+<pre><code class="lang-c">int board_init(void);
 </code></pre>
 <p>这个函数会在<code>lib_arm/board.c:start_armboot()</code>里面通过函数指针列表来调用。</p>
 <p>初始化FSMC的函数，改为sram_init(void)，并且照搬ST的例程。</p>
 <p>配置文件<code>include/configs/stm32f103zet6.h</code>里面，基本上照搬了429 discovery的配置，值得修改的地方有，时钟：</p>
-<pre><code class="c">#define CONFIG_STM32_SYS_CLK_PLL
+<pre><code class="lang-c">#define CONFIG_STM32_SYS_CLK_PLL
 #define CONFIG_STM32_PLL_SRC_HSE
 #define CONFIG_STM32_HSE_HZ        8000000        /* 8 MHz */
 #define CONFIG_STM32_PLL_M        4
@@ -261,25 +259,25 @@ s32 serial_tstc(void); // 获取串口接收状态
 #define CONFIG_STM32_PLL_Q        15
 </code></pre>
 <p>片内flash大小：</p>
-<pre><code class="c">#define CONFIG_MEM_NVM_BASE        0x08000000
+<pre><code class="lang-c">#define CONFIG_MEM_NVM_BASE        0x08000000
 #define CONFIG_MEM_NVM_LEN        (1024 * 512)
 </code></pre>
 <p>片内SRAM：</p>
-<pre><code class="c">#define CONFIG_MEM_RAM_BASE        0x20000000
+<pre><code class="lang-c">#define CONFIG_MEM_RAM_BASE        0x20000000
 #define CONFIG_MEM_RAM_LEN        (20 * 1024)
 #define CONFIG_MEM_RAM_BUF_LEN        (24 * 1024)
 #define CONFIG_MEM_MALLOC_LEN        (16 * 1024)
 #define CONFIG_MEM_STACK_LEN        (4 * 1024)
 </code></pre>
 <p>接在FSMC bank0 CS3的片外SRAM：</p>
-<pre><code class="c">#define CONFIG_NR_DRAM_BANKS        1
+<pre><code class="lang-c">#define CONFIG_NR_DRAM_BANKS        1
 #define CONFIG_SYS_RAM_SIZE        (2 * 1024 * 1024)
 #define CONFIG_SYS_RAM_CS        1
 #define CONFIG_SYS_RAM_FREQ_DIV        2
 #define CONFIG_SYS_RAM_BASE        0x68000000
 </code></pre>
 <p>串口配置，改为USART1：</p>
-<pre><code class="c">#define CONFIG_STM32_USART_PORT        1    /* USART1 */
+<pre><code class="lang-c">#define CONFIG_STM32_USART_PORT        1    /* USART1 */
 #define CONFIG_STM32_USART_TX_IO_PORT    0    /* PORTA */
 #define CONFIG_STM32_USART_TX_IO_PIN    9    /* GPIO9 */
 #define CONFIG_STM32_USART_RX_IO_PORT    0    /* PORTA */
@@ -288,7 +286,7 @@ s32 serial_tstc(void); // 获取串口接收状态
 #define CONFIG_SYS_BAUDRATE_TABLE    { 9600, 19200, 38400, 57600, 115200 }
 </code></pre>
 <p>然后是一些uboot的基本设置，比方说<code>CONFIG_BOOTDELAY</code>是开始数秒的秒数，<code>CONFIG_EXTRA_ENV_SETTINGS</code>是环境变量的设置，<code>CONFIG_BOOTCOMMAND</code>是默认启动的命令。</p>
-<pre><code class="c">#define CONFIG_BOOTDELAY        3
+<pre><code class="lang-c">#define CONFIG_BOOTDELAY        3
 #define CONFIG_BOOTCOMMAND        &quot;run envmboot&quot;
 #define CONFIG_EXTRA_ENV_SETTINGS                \
         ...
@@ -312,11 +310,11 @@ s32 serial_tstc(void); // 获取串口接收状态
 <p>内存测试</p>
 <h2 id="为uboot添加一些功能"><a href="#为uboot添加一些功能" class="headerlink" title="为uboot添加一些功能"></a>为uboot添加一些功能</h2><p>比方说，环境变量存储在片内flash里面，nand命令等等。</p>
 <h3 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h3><p>封装一下ST库的flash读写：</p>
-<pre><code class="c">void envm_init(void); // 空函数
+<pre><code class="lang-c">void envm_init(void); // 空函数
 u32 envm_write(u32 offset, void * buf, u32 size); // 检测地址合法性，然后写入flash
 </code></pre>
 <p>然后<code>include/configs/stm32f103zet6.h</code>里面添加一下配置。下面设置片内flash 128k之后的4k空间作为环境变量的存储区：</p>
-<pre><code class="c">#define CONFIG_ENV_IS_IN_ENVM
+<pre><code class="lang-c">#define CONFIG_ENV_IS_IN_ENVM
 #define CONFIG_ENV_SIZE            (4 * 1024)
 #define CONFIG_ENV_ADDR         \
     (CONFIG_SYS_ENVM_BASE + (128 * 1024))
@@ -327,14 +325,14 @@ u32 envm_write(u32 offset, void * buf, u32 size); // 检测地址合法性，然
 <h3 id="nand-flash"><a href="#nand-flash" class="headerlink" title="nand flash"></a>nand flash</h3><p>uboot里面有简化了的mtd系统，基本上只要写了底层初始化、读写的函数就行了。</p>
 <p>首先在<code>board_init()</code>里面补充FSMC nand flash的初始化和相应GPIO的初始化。</p>
 <p>我在<code>drivers/mtd/nand/stm32f103zet6_nand.c</code>里面实现的底层驱动。这些都要<strong><em>老老实实去翻手册</em></strong>。以下是基本读写函数：</p>
-<pre><code class="c">/* 发送一条命令，或写一个字节数据 */
+<pre><code class="lang-c">/* 发送一条命令，或写一个字节数据 */
 static void stm32f103_fsmc_send_cmd(struct mtd_info *mtd, int cmd, unsigned int ctrl);
 
 /* nand flash是否忙。读一下忙引脚的电平即可 */
 static int stm32f103_fsmc_read_rb(struct mtd_info *mtd);
 </code></pre>
 <p>然后还要告诉mtd层读写函数：</p>
-<pre><code class="c">int board_nand_init(struct nand_chip *nand)
+<pre><code class="lang-c">int board_nand_init(struct nand_chip *nand)
 {
     // 设置读写寄存器的地址
     nand-&gt;IO_ADDR_R = nand-&gt;IO_ADDR_W = 0x70000000;
@@ -350,17 +348,17 @@ static int stm32f103_fsmc_read_rb(struct mtd_info *mtd);
 }
 </code></pre>
 <p>最后在<code>include/configs/stm32f103zet6.h</code>里面添加一下配置：</p>
-<pre><code class="c">#define CONFIG_CMD_NAND 1
+<pre><code class="lang-c">#define CONFIG_CMD_NAND 1
 #define CONGIG_MTD_DEVICE
 #define CONFIG_SYS_MAX_NAND_DEVICE  1
 #define CONFIG_SYS_NAND_BASE 0x70000000
 </code></pre>
 <p>然后启动时候就可以观察到NAND的东西了。mtd里面有个数组记录了很多常用nand芯片的ID和大小，并且通用的初始化什么的都做好了，相当方便。现在就可以用nand指令去问候nand flash了。比方说<code>nand dump</code>、<code>nand erase</code>、<code>nand read</code>、<code>nand write</code>等等。</p>
 <h3 id="其他的可玩配置："><a href="#其他的可玩配置：" class="headerlink" title="其他的可玩配置："></a>其他的可玩配置：</h3><p>uboot命令行里面可以用上下方向键看历史命令：</p>
-<pre><code class="c">#define CONFIG_CMDLINE_EDITING
+<pre><code class="lang-c">#define CONFIG_CMDLINE_EDITING
 </code></pre>
 <p>tab补全：</p>
-<pre><code class="c">#define CONFIG_AUTO_COMPLETE
+<pre><code class="lang-c">#define CONFIG_AUTO_COMPLETE
 </code></pre>
 <p>想要在编译时候裁剪掉没有被引用的函数或数组，要在makefile里面加gcc<strong><em>编译参数</em></strong><code>-ffunction-sections -fdata-sections</code>和<strong><em>链接参数</em></strong><code>-Wl,--gc-sections</code>。因为ST库的函数太多了，可以裁掉数十kb的大小。</p>
 <h2 id="uclinux内核配置"><a href="#uclinux内核配置" class="headerlink" title="uclinux内核配置"></a>uclinux内核配置</h2><p>好事情是，<a href="https://github.com/robutest/uclinux" target="_blank" rel="noopener">robutest的uclinux</a>里面有STM32F1的驱动，改改配置，编译出来的东西就能启动。</p>
@@ -395,7 +393,7 @@ static int stm32f103_fsmc_read_rb(struct mtd_info *mtd);
             </figure>
 <p>XIP地址</p>
 <p>内核镜像要在它前面留有64字节的空，这是uImage的头部。需要用uboot编译出来的工具<code>mkimage</code>来生成最终的uImage。</p>
-<pre><code class="bash">$ ../uboot/tools/mkimage -x -A arm -O linux -T kernel \
+<pre><code class="lang-bash">$ ../uboot/tools/mkimage -x -A arm -O linux -T kernel \
   -C none -a 0x08015040 -e 0x08015041 -n &quot;linux&quot;  \
   -d xipImage.bin \
   xipuImage.bin
@@ -411,17 +409,17 @@ static int stm32f103_fsmc_read_rb(struct mtd_info *mtd);
 <li><code>CONFIG_EXTRA_CFLAGS</code>设置为<code>-march=armv7-m -mthumb</code>，使之生成thumb2的代码</li>
 <li><code>CONFIG_PREFIX</code>设置安装目录</li>
 <li><p>编译时，需要SKIP_STRIP：</p>
-<pre><code class="bash">$ make SKIP_STRIP=y
+<pre><code class="lang-bash">$ make SKIP_STRIP=y
 ...
 $ make install
 </code></pre>
 </li>
 <li><p>然后，那个安装目录下面就有了<code>bin</code>, <code>sbin</code>, <code>usr</code>目录了。补充上<code>etc</code>、<code>dev</code>，然后就是比较规范的根目录了。规范叫<a href="https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard" target="_blank" rel="noopener">“Filesystem Hierarchy Standard”</a></p>
-<pre><code class="bash">$ ls ../rootfs
+<pre><code class="lang-bash">$ ls ../rootfs
 bin  dev  etc  sbin  usr
 </code></pre>
 </li>
-<li><p>最后，通过<code>genromfs</code>命令来生成romfs镜像。genromfs通过包管理来安装。<br><code>`</code> bash<br>$ genromfs -v \<br>-V “ROM Disk” \<br>-f romfs.bin \<br>-x placeholder \<br>-d ./rootfs/</p>
+<li><p>最后，通过<code>genromfs</code>命令来生成romfs镜像。genromfs通过包管理来安装。<br>``` bash<br>$ genromfs -v  <br>-V “ROM Disk”  <br>-f romfs.bin  <br>-x placeholder  <br>-d ./rootfs/</p>
 <h1 id="然后输出一堆东西。。。"><a href="#然后输出一堆东西。。。" class="headerlink" title="然后输出一堆东西。。。"></a>然后输出一堆东西。。。</h1></li>
 </ul>
 <p>$ ls romfs.bin<br>romfs.bin</p>
@@ -466,7 +464,7 @@ Creating 1 MTD partitions on &quot;ROM&quot;:
                 <div class="image-caption">砍为两半</div>
             </figure></p>
 <p>在arch/arm/kernel/head-common.S:__mmap_switched函数里面屏蔽掉data段初始化：</p>
-<pre><code class="c">        /*             
+<pre><code class="lang-c">        /*             
          * Copy .data segment and clear BSS    
          * For stm32f1 device, it shuold be done in uboot beforehand,                          
          * because eNVM is too small to hold them...                                           
@@ -679,8 +677,6 @@ Creating 1 MTD partitions on &quot;ROM&quot;:
 
         <p>
             
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
             <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
         </p>
     </div>
@@ -776,6 +772,27 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
 
 
 
@@ -785,5 +802,20 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 </body>
 </html>

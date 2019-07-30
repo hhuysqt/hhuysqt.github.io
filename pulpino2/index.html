@@ -38,8 +38,6 @@
 <meta name="twitter:description" content="应用程序需要内核提供各种服务才能运行，服务通过库以及相应的ABI（Application Binary Interface，应用程序二进制接口）来提供，比方说C库等。nuttx的应用程序可以内置在内核中（built-in），也可以与内核分开（separate），即运行外部可执行文件。目前它支持两种可执行文件：  ELF，就是Linux下标准的ELF可执行文件； NXFLAT，它是简化版的XFLAT">
 <meta name="twitter:image" content="https://hhuysqt.github.io/pulpino2/relasymbols.jpeg">
     
-        <link rel="alternate" type="application/atom+xml" title="hhuysqt" href="/atom.xml">
-    
     <link rel="shortcut icon" href="/img/m.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
@@ -338,7 +336,7 @@ ELF 头：
 <p>Linux的<code>xxx-linux-gcc</code>工具链可以直接生成对应平台下的ELF文件；UCLinux的工具链<code>xxx-uclinuxeabi-gcc</code>可以直接生成可在UCLinux下运行的flat文件，并附带一个后缀为.gdb的ELF文件用于调试；这些ELF文件都是可执行类型的。</p>
 <p>但是nuttx的应用程序是可重定位类型的，就是<code>.o</code>级别的，因此其实并不需要<code>xxx-nuttx-gcc</code>，直接用<code>xxx-none-gcc</code>、<code>xxx-unknown-gcc</code>就可以了。另外nuttx的buildroot制作的<code>xxx-nuttx-gcc</code>其实跟Linux、UCLinux的并不是一回事，也不能不加参数一步到位生成可执行的ELF。这时我们应该显示地<strong>先编译再链接</strong>，链接时候需要加参数<code>-r</code>以告诉ld要生成relocatable的ELF。</p>
 <p>作为例子，假设有这样一个c应用程序：</p>
-<pre><code class="c">// hello.c
+<pre><code class="lang-c">// hello.c
 #include &lt;stdio.h&gt;
 int main(void)
 {
@@ -359,7 +357,7 @@ int main(void)
 </code></pre><p>第二次链接之后，<code>printf</code>被resolved成一个absolute的值<code>0x23015bc2</code>。</p>
 <pre><code> 8: 23015bc2     0 NOTYPE  GLOBAL DEFAULT  ABS printf
 </code></pre><h4 id="内核有符号表：根据静态符号表链入内核"><a href="#内核有符号表：根据静态符号表链入内核" class="headerlink" title="内核有符号表：根据静态符号表链入内核"></a>内核有符号表：根据静态符号表链入内核</h4><p>这时就允许<code>printf</code>是UND符号了，因为有外部符号表。但是这个符号表需要写死在内核里。如果只需要printf的话可以这样写一个数组：</p>
-<pre><code class="c">#include &lt;stdio.h&gt;
+<pre><code class="lang-c">#include &lt;stdio.h&gt;
 #include &lt;nuttx/binfmt/symtab.h&gt;
 
 const struct symtab_s g_symtab[] =
@@ -581,8 +579,6 @@ $ ./mksymtab tmp.csv tmp.c
 
         <p>
             
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
-            
             <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
         </p>
     </div>
@@ -678,6 +674,27 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
 
 
 
@@ -687,5 +704,20 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
 
 
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 </body>
 </html>
