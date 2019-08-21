@@ -161,6 +161,60 @@
     <ul class="post-list">
     
         <li class="post-list-item fade">
+            <article id="post-cross-compiler"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2018-02-23 23:03:53" datetime="2018-02-23T15:03:53.000Z"  itemprop="datePublished">2018-02-23</time>
+
+        
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/cross-compiler/">制作arm-uclinuxeabi的交叉编译工具链</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        交叉编译的常识制作交叉工具链，会涉及到三个架构的机器：
+
+build，哪个机器制作的这个编译器
+host，哪个机器将运行编译器
+target，编译器生成代码将会跑在哪个机器上
+
+如果build == host == target，就叫native编译器。这是最正常的情况。如果build == host != target，就叫cross编译器。这就是常规意义下的交叉编译器。如果build != host != target，就叫canadian编译器。据说在社区讨论这种情况的编译器时候，加拿大国会有三个党，于是就这样开玩笑了。。。这种情况一般用在Compile farm里面。编译农场或许就是一堆树莓派，它用来编译不同架构的软件包，制作这个编译器的或许就是某台高性能的x86机器。
+其他情况也有不同的叫法，参考这个回答
+对于Cortex M，有哪些工具链可选？
+optimize-uclinux这篇报告第34页简述了一些可用的编译器。
+Bootlin（以前叫Free electrons）公司收录了一堆常见CPU架构的不同版本的gcc工具链。不过armv7-m的工具链貌似不行。
+社区推荐的arm2010-q1工具链有很强的可用性。
+arm官方维护的亲儿子gcc-arm-none-eabi可用用来开发裸机程序，基本没bug，适应的CPU又多。
+包管理可用安装gcc-arm-none-eabi工具链，不过版本略旧与arm官网的gcc。
+自己动手做arm-none-eabi或者arm-uclinuxeabi工具链。
+
+    
+
+        <a href="/cross-compiler/" class="post-more waves-effect waves-button">
+            阅读全文…
+        </a>
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
             <article id="post-uclinux-on-stm32f103"
   class="article-card article-type-post" itemprop="blogPost">
 

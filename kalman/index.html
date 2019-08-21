@@ -28,7 +28,7 @@
 <meta property="og:site_name" content="hhuysqt">
 <meta property="og:description" content="卡尔曼滤波器有无数种推导方法：你可以将因果IIR维纳滤波器写成递推的形式，那么就是卡尔曼滤波器；你可以将估计值测量值等等都假设为高斯分布，通过最大后验估计(maximun a posterior)得到批量最小二乘法(batch least-squares)：$(H^TW^{-1}H)x = H^TW^{-1}z$，利用$H^TW^{-1}H$的稀疏性，通过Cholesky分解并发现其中的递推规则，">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-07-30T14:37:48.434Z">
+<meta property="og:updated_time" content="2019-08-21T14:43:16.200Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="卡尔曼滤波器">
 <meta name="twitter:description" content="卡尔曼滤波器有无数种推导方法：你可以将因果IIR维纳滤波器写成递推的形式，那么就是卡尔曼滤波器；你可以将估计值测量值等等都假设为高斯分布，通过最大后验估计(maximun a posterior)得到批量最小二乘法(batch least-squares)：$(H^TW^{-1}H)x = H^TW^{-1}z$，利用$H^TW^{-1}H$的稀疏性，通过Cholesky分解并发现其中的递推规则，">
@@ -253,58 +253,41 @@ p(x,y) &= p(x)p(y|x) \\
 &= p(y)p(x|y)
 \end{aligned}</script><p>调整一下就是常见的贝叶斯公式：</p>
 <script type="math/tex; mode=display">
-p(y|x) = \frac{p(x|y)p(y)}{p(x)}</script><p>赋予它一些含义：$p(y|x)$称为<code>后验</code>概率，$p(x|y)$称为<code>似然</code>，$p(y)$称为<code>先验</code>概率。</p>
+p(y|x) = \frac{p(x|y)p(y)}{p(x)}</script><p>赋予它一些含义：$p(y|x)$称为<strong>后验(posterior)</strong>，$p(x|y)$称为<strong>似然(likelihood)</strong>，$p(y)$称为<strong>先验(prior)</strong>。</p>
 <h2 id="展开联合高斯概率密度函数"><a href="#展开联合高斯概率密度函数" class="headerlink" title="展开联合高斯概率密度函数"></a>展开联合高斯概率密度函数</h2><p>已知</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-p(\bf x) &= \mathcal N(\bf\mu_x, \bf\Sigma_{xx}) \\
-p(\bf y) &= \mathcal N(\bf\mu_y, \bf\Sigma_{yy}) \\
-p(\bf x, \bf y) &= \mathcal N \left(\begin{bmatrix} \bf\mu_x \\ \bf\mu_y \end{bmatrix}, \begin{bmatrix} \bf\Sigma_{xx}&\bf\Sigma_{xy}\\\bf\Sigma_{yx}&\bf\Sigma_{yy} \end{bmatrix} \right)
-\end{aligned}</script><p>其中$\bf\Sigma_{xy} = \bf\Sigma_{yx}^T$。由贝叶斯公式求后验概率：</p>
+\bf p(x) &= \bf \mathcal N(\mu_x, \Sigma_{xx}) \\
+\bf p(y) &= \bf \mathcal N(\mu_y, \Sigma_{yy}) \\
+\bf p(x, y) &= \mathcal N \left(\begin{bmatrix} \mu_x \\ \mu_y \end{bmatrix}, \begin{bmatrix} \bf\Sigma_{xx}&\bf\Sigma_{xy}\\\bf\Sigma_{yx}&\bf\Sigma_{yy} \end{bmatrix} \right) \\
+ &= \bf \eta \space exp \left(-\frac{1}{2} \begin{bmatrix} \bf x-\mu_x \\ \bf y-\mu_y \end{bmatrix}^T
+ \begin{bmatrix} \bf\Sigma_{xx}&\bf\Sigma_{xy}\\\bf\Sigma_{yx}&\bf\Sigma_{yy} \end{bmatrix}^{-1}
+ \begin{bmatrix} \bf x-\mu_x \\ \bf y-\mu_y \end{bmatrix} \right)
+\end{aligned}</script><p>其中$\bf\Sigma_{xy} = \bf\Sigma_{yx}^T$。我们展开联合分布$\bf p(x,y)$，只考虑指数部分的二次型：</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-&p(\bf y|\bf x) \\
-&= \frac{p(\bf x,\bf y)}{p(\bf x)} \\
-&= \alpha \frac{exp\left(-\frac{1}{2}
-\begin{bmatrix} \bf x - \bf\mu_x \\ \bf y - \bf\mu_y \end{bmatrix}^T 
-\begin{bmatrix} \bf\Sigma_{xx}&\bf\Sigma_{xy}\\\bf\Sigma_{yx}&\bf\Sigma_{yy} \end{bmatrix}^{-1}
-\begin{bmatrix} \bf x - \bf\mu_x \\ \bf y - \bf\mu_y \end{bmatrix}
-\right)}
-{exp\left(-\frac{1}{2}
-\begin{bmatrix}\bf x - \bf\mu_x \end{bmatrix}^T\bf\Sigma_{xx}^{-1}\begin{bmatrix}\bf x - \bf\mu_x \end{bmatrix}
-\right)} \\
-
-&= \alpha \frac{exp\left(-\frac{1}{2}
-\begin{bmatrix} \bf x - \bf\mu_x \\ \bf y - \bf\mu_y \end{bmatrix}^T 
-\begin{bmatrix} I&-\bf\Sigma_{xx}^{-1}\bf\Sigma_{xy} \\ & I \end{bmatrix}
-\begin{bmatrix} \bf\Sigma_{xx}^{-1}& \\ &(\bf\Sigma_{yy} - \bf\Sigma_{yx}\bf\Sigma_{xx}^{-1}\bf\Sigma_{xy})^{-1} \end{bmatrix}
-\begin{bmatrix} I& \\ -\bf\Sigma_{yx}\bf\Sigma_{xx}^{-1} & I \end{bmatrix}
-\begin{bmatrix} \bf x - \bf\mu_x \\ \bf y - \bf\mu_y \end{bmatrix}
-\right)}
-{exp\left(-\frac{1}{2}
-\begin{bmatrix}\bf x - \bf\mu_x \end{bmatrix}^T\bf\Sigma_{xx}^{-1}\begin{bmatrix}\bf x - \bf\mu_x \end{bmatrix}
-
-\right)} \\
-
-\end{aligned} \\</script><p>上面推导，将联合概率密度函数的协方差矩阵的<strong>逆</strong>，利用舒尔补展开；$\alpha$是归一化参数，不必要展开来写了。。下面将分子的几个矩阵一个个乘起来，得到两项二次型的和：</p>
+&\overbrace{
+ \begin{bmatrix} \bf x-\mu_x \\ \bf y-\mu_y \end{bmatrix}^T
+ \underbrace{\begin{bmatrix} \bf\Sigma_{xx}&\bf\Sigma_{xy}\\\bf\Sigma_{yx}&\bf\Sigma_{yy} \end{bmatrix}^{-1}}_\text{使用求逆的舒尔补展开}
+ \begin{bmatrix} \bf x-\mu_x \\ \bf y-\mu_y \end{bmatrix}
+ }^{\bf p(x,y)\text{联合概率密度}} \\
+=&\underbrace{ \begin{bmatrix} \bf x-\mu_x \\ \bf y-\mu_y \end{bmatrix}^T
+ \begin{bmatrix} I & \\ \bf-\Sigma_{yy}^{-1}\Sigma_{yx} & I \end{bmatrix}
+ }
+ \begin{bmatrix} \bf(\Sigma_{xx} - \Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx})^{-1} & \\ & \bf\Sigma_{yy}^{-1} \end{bmatrix}
+ \underbrace{\begin{bmatrix} I & \bf-\Sigma_{xy}\Sigma_{yy}^{-1} \\ & I \end{bmatrix}
+ \begin{bmatrix} \bf x-\mu_x \\ \bf y-\mu_y \end{bmatrix}} \\
+=& \begin{bmatrix} \bf x-\mu_x-\Sigma_{xy}\Sigma_{yy}^{-1}(y-\mu_y) \\ \bf (y-\mu_y) \end{bmatrix} ^T
+ \underbrace {\begin{bmatrix} \bf(\Sigma_{xx} - \Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx})^{-1} & \\ & \bf\Sigma_{yy}^{-1} \end{bmatrix}
+ }_\text{对角块矩阵，二次型展开很方便}
+  \begin{bmatrix} \bf x-\mu_x-\Sigma_{xy}\Sigma_{yy}^{-1}(y-\mu_y) \\ \bf (y-\mu_y) \end{bmatrix} \\
+=& \underbrace{ \bf (x-\mu_x-\Sigma_{xy}\Sigma_{yy}^{-1}(y-\mu_y))^T(\Sigma_{xx} - \Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx})^{-1}(x-\mu_x-\Sigma_{xy}\Sigma_{yy}^{-1}(y-\mu_y)) }_{\bf p(x|y)\text{部分}} \\
+ &+ \underbrace{ \bf (y-\mu_y)^T\Sigma_{yy}^{-1}(y-\mu_y) }_{\bf p(y)\text{部分}}
+\end{aligned}</script><p>从而得到后验概率$\bf p(x|y)$，其中协方差矩阵是一个关于$\bf\Sigma_{xx}$的舒尔补：</p>
 <script type="math/tex; mode=display">
-\begin{aligned}
-\begin{bmatrix} \bf x - \bf\mu_x \\ \bf y - \bf\mu_y \end{bmatrix}^T 
-\begin{bmatrix} I&-\bf\Sigma_{xx}^{-1}\bf\Sigma_{xy} \\ & I \end{bmatrix}
-\begin{bmatrix} \bf\Sigma_{xx}^{-1}& \\ &(\bf\Sigma_{yy} - \bf\Sigma_{yx}\bf\Sigma_{xx}^{-1}\bf\Sigma_{xy})^{-1} \end{bmatrix}
-\begin{bmatrix} I& \\ -\bf\Sigma_{yx}\bf\Sigma_{xx}^{-1} & I \end{bmatrix}
-\begin{bmatrix} \bf x - \bf\mu_x \\ \bf y - \bf\mu_y \end{bmatrix} \\
-=
-(\bf y - (\bf\mu_y + \bf\Sigma_{yx}\bf\Sigma_{xx}^{-1}(\bf x - \bf\mu_x)))^T
-(\bf\Sigma_{yy} - \bf\Sigma_{yx}\bf\Sigma_{xx}^{-1}\bf\Sigma_{xy})^{-1}
-(\bf y - (\bf\mu_y + \bf\Sigma_{yx}\bf\Sigma_{xx}^{-1}(\bf x - \bf\mu_x))) \\
-+
-\begin{bmatrix}\bf x - \bf\mu_x \end{bmatrix}^T\bf\Sigma_{xx}^{-1}\begin{bmatrix}\bf x - \bf\mu_x \end{bmatrix}
-\end{aligned}</script><p>其中第二项跟分母一致，可以约去，就剩下一个二次型了。于是后验概率还是一个高斯分布，其中协方差矩阵是一个关于$\bf\Sigma_{yy}$的舒尔补：</p>
+\bf p(x | y) = \mathcal N\left( \mu_x + \Sigma_{xy}\Sigma_{yy}^{-1}( y - \mu_y), \quad \Sigma_{xx} - \Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx} \right)</script><p>同理，用另一种方式展开舒尔补，我们可以得到x的后验概率：</p>
 <script type="math/tex; mode=display">
-p(\bf y | \bf x) = \mathcal N\left( \bf\mu_y + \bf\Sigma_{yx}\bf\Sigma_{xx}^{-1}(\bf x - \bf\mu_x), \bf\Sigma_{yy} - \bf\Sigma_{yx}\bf\Sigma_{xx}^{-1}\bf\Sigma_{xy} \right)</script><p>同理，用另一种方式展开舒尔补，我们可以得到x的后验概率：</p>
-<script type="math/tex; mode=display">
-p(\bf x | \bf y) = \mathcal N\left( \bf\mu_x + \bf\Sigma_{xy}\bf\Sigma_{yy}^{-1}(\bf y - \bf\mu_y), \bf\Sigma_{xx} - \bf\Sigma_{xy}\bf\Sigma_{yy}^{-1}\bf\Sigma_{yx} \right)</script><h2 id="推导经典的5个卡尔曼滤波器公式"><a href="#推导经典的5个卡尔曼滤波器公式" class="headerlink" title="推导经典的5个卡尔曼滤波器公式"></a>推导经典的5个卡尔曼滤波器公式</h2><p>将系统建模为以下两个<strong>线性</strong>方程：<code>运动方程</code>和<code>观测方程</code>：</p>
+\bf p(y | x) = \mathcal N\left( \mu_y + \Sigma_{yx}\Sigma_{xx}^{-1}( x - \mu_x), \quad \Sigma_{yy} - \Sigma_{yx}\Sigma_{xx}^{-1}\Sigma_{xy} \right)</script><h2 id="推导经典的5个卡尔曼滤波器公式"><a href="#推导经典的5个卡尔曼滤波器公式" class="headerlink" title="推导经典的5个卡尔曼滤波器公式"></a>推导经典的5个卡尔曼滤波器公式</h2><p>将系统建模为以下两个<strong>线性</strong>方程：<code>运动方程</code>和<code>观测方程</code>：</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
 \begin{cases}
@@ -318,34 +301,36 @@ p(\bf x | \bf y) = \mathcal N\left( \bf\mu_x + \bf\Sigma_{xy}\bf\Sigma_{yy}^{-1}
 \begin{aligned}
 \bf\check{x}_k &= E[\bf x_k] = E[\bf A_k\bf x_{k-1} + \bf w_k + \bf u_k] \\
 &= \bf A_kE[\bf x_{k-1}] + \bf w_k + E[\bf u_k] \\
-&= \bf A_k\bf\check{x}_{k-1} + \bf w_k \\
+&= \bf A_k\bf\hat{x}_{k-1} + \underbrace {\bf w_k}_\text{输入} \\ \\
 
-\bf\check{P}_k &= E[(\bf x_k - E[\bf x_k])(\bf x_k - E[\bf x_k])^T] \\
-&= E[(\bf A_k\bf x_{k-1} + \bf w_k + \bf u_k - \bf A_k\bf\check{x}_{k-1} - \bf w_k) \\
-&*(\bf A_k\bf x_{k-1} + \bf w_k + \bf u_k - \bf A_k\bf\check{x}_{k-1} - \bf w_k)^T] \\
-&= \bf A_k E[(\bf x_{k-1} - \bf\check{x}_{k-1})(\bf x_{k-1} - \bf\check{x}_{k-1})^T]\bf A_k^T + E[\bf u_k\bf u_k^T] \\
-&= \bf A_k \bf\check{P}_{k-1} \bf A_k^T + \bf Q_k
+\bf\check{P}_k &= \bf E[(x_k - E[x_k])(x_k - E[x_k])^T] \\
+&= \bf E[(A_k x_{k-1} + w_k + u_k - A_k\check{x}_{k-1} - w_k) \\
+&\quad \bf *(A_kx_{k-1} + w_k + u_k - A_k\check{x}_{k-1} - w_k)^T] \\
+&= \bf A_k E[(x_{k-1} - \check{x}_{k-1})(x_{k-1} - \check{x}_{k-1})^T]A_k^T + E[u_k u_k^T] \\
+&= \bf A_k \hat{P}_{k-1} A_k^T + Q_k
 
 \end{aligned}</script><p>对于y：</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-E[\bf y_k] &= C_k\bf\check{x}_k = C_k(\bf A_k\bf\check{x}_{k-1} + \bf w_k) \\
+\mu_y &= \bf E[\bf y_k] \\
+ &= \bf C_k\check{x}_k \\
+ &= \bf C_k(\bf A_k\bf\check{x}_{k-1} + \bf w_k) \\ \\
 
-\bf\Sigma_{yy} &= E[(\bf y_k - E[\bf y_k])(\bf y_k - E[\bf y_k])^T] \\
-&= E[(\bf C_k\bf x_{k} + \bf v_k - C_k\bf\check{x}_k)(\bf C_k\bf x_{k} + \bf v_k - C_k\bf\check{x}_k)^T] \\
-&= \bf C_k E[(\bf x_{k} - \bf\check{x}_{k})(\bf x_{k} - \bf\check{x}_{k})^T]C_k^T + E[\bf v_k\bf v_k^T] \\
+\bf\Sigma_{yy} &= \bf E[(y_k - E[y_k])(y_k - E[y_k])^T] \\
+&= \bf E[(C_k x_{k} + v_k - C_k\check{x}_k)(C_k x_{k} + v_k - C_k\check{x}_k)^T] \\
+&= \bf C_k E[(x_{k} - \check{x}_{k})(x_{k} - \check{x}_{k})^T]C_k^T + E[v_k v_k^T] \\
 &= \bf C_k\check{P}_kC_k^T + R_k
-\end{aligned}</script><p>要得到联合高斯分布还需要xy的协方差矩阵：</p>
+\end{aligned}</script><p>要得到联合高斯分布还需要$\bf x,y$的协方差矩阵：</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-\bf\Sigma_{xy} &= E[(\bf x_k - E[\bf x_k])(\bf y_k - E[\bf y_k])^T] \\
-&= E[(\bf A_k(\bf x_{k-1} - \bf\check{x}_{k-1}) + \bf u_k)(C_k(\bf A_k(\bf x_{k-1} - \bf\check{x}_{k-1}) + \bf u_k) + \bf v_k)^T] \\
-&= (\bf A_k E[(\bf x_{k-1} - \bf\check{x}_{k-1})(\bf x_{k-1} - \bf\check{x}_{k-1})^T]\bf A_k^T + E[\bf u_k\bf u_k^T]) C_k^T + 0 + 0 + 0 + 0 + 0 \\
+\bf\Sigma_{xy} &= \bf E[(x_k - E[x_k])(y_k - E[y_k])^T] \\
+&= \bf E[(A_k(x_{k-1} - \check{x}_{k-1}) + u_k)(C_k(A_k(x_{k-1} - \check{x}_{k-1}) + u_k) + v_k)^T] \\
+&= \bf \left( A_k E[(x_{k-1} - \check{x}_{k-1})(x_{k-1} - \check{x}_{k-1})^T]A_k^T + E[u_k u_k^T] \right) C_k^T + 0 + 0 + 0 + 0 + 0 \\
 &= \bf\check{P}_k C_k^T
-\end{aligned}</script><p>然后我们直接写出联合高斯分布$p(\bf x_k,\bf y_k | \bf x_{k-1})$：</p>
+\end{aligned}</script><p>然后我们直接写出联合高斯分布$\bf p( x_k, y_k | x_{k-1})$：</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-p(\bf x_k,\bf y_k | \bf x_{k-1}) &= \mathcal N\left(\begin{bmatrix} \bf\mu_x \\ \bf\mu_y \end{bmatrix}, \begin{bmatrix} \bf\Sigma_{xx}&\bf\Sigma_{xy}\\\bf\Sigma_{yx}&\bf\Sigma_{yy} \end{bmatrix} \right) \\
+\bf p(x_k,y_k | x_{k-1}) &= \mathcal N\left(\begin{bmatrix} \mu_x \\ \mu_y \end{bmatrix}, \begin{bmatrix} \bf\Sigma_{xx}&\bf\Sigma_{xy}\\\bf\Sigma_{yx}&\bf\Sigma_{yy} \end{bmatrix} \right) \\
 &= \mathcal N\left(\begin{bmatrix} \bf\check{x}_k \\ \bf C_k\bf\check{x}_k \end{bmatrix}, 
 \begin{bmatrix} 
 \bf\check{P}_k & \bf\check{P}_k C_k^T \\ 
@@ -355,31 +340,37 @@ p(\bf x_k,\bf y_k | \bf x_{k-1}) &= \mathcal N\left(\begin{bmatrix} \bf\mu_x \\ 
 <script type="math/tex; mode=display">
 \begin{aligned}
 &p(\bf x_k | \bf x_{k-1},\bf y_k) \\
-&= \mathcal N\left( \bf\mu_x + \bf\Sigma_{xy}\bf\Sigma_{yy}^{-1}(\bf y - \bf\mu_y), \bf\Sigma_{xx} - \bf\Sigma_{xy}\bf\Sigma_{yy}^{-1}\bf\Sigma_{yx} \right) \\
-&= \mathcal N\left( \bf\check{x}_k + \bf\check{P}_k C_k^T(C_k\check{P}_kC_k^T + R_k)^{-1}(\bf y_k - \bf C_k\bf\check{x}_k), (I - \bf\check{P}_k C_k^T(\bf C_k\check{P}_kC_k^T + R_k)^{-1}\bf C_k)\check{P}_k \right)
+&= \bf \mathcal N\left( \mu_x + \Sigma_{xy}\Sigma_{yy}^{-1}(y - \mu_y), \quad \Sigma_{xx} - \Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx} \right) \\
+&= \bf \mathcal N\left( \overbrace{ \check{x}_k + \underline{\check{P}_k C_k^T(C_k\check{P}_kC_k^T + R_k)^{-1}}(y_k - C_k\check{x}_k)}^{\text{后验均值}\hat x}, \quad 
+  \overbrace{(I - \underline{\check{P}_k C_k^T(\bf C_k\check{P}_kC_k^T + R_k)^{-1}} C_k)\check{P}_k}^{\text{后验方差}\hat P} \right)
 
-\end{aligned}</script><p>发现有一些项重复性很高，总结为<code>卡尔曼增益</code>。注意它的形式跟<a href="#舒尔补">第三条SMW等式</a>一样：</p>
+\end{aligned}</script><p>发现有一些项重复性很高，总结为<code>卡尔曼增益</code>。（注意它的形式跟<a href="#舒尔补">第三条SMW等式</a>一样，意味着它也可以写成另外的形式）</p>
 <script type="math/tex; mode=display">
 \bf K_k = \bf\check{P}_k C_k^T(C_k\check{P}_kC_k^T + R_k)^{-1}</script><p>于是后验的均值和方差为:</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-\bf\hat{x}_k &= \bf\check{x}_k + \bf K_k(\bf y_k - \bf C_k\bf\check{x}_k) \\
-\bf\hat{P}_k &= (I - \bf K_kC_k)\check{P}_k
+\bf\hat{x}_k &= \bf \check{x}_k + K_k(y_k - C_k\check{x}_k) \\
+\bf\hat{P}_k &= \bf (I - K_kC_k)\check{P}_k
 \end{aligned}</script><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><script type="math/tex; mode=display">
 \begin{aligned}
-预测：&
+系统建模：&
 \begin{cases}
-\bf\check{x}_k &= \bf A_k\bf\check{x}_{k-1} + \bf w_k \\
-\bf\check{P}_k &= \bf A_k \bf\check{P}_{k-1} \bf A_k^T + \bf Q_k
+  \bf x_k = A_k x_{k-1} &+ \bf w_k + &\bf u_k \\
+  \bf y_k = C_k x_{k} &+ &\bf v_k
+\end{cases} \\\\
+预测(先验)：&
+\begin{cases}
+  \bf\check{x}_k &= \bf A_k\hat{x}_{k-1} + w_k \\
+  \bf\check{P}_k &= \bf A_k\hat{P}_{k-1} A_k^T + Q_k
 \end{cases} \\
 卡尔曼增益：&
 \begin{cases}
-\bf K_k &= \bf\check{P}_k C_k^T(C_k\check{P}_kC_k^T + R_k)^{-1}
+  \bf K_k &= \bf\check{P}_k C_k^T(C_k\check{P}_kC_k^T + R_k)^{-1}
 \end{cases} \\
-更新：&
+更新(后验)：&
 \begin{cases}
-\bf\hat{x}_k &= \bf\check{x}_k + \bf K_k(\bf y_k - \bf C_k\bf\check{x}_k) \\
-\bf\hat{P}_k &= (I - \bf K_kC_k)\check{P}_k
+  \bf\hat{x}_k &= \bf \check{x}_k + K_k(y_k - C_k\check{x}_k) \\
+  \bf\hat{P}_k &= \bf (I - K_kC_k)\check{P}_k
 \end{cases}
 \end{aligned}</script>
         </div>
@@ -389,7 +380,7 @@ p(\bf x_k,\bf y_k | \bf x_{k-1}) &= \mathcal N\left(\begin{bmatrix} \bf\mu_x \\ 
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2019-07-30T14:37:48.434Z" itemprop="dateUpdated">2019-07-30 22:37:48</time>
+    最后更新时间：<time datetime="2019-08-21T14:43:16.200Z" itemprop="dateUpdated">2019-08-21 22:43:16</time>
 </span><br>
 
 
@@ -468,7 +459,14 @@ p(\bf x_k,\bf y_k | \bf x_{k-1}) &= \mathcal N\left(\begin{bmatrix} \bf\mu_x \\ 
     </div>
 
     
-<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/marginalization/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">最小二乘法，非线性优化和边缘化</h4>
+      </a>
+    </div>
   
 
   

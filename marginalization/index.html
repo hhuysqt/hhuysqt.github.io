@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>最小二乘法，非线性优化和边缘化 | hhuysqt</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="">
+    <meta name="description" content="这篇博客对以下问题进行粗略的讨论：  最小二乘法和高斯分布的联系 高斯牛顿法与联合高斯分布的信息矩阵、信息向量的关系 舒尔补进行边缘化，边缘化产生了先验，为啥舒尔补这么随处可见 卡尔曼滤波（KF）、扩展KF（EKF）、迭代EKF（IEKF）、滑动窗口滤波（SWF）、光束平差法（bundle adjustment），它们的关系 优化问题中的first estimate Jacobian（FEJ）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="最小二乘法，非线性优化和边缘化">
+<meta property="og:url" content="https://hhuysqt.github.io/marginalization/index.html">
+<meta property="og:site_name" content="hhuysqt">
+<meta property="og:description" content="这篇博客对以下问题进行粗略的讨论：  最小二乘法和高斯分布的联系 高斯牛顿法与联合高斯分布的信息矩阵、信息向量的关系 舒尔补进行边缘化，边缘化产生了先验，为啥舒尔补这么随处可见 卡尔曼滤波（KF）、扩展KF（EKF）、迭代EKF（IEKF）、滑动窗口滤波（SWF）、光束平差法（bundle adjustment），它们的关系 优化问题中的first estimate Jacobian（FEJ）">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://hhuysqt.github.io/marginalization/1.jpeg">
+<meta property="og:updated_time" content="2019-08-21T15:11:59.556Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="最小二乘法，非线性优化和边缘化">
+<meta name="twitter:description" content="这篇博客对以下问题进行粗略的讨论：  最小二乘法和高斯分布的联系 高斯牛顿法与联合高斯分布的信息矩阵、信息向量的关系 舒尔补进行边缘化，边缘化产生了先验，为啥舒尔补这么随处可见 卡尔曼滤波（KF）、扩展KF（EKF）、迭代EKF（IEKF）、滑动窗口滤波（SWF）、光束平差法（bundle adjustment），它们的关系 优化问题中的first estimate Jacobian（FEJ）">
+<meta name="twitter:image" content="https://hhuysqt.github.io/marginalization/1.jpeg">
+    
+    <link rel="shortcut icon" href="/img/m.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+  <!-- highlight.js代码高亮主题 css 引入-->
+  <link rel="stylesheet" href="/plugins/highlight/styles/github.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+<!--
+  <script src="/plugins/highlight/highlight.pack.js"></script>
+-->
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- highlight.js代码高亮主题 css 引入-->
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">hhuysqt</h5>
+          <a href="mailto:1020988872@qq.com" title="1020988872@qq.com" class="mail">1020988872@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                所有文章
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                索引
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/hhuysqt" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.zhihu.com/people/hhuysqt/activities" target="_blank" >
+                <i class="icon icon-lg icon-search-plus"></i>
+                知乎
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-male"></i>
+                个人&amp;友链
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">最小二乘法，非线性优化和边缘化</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">最小二乘法，非线性优化和边缘化</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-08-18T05:11:17.000Z" itemprop="datePublished" class="page-time">
+  2019-08-18
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>目录</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#乘法原理和贝叶斯公式"><span class="post-toc-number">1.</span> <span class="post-toc-text">乘法原理和贝叶斯公式</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#最小二乘法"><span class="post-toc-number">2.</span> <span class="post-toc-text">最小二乘法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#非线性优化"><span class="post-toc-number">3.</span> <span class="post-toc-text">非线性优化</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#高斯分布的信息矩阵"><span class="post-toc-number">4.</span> <span class="post-toc-text">高斯分布的信息矩阵</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#舒尔补进行边缘化"><span class="post-toc-number">5.</span> <span class="post-toc-text">舒尔补进行边缘化</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#舒尔补与矩阵求逆引理"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">舒尔补与矩阵求逆引理</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#联合高斯分布（正则参数）的边缘化"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">联合高斯分布（正则参数）的边缘化</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#高斯牛顿法的边缘化"><span class="post-toc-number">5.3.</span> <span class="post-toc-text">高斯牛顿法的边缘化</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#不同窗口大小的最大后验估计法"><span class="post-toc-number">6.</span> <span class="post-toc-text">不同窗口大小的最大后验估计法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#滑动窗口边缘化的弊端与FEJ"><span class="post-toc-number">7.</span> <span class="post-toc-text">滑动窗口边缘化的弊端与FEJ</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总结"><span class="post-toc-number">8.</span> <span class="post-toc-text">总结</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-marginalization"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">最小二乘法，非线性优化和边缘化</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-08-18 13:11:17" datetime="2019-08-18T05:11:17.000Z"  itemprop="datePublished">2019-08-18</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>这篇博客对以下问题进行粗略的讨论：</p>
+<ul>
+<li>最小二乘法和高斯分布的联系</li>
+<li>高斯牛顿法与联合高斯分布的信息矩阵、信息向量的关系</li>
+<li>舒尔补进行边缘化，边缘化产生了先验，为啥舒尔补这么随处可见</li>
+<li>卡尔曼滤波（KF）、扩展KF（EKF）、迭代EKF（IEKF）、滑动窗口滤波（SWF）、光束平差法（bundle adjustment），它们的关系</li>
+<li>优化问题中的first estimate Jacobian（FEJ） </li>
+</ul>
+<h2 id="乘法原理和贝叶斯公式"><a href="#乘法原理和贝叶斯公式" class="headerlink" title="乘法原理和贝叶斯公式"></a>乘法原理和贝叶斯公式</h2><p>一个联合概率密度函数可以写成连乘的形式；其中$\bf {x_i}$也可以是个向量：</p>
+<script type="math/tex; mode=display">
+p(x_1,x_2,\dots) = p(x_1)p(x_2|x_1)p(x_3|x_1,x_2)\dots</script><p>如果只有两个（两组）随机变量，联合概率密度函数可以写成两种形式：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+p(x,y) &= p(x)p(y|x) \\
+&= p(y)p(x|y)
+\end{aligned}</script><p>调整一下就是常见的贝叶斯公式：</p>
+<script type="math/tex; mode=display">
+p(x|y) = \frac{p(y|x)p(x)}{p(y)}</script><p>赋予它一些含义：$p(x|y)\propto p(y|x)p(x)=p(x,y)$称为<strong>后验(posterior)</strong>，$p(y|x)$称为<strong>似然(likelihood)</strong>，$p(x)$称为<strong>先验(prior)</strong>。</p>
+<p>将系统建模为以下两个方程：<code>运动方程</code>和<code>观测方程</code>：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\begin{cases}
+\bf x_k &= \bf f(x_{k-1}, \overbrace{w_k}^\text{输入}, \overbrace{u_k}^\text{噪声}) \\
+\bf y_k &= \bf g(x_{k}, \underbrace{v_k}_\text{噪声})
+\end{cases}
+\end{aligned}</script><p>我们要估计的状态量是$\bf x$，而传感器对$\bf x$测量产生了$\bf y$。如果知道了$\bf x_{k-1}$的（后验）分布$\bf p(\hat x_{k-1}) = p(x_{k-1}|y_{k-1})$，那么我们可以通过<strong>运动方程</strong>估计$\bf x_{k}$的（先验）分布$\bf p(\check x_{k})$；也就是说运动方程将$\bf x_{k-1}$的后验传递到$\bf x_{k}$产生了先验。在$\bf x_{k}$处通过<strong>观测方程</strong>观测到$\bf y_k$，描述的是$\bf p(y_k|x_k)$这样一个似然概率。通过先验和似然，求得这时刻的后验概率$\bf p(\hat x_{k}) = p(x_{k}|y_{k})$。</p>
+<p>如果我们没有运动方程而只有观测方程，也就是bundle adjustment中常见的情况，那么可以说先验是一个方差无穷大的分布，那么最大化后验概率等价于最大似然；如果通过一些方法估计了先验，比如说滑动窗口过去时刻的状态估计可以对窗口内的估计值产生先验，或者说有了一个运动方程，那么最大化后验的话就是最大化似然和先验的乘积；如果连传感器测量值也是有先验的，那么就是全贝叶斯估计了。</p>
+<h2 id="最小二乘法"><a href="#最小二乘法" class="headerlink" title="最小二乘法"></a>最小二乘法</h2><p>首先重温一下<code>二次型</code>。有n个变量$\bf{x} = \begin{bmatrix} x_i \end{bmatrix}_n$，它们两两相乘并求和，每个乘积都有一个权重$a_{ij}$，可以表达为：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+sum &= \sum_{i=1}^{n} \sum_{j=1}^{n} a_{ij}x_ix_j \\
+&= \bf{x}^TA\bf{x}
+\end{aligned}</script><p>其中$\bf{A} = \begin{bmatrix} a_{ij} \end{bmatrix}_{n*n}$。考虑到乘法和加法具有交换律，即$x_ix_j = x_jx_i$，同项可以合并，则取$a_{ij} = a_{ji}$，使得$\bf{A}$是一个对称方阵。则一个二次型对应有且只有一个对称方阵，一个对称方阵也可对应一个二次型。</p>
+<p>二次型的和还是二次型，即$\bf{x}^TA\bf{x} + \bf{x}^TB\bf{x} = \bf{x}^T(A+B)\bf{x}$。</p>
+<p><code>联合高斯分布</code>的概率密度函数(PDF)如下：</p>
+<script type="math/tex; mode=display">
+\mathcal N(\bf\mu, \bf\Sigma) \sim p(\bf x) = \frac{1}{\sqrt{(2\pi)^Ndet(\bf\Sigma)}}exp\left(-\frac{1}{2}(\bf x - \bf\mu)^T\Sigma^{-1}(\bf x - \bf\mu)\right)</script><p>其中$\bf\mu = \begin{bmatrix} \mu_1&amp;…&amp;\mu_N \end{bmatrix}^T$ 为N个随机变量的均值，$\bf\Sigma = E\left[(x - \mu)(x - \mu)^T\right]$为N个随机变量的协方差矩阵。可以看出指数部分是一个二次型。</p>
+<p>我们仅考虑如何由<code>观测方程</code>估计状态值。假设受高斯噪声影响的传感器读出的测量值符合高斯分布，其协方差矩阵为$\bf{W}$，而且由<code>状态变量</code>$\bf{x}$到测量值$\bf{y}$的模型线性的。我们把$\bf y$的概率密度函数建模为$\bf x$的条件概率：</p>
+<script type="math/tex; mode=display">
+\begin {aligned}
+\bf{y} &= \bf{C}\bf{x} + \bf{w} \\
+\bf p(y|x) &\sim \mathcal N(\bf{C}\bf{x}, W) \\
+ &= \eta *\bf exp\Bigl(- \frac{1}{2} (y-Cx)^TW^{-1}(y-Cx)\Bigr)
+\end {aligned}</script><p>我们不能完全相信传感器读到的值$\bf{y}$，而要求$\bf{y}$分布的最大值$\bf \hat{y} = C\hat{x}$，才能得到状态值的最佳估计$\bf \hat{x}$。那么我们就要最大化$\mathcal N(\bf{C}\bf{x}, W)$，即最小化指数中的二次型：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\bf x &= \arg \min_x \Bigl((\underbrace{\bf y-Cx}_\text{误差函数e})^T\bf W^{-1}(y-Cx)\Bigr) \\
+ &= \arg \min_x (\bf \underbrace{e^TW^{-1}e}_\text{目标函数f})
+\end{aligned}</script><p>如果假设$\bf y$中每一项都是对$\bf x$的一次观测，或者说$n$维的$\bf x$经过了$m$次观测得到$m$维的$\bf y$，那么现在要从$m$维的$\bf y$恢复出$n$维的$\bf x$最有可能的值。我们令<code>目标函数</code>对$\bf x$的导数为0</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\bf \frac{\partial f}{\partial x} &= 0 \\
+ &= \frac{\partial }{\partial \bf x} \Bigl( \bf (y-Cx)^TW^{-1}(y-Cx) \Bigr) \\
+ &= \frac{\partial }{\partial \bf x} \Bigl( \bf (C^{-1}y-x)^T\underbrace{C^TW^{-1}C}_\text{将C提出来}(C^{-1}y-x) \Bigr) \\
+ 0&= 2\bf C^TW^{-1}C(C^{-1}y-x) \\
+ \bf C^TW^{-1}Cx &= \bf C^TW^{-1}y
+\end{aligned}</script><p>最后得到熟悉的<code>批量最小二乘法</code>的求解公式。如果观测是独立同分布的，不妨设协方差$\bf W = \sigma I$，约去$\sigma$得到$\bf C^TCx = \bf C^Ty$就是常见的最小二乘法了。如果每次观测是独立但是分布都不同，则$\bf W^{-1}$还是一个对角矩阵，扮演了权重的角色。</p>
+<h2 id="非线性优化"><a href="#非线性优化" class="headerlink" title="非线性优化"></a>非线性优化</h2><p>上文中我们把观测方程假设为线性的，但是现实中几乎不存在与状态栏成线性关系的观测方程，例如三角定位：状态量是标签的坐标，而测量的是标签与多个基站之间的距离；xyz坐标跟距离显然不是线性关系。</p>
+<p>假设$\bf y$满足正态分布，经过非线性变换之后的$\bf x$的概率密度函数，虽然有可能是单峰的钟形的，并不一定是对称的，意味着<strong>极大值并不一定是均值（期望）</strong>；我们一般使用最大似然法估计的是概率密度函数的极大值，而我们通常评价一个估计方法是否<code>无偏</code>考虑的是它的期望，因此这时候最大似然或者最大后验这种估计最值的方法是“有偏”的。虽然如此，这并不能说非线性条件下就不能用最大似然法，要知道这仅仅是一个评价指标上的取舍。</p>
+<p>我们不妨假设$\bf y$满足正态分布，毕竟传感器的噪声“就是”高斯的。状态方程是非线性方程，但可以通过一阶泰勒展开将其线性化。我们将其写成迭代的形式：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\bf{y} &= \bf{g}(\bf{x_i}) + \bf{w} \\
+ & \approx \bf \underbrace{g(x_{i-1})}_\text{估计观测值} + \underbrace{J}_\text{雅可比}*\underbrace{(x_i-x_{i-1})}_{\bf \Delta x_i} + w \\
+ \Bigl(& \text{令}\bf \hat y_i = g(x_{i-1})\Bigr) \\
+ & \sim \mathcal N(\bf \hat y_i + J\Delta x_i, W) \\
+ &= \eta *\bf exp\Bigl(- \frac{1}{2} (\underbrace{y-\hat y_i}_{\bf e_i} - J\Delta x_i)^TW^{-1}(y-\hat y_i - J\Delta x_i)\Bigr) \\
+ &= \eta *\bf exp\Bigl(- \frac{1}{2} (e_i - J\Delta x_i)^TW^{-1}(e_i - J\Delta x_i)\Bigr)
+\end{aligned}</script><p>于是目标函数变为$\bf (e_i - J\Delta x_i)^TW^{-1}(e_i - J\Delta x_i)$，自变量变为了$\bf\Delta x_i$。套用上文的方法，对$\bf\Delta x_i$求导等于0，得到</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\bf \underbrace{J^TW^{-1}J}_{\text{海森矩阵}H}\Delta x &= \bf \underbrace{J^TW^{-1}e_i}_{b}\\
+\bf Hx &= \bf b
+\end{aligned}</script><p>这就是<code>高斯牛顿法</code>。每一步迭代都算得一个$\bf\Delta x_i$，进而更新$\bf x_i$。<em>高翔十四讲中将误差函数$\bf e = y-g(x)$展开为$\bf e + J\Delta x$，而上文是将$\bf g(x)$展开的，因此雅可比矩阵有个负号的不同；十四讲中直接给出的目标函数没有$\bf W$，相当于假设$\bf W = \sigma I$，即$\bf y$的每一项都独立同分布从而约去了。</em></p>
+<h2 id="高斯分布的信息矩阵"><a href="#高斯分布的信息矩阵" class="headerlink" title="高斯分布的信息矩阵"></a>高斯分布的信息矩阵</h2><p>联合高斯分布除了可以表达为<code>均值</code>和<code>协方差矩阵</code>形式以外，还可以表达为<code>信息矩阵</code>和<code>信息向量</code>的形式。后两者在《概率机器人》中被称为“正则参数”，这两种形式是对偶的：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\bf\mathcal N(\mu, \Sigma)
+\begin{cases}
+\bf \Sigma &= \bf \Omega^{-1} \\
+\bf \mu &= \bf \Omega^{-1} \xi
+\end{cases},
+\qquad
+\bf\mathcal N^{-1}(\xi, \Omega)
+\begin{cases}
+\bf \Omega &= \bf \Sigma^{-1} \\
+\bf \xi &= \bf \Sigma^{-1} \mu
+\end{cases}
+\end{aligned}</script><script type="math/tex; mode=display">
+\bf 
+\eta exp(-\frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu))
+\qquad
+\eta'exp(-\frac{1}{2}x^T\Omega x + x^T\xi)</script><p>之所以考虑用信息矩阵表示，是因为高斯分布的指数项的二次型矩阵是<strong>协方差矩阵的逆</strong>，于是可以表达得更简单。之所以叫“信息”矩阵，就是因为它是概率密度函数的对数项，而熵就是概率的负对数。对于任意一个概率密度函数，用高斯去近似它，那么求其对数并展开为二次型就可以得到信息矩阵和信息向量；但是并不是所有时候这个信息矩阵都是可以求逆得到协方差矩阵的，这时候这个“高斯分布”只能以信息矩阵的形式存下来。如果说卡尔曼滤波针对的是协方差矩阵，那么相对应也有所谓“信息滤波”针对信息矩阵，二者形式上十分对称。</p>
+<p>我们将估计量建模为<strong>期望$\theta$</strong>，将测量值建模为<strong>随机变量$\bf x$</strong>，于是得到<strong>条件概率$\bf p(x|\theta)$</strong>。我们觉得它应该是个正态分布，虽然不一定是，但是可以近似，于是我们想或许对它对数值作泰勒展开即可。<code>费歇尔信息矩阵</code>（Fisher information matrix）也有相似的定义，虽然它本意可能不是为了“近似”高斯分布：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\bf \mathcal I(\theta) &= \bf E\Bigl[ \Bigl( \frac{\partial \log p(x|\theta)}{\partial \theta} \Bigr)\Bigl( \frac{\partial \log p(x|\theta)}{\partial \theta} \Bigr)^T \Bigr] \\
+\text{某些情况下} &= \bf-E\Bigl[ \frac{\partial^2\log p(x|\theta)}{\partial \theta^2} \Bigr]
+\end{aligned}</script><p>注意式子中的期望。如果$\bf p(x|\theta)$真的是高斯的那么两个式子相等，都等于协方差矩阵的逆，也即是“那个”信息矩阵。</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\bf p(x|\theta) &\sim \bf \mathcal N(\theta, \Sigma) \\
+\bf \frac{\partial \log p(x|\theta)}{\partial \theta} &= \bf \Sigma^{-1}(x - \theta) \\
+\bf \frac{\partial^2\log p(x|\theta)}{\partial \theta^2} &= \bf -\Sigma^{-1} \\
+\bf -E\Bigl[ \frac{\partial^2\log p(x|\theta)}{\partial \theta^2} \Bigr] &= \bf \Sigma^{-1} \\
+\bf E\Bigl[ \Bigl( \frac{\partial \log p(x|\theta)}{\partial \theta} \Bigr)\Bigl( \frac{\partial \log p(x|\theta)}{\partial \theta} \Bigr)^T \Bigr] &= \bf E\bigl[ \Sigma^{-1}(x - \theta)(x - \theta)^T\Sigma^{-1} \bigr] \\
+ &= \bf \Sigma^{-1}E\Bigl[(x - \theta)(x - \theta)^T\Bigr]\Sigma^{-1} \\
+ &= \bf \Sigma^{-1}\Sigma\Sigma^{-1} \\
+ &= \bf \Sigma^{-1} \\ 
+\end{aligned}</script><p>Fisher信息矩阵的逆被称为<code>克拉美罗下界</code>（CRLB），任意对$\theta$的估计方法得到结果的协方差都要大于CRLB，如果它达到了CRLB，那么它估计的状态的方差最小，是“最优”的。<em>感性的认识：很多“最x值”都会牵涉到高斯分布，比如说在给定方差下正态分布使得熵最大，因此信源功率有限的情况下，信道容量（即互信息的最大值）在信源是高斯分布的情况下达到。同样道理如果估计量的分布真的是高斯的，那么就能得到“最优”估计。</em></p>
+<p>我们回过头来看信息矩阵和信息向量。如果测量值$\bf y$与待估计的状态值$\bf x$是线性的，那么得到分布如下：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\bf{y} &= \bf{C}\bf{x} + \bf{w} \\
+\bf p(y|x) &\sim \mathcal N(\bf{C}\bf{x}, W) \\
+ &= \eta *\bf exp\Bigl(- \frac{1}{2} (y-Cx)^TW^{-1}(y-Cx)\Bigr) \\
+ &= \eta *\bf exp\Bigl(- \frac{1}{2} \bf (C^{-1}y-x)^T\underbrace{C^TW^{-1}C}_\text{将C提出来}(C^{-1}y-x) \Bigr) \\
+ & \Downarrow \text{（因为我们只考虑观测方程，没有先验）} \\
+\bf p(x|y) &\sim \bf \mathcal N(C^{-1}y,\quad (C^TW^{-1}C)^{-1}) \\
+\text{（写成信息形式）}
+ &= \bf \mathcal N^{-1}(C^TW^{-1}y,\quad C^TW^{-1}C)
+\end{aligned}</script><p>我们没有$\bf x,y$的先验，这其实是最大似然法。我们构建了最小二乘方程如下：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\bf \underbrace{C^TW^{-1}C}_\text{信息矩阵}x &= \bf \underbrace{C^TW^{-1}y}_\text{信息向量}
+\end{aligned}</script><p>如果是非线性的，那么我们进行一阶泰勒展开以线性化：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\bf{y} &= \bf{g}(\bf{x_i}) + \bf{w} \\
+ & \approx \bf g(x_{i-1}) + J(x_i-x_{i-1}) + w \\
+ \Bigl(& \text{令}\bf \hat y_i = g(x_{i-1})\Bigr) \\
+\bf p(y|x_i) & \sim \bf \mathcal N(\hat y_i + J\Delta x_i, W) \\
+ &= \eta *\bf exp\Bigl(- \frac{1}{2} (\underbrace{y-\hat y_i}_{\bf e_i} - J\Delta x_i)^TW^{-1}(y-\hat y_i - J\Delta x_i)\Bigr) \\
+ &= \eta *\bf exp\Bigl(- \frac{1}{2} (e_i - J\Delta x_i)^TW^{-1}(e_i - J\Delta x_i)\Bigr) \\
+ &= \eta *\bf exp\Bigl(- \frac{1}{2} (J^{-1}e_i - \Delta x_i)^TJ^TW^{-1}J(J^{-1}e_i - \Delta x_i) \Bigr) \\
+ & \Downarrow \text{（还是因为我们只考虑观测方程，没有先验）} \\
+\bf p(\Delta x_i|e_i) &\sim \bf \mathcal N (J^{-1}e_i, \quad (J^TW^{-1}J)^{-1}) \\
+\text{（写成信息形式）}
+ &= \bf \mathcal N^{-1} (J^TW^{-1}e_i, \quad J^TW^{-1}J)
+\end{aligned}</script><p>得到的高斯牛顿法的求解方程是:</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\bf \underbrace{J^TW^{-1}J}_{\text{海森矩阵}H}\Delta x &= \bf \underbrace{J^TW^{-1}e_i}_{b}\\
+\bf Hx &= \bf b
+\end{aligned}</script><p>从而可以看出，<strong>原来高斯牛顿法中的海森（Hessian）矩阵就是信息矩阵！等式右边的向量就是信息向量！</strong> 也有一种说法是“高斯牛顿法定义了费歇尔信息矩阵”。</p>
+<h2 id="舒尔补进行边缘化"><a href="#舒尔补进行边缘化" class="headerlink" title="舒尔补进行边缘化"></a>舒尔补进行边缘化</h2><p><strong>边缘化</strong>指的是以下过程：假设一个联合分布为$p(x_1,x_2, \dots, x_i, x_{i+1}, \dots)$，现在我们要将随机变量的维度降到$i$维，那么就要将$i+1$之后的变量扔掉，剩下了联合分布$p(x_1,x_2, \dots, x_i)$，也就是“边缘化”（marginalization）。</p>
+<p>如果我们以<code>均值</code>和<code>协方差矩阵</code>的方式来表示联合分布，那么边缘化就很直接：把对应的均值和协方差矩阵部分抠掉就行了。</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\bf p(x, y) &= \mathcal N \left(
+  \begin{bmatrix} \mu_x \\ \mu_y \end{bmatrix}, 
+  \begin{bmatrix} \bf\Sigma_{xx}&\bf\Sigma_{xy}\\\bf\Sigma_{yx}&\bf\Sigma_{yy} \end{bmatrix} 
+  \right) \\
+\Downarrow \\
+\bf p(x) &= \bf \mathcal N(\mu_x, \Sigma_{xx}) \\
+\end{aligned}</script><p>但是如果以<code>信息向量</code>和<code>信息矩阵</code>来表示联合分布的话，就不能直接将对应部分的信息矩阵和信息向量抠掉了，边缘化需要用到舒尔补。<strong>如果直接抠掉的话就求的是条件分布了，下面会给予证明。</strong> 相对应地，对原来的协方差矩阵使用舒尔补的方法就反而得到条件分布，可见这两种表达形式的对偶性。</p>
+<h3 id="舒尔补与矩阵求逆引理"><a href="#舒尔补与矩阵求逆引理" class="headerlink" title="舒尔补与矩阵求逆引理"></a>舒尔补与矩阵求逆引理</h3><p>Schur complement将一个分4块的可逆矩阵分解为<code>上三角×对角×下三角</code>(UDL)，或者<code>下三角×对角×上三角</code>(LDU)形式：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\begin{bmatrix} \bf A&\bf B\\\bf C&\bf D \end{bmatrix} &= 
+\begin{bmatrix} \bf I& \\ \bf CA^{-1}&\bf I \end{bmatrix} 
+\begin{bmatrix} \bf A& \\ &\bf D-CA^{-1}B \end{bmatrix}
+\begin{bmatrix} \bf I&\bf A^{-1}B \\ &\bf I \end{bmatrix} \\
+&= 
+\begin{bmatrix} \bf I&\bf BD^{-1} \\ &\bf I \end{bmatrix}
+\begin{bmatrix} \bf A-BD^{-1}C& \\ &\bf D \end{bmatrix}
+\begin{bmatrix} \bf I& \\ \bf D^{-1}C&\bf I \end{bmatrix}
+\end{aligned}</script><p>其中$\bf D-CA^{-1}B$和$\bf A-BD^{-1}C$就是舒尔补，字母顺序是顺时针的，方便记忆。</p>
+<p>求逆也很方便：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\begin{bmatrix} \bf A&\bf B\\\bf C&\bf D \end{bmatrix}^{-1} &= 
+\begin{bmatrix} \bf I&\bf -A^{-1}B \\ &\bf I \end{bmatrix}
+\begin{bmatrix} \bf A^{-1}& \\ &\bf (D-CA^{-1}B)^{-1} \end{bmatrix}
+\begin{bmatrix} \bf I& \\ \bf -CA^{-1}&\bf I \end{bmatrix} \\
+&= 
+\begin{bmatrix} \bf I& \\ \bf -D^{-1}C&\bf I \end{bmatrix}
+\begin{bmatrix} \bf (A-BD^{-1}C)^{-1}& \\ &\bf D^{-1} \end{bmatrix}
+\begin{bmatrix} \bf I&\bf -BD^{-1} \\ &\bf I \end{bmatrix}
+\end{aligned}</script><p>乘起来，得到等价的矩阵求逆的等式。这些等式被称为<code>矩阵求逆引理</code>或者SMW等式：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\begin{bmatrix} \bf A&\bf B\\\bf C&\bf D \end{bmatrix}^{-1} &= 
+\begin{bmatrix} 
+  \bf A^{-1}+A^{-1}B(D-CA^{-1}B)^{-1}CA^{-1} & \bf -A^{-1}B(D-CA^{-1}B)^{-1} \\
+  \bf -(D-CA^{-1}B)^{-1}CA^{-1} & \bf (D-CA^{-1}B)^{-1}
+\end{bmatrix} \\
+&=
+\begin{bmatrix} 
+  \bf (A-BD^{-1}C)^{-1} & \bf -(A-BD^{-1}C)^{-1}BD^{-1} \\
+  \bf -D^{-1}C(A-BD^{-1}C)^{-1} & \bf D^{-1}+D^{-1}C(A-BD^{-1}C)^{-1}BD^{-1}
+\end{bmatrix}
+\end{aligned}</script><p>舒尔补可以在高斯消元法解线性方程组的时候凑出来：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&\begin{bmatrix} \bf A&\bf B\\\bf C&\bf D \end{bmatrix} \begin{bmatrix} \bf x_1\\\bf x_2 \end{bmatrix} = \begin{bmatrix} \bf b_1\\\bf b_2 \end{bmatrix} \\
+& \qquad\qquad \Downarrow \\
+&\begin{cases}
+  \bf Ax_1 + Bx_2 = b_1 \\
+  \bf Cx_1 + Dx_2 = b_2
+\end{cases}
+\text{（用下式消去上式）}
+\begin{cases}
+  \bf (A-BD^{-1}C)x_1 = b_1 - BD^{-1}b_2 \\
+  \bf Dx_2 = b_2 + Cx_1
+\end{cases} \\
+
+& \qquad\qquad \Downarrow \\
+& \begin{bmatrix} \bf A-BD^{-1}C& \\ &\bf D \end{bmatrix} \begin{bmatrix} \bf x_1\\\bf x_2 \end{bmatrix} = \begin{bmatrix} \bf b_1 - BD^{-1}b_2\\\bf b_2 + Cx_1 \end{bmatrix}
+
+\end{aligned}</script><p>可见现在参数矩阵中出现了$\bf D$关于$\bf A$的舒尔补。同理如果用上式消去下式，就会出现$\bf A$关于$\bf D$的舒尔补。剩下的两个三角矩阵要凑出来也并不难。</p>
+<h3 id="联合高斯分布（正则参数）的边缘化"><a href="#联合高斯分布（正则参数）的边缘化" class="headerlink" title="联合高斯分布（正则参数）的边缘化"></a>联合高斯分布（正则参数）的边缘化</h3><p>我们考虑使用<code>信息矩阵</code>和<code>信息向量</code>：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+p(\bf x) &= \bf\mathcal N^{-1}(\xi_x, \Omega_{xx}) \\
+p(\bf y) &= \bf\mathcal N^{-1}(\xi_y, \Omega_{yy}) \\
+p(\bf x, y) &= \bf\mathcal N^{-1} \left(
+  \begin{bmatrix} \xi_x \\ \xi_y \end{bmatrix}, 
+  \begin{bmatrix} \bf\Omega_{xx}&\bf\Omega_{xy}\\\bf\Omega_{yx}&\bf\Omega_{yy} \end{bmatrix} 
+  \right) \\
+ &= \bf \eta' exp \left( -\frac{1}{2}\begin{bmatrix} \bf x \\ \bf y \end{bmatrix}^T
+  \begin{bmatrix} \bf\Omega_{xx}&\bf\Omega_{xy}\\\bf\Omega_{yx}&\bf\Omega_{yy} \end{bmatrix}
+  \begin{bmatrix} \bf x \\ \bf y \end{bmatrix}
+  + \begin{bmatrix} \bf x \\ \bf y \end{bmatrix}^T\begin{bmatrix} \xi_x \\ \xi_y \end{bmatrix} \right)
+\end{aligned}</script><p>再根据上文<a href="#舒尔补与矩阵求逆引理">矩阵求逆引理</a>，当使用<code>信息矩阵</code>和<code>信息向量</code>来表达联合分布时候，虽然$\bf \Omega = \Sigma^{-1}$，但是分块的话$\bf \Omega_{xx} \neq \Sigma_{xx}^{-1}$，$\bf \Omega_{yy} \neq \Sigma_{yy}^{-1}$。</p>
+<p>然而，$\bf \Omega_{xx} = \left( \Sigma_{xx} - \Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx} \right)^{-1}$，<strong>恰好是$\bf p(x|y)$条件分布的信息矩阵</strong>！条件分布求法如下：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&\overbrace{
+ \begin{bmatrix} \bf x-\mu_x \\ \bf y-\mu_y \end{bmatrix}^T
+ \underbrace{\begin{bmatrix} \bf\Sigma_{xx}&\bf\Sigma_{xy}\\\bf\Sigma_{yx}&\bf\Sigma_{yy} \end{bmatrix}^{-1}}_\text{使用求逆的舒尔补展开}
+ \begin{bmatrix} \bf x-\mu_x \\ \bf y-\mu_y \end{bmatrix}
+ }^{\bf p(x,y)\text{联合概率密度}} \\
+=&\underbrace{ \begin{bmatrix} \bf x-\mu_x \\ \bf y-\mu_y \end{bmatrix}^T
+ \begin{bmatrix} I & \\ \bf-\Sigma_{yy}^{-1}\Sigma_{yx} & I \end{bmatrix}
+ }
+ \begin{bmatrix} \bf(\Sigma_{xx} - \Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx})^{-1} & \\ & \bf\Sigma_{yy}^{-1} \end{bmatrix}
+ \underbrace{\begin{bmatrix} I & \bf-\Sigma_{xy}\Sigma_{yy}^{-1} \\ & I \end{bmatrix}
+ \begin{bmatrix} \bf x-\mu_x \\ \bf y-\mu_y \end{bmatrix}} \\
+=& \begin{bmatrix} \bf x-\mu_x-\Sigma_{xy}\Sigma_{yy}^{-1}(y-\mu_y) \\ \bf (y-\mu_y) \end{bmatrix} ^T
+ \underbrace {\begin{bmatrix} \bf(\Sigma_{xx} - \Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx})^{-1} & \\ & \bf\Sigma_{yy}^{-1} \end{bmatrix}
+ }_\text{对角块矩阵，二次型展开很方便}
+  \begin{bmatrix} \bf x-\mu_x-\Sigma_{xy}\Sigma_{yy}^{-1}(y-\mu_y) \\ \bf (y-\mu_y) \end{bmatrix} \\
+=& \underbrace{ \bf (x-\mu_x-\Sigma_{xy}\Sigma_{yy}^{-1}(y-\mu_y))^T(\Sigma_{xx} - \Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx})^{-1}(x-\mu_x-\Sigma_{xy}\Sigma_{yy}^{-1}(y-\mu_y)) }_{\bf p(x|y)\text{部分}} \\
+ &+ \underbrace{ \bf (y-\mu_y)^T\Sigma_{yy}^{-1}(y-\mu_y) }_{\bf p(y)\text{部分}}
+\end{aligned}</script><p>从而得到：</p>
+<script type="math/tex; mode=display">
+\bf p(x | y) = \mathcal N\left( \mu_x + \Sigma_{xy}\Sigma_{yy}^{-1}( y - \mu_y), \quad \Sigma_{xx} - \Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx} \right)</script><p>这也证明了，$\begin{bmatrix} \bf\Omega_{xx}&amp;\bf\Omega_{xy}\\\bf\Omega_{yx}&amp;\bf\Omega_{yy} \end{bmatrix}$中，$\bf\Omega_{xx}$是$\bf p(x|y)$的信息矩阵，相应地，$\bf\Omega_{xx}$是$\bf p(y|x)$的信息矩阵。</p>
+<p>为了边缘化$\bf y$以求$\bf p(x)$，再使用上文<a href="#舒尔补与矩阵求逆引理">矩阵求逆引理</a>得到$\bf\Omega_{xx}$的另一个表达形式，以及其他分块矩阵的表达形式：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\bf \Omega_{xx} &= \bf \Sigma_{xx}^{-1} + 
+  \Sigma_{xx}^{-1}\Sigma_{xy}\underline{\left( \Sigma_{yy} - \Sigma_{yx}\Sigma_{xx}^{-1}\Sigma_{xy} \right)^{-1}}\Sigma_{yx}\Sigma_{xx}^{-1} \\
+\bf \Omega_{xy} &= \bf -\Sigma_{xx}^{-1}\Sigma_{xy}\underline{\left( \Sigma_{yy} - \Sigma_{yx}\Sigma_{xx}^{-1}\Sigma_{xy} \right)^{-1}} \\
+\bf \Omega_{yx} &= \bf -\underline{\left( \Sigma_{yy} - \Sigma_{yx}\Sigma_{xx}^{-1}\Sigma_{xy} \right)^{-1}}\Sigma_{yx}\Sigma_{xx}^{-1} \\
+\bf \Omega_{yy} &= \bf \underline{\left( \Sigma_{yy} - \Sigma_{yx}\Sigma_{xx}^{-1}\Sigma_{xy} \right)^{-1}}
+\end{aligned}</script><p>注意上面划横线的部分都是一样的。然后我们可以容易地验证：$\bf \Omega_{xx} - \Omega_{xy}\Omega_{yy}^{-1}\Omega_{yx} = \Sigma_{xx}^{-1}$，因为$\bf \Omega_{xy}\Omega_{yy}^{-1}\Omega_{yx}$恰好把$\bf\Omega_{xx}$的后面一坨消掉了。因此</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\bf\Omega_x &= \bf\Sigma_{xx}^{-1} \\
+ &= \bf \Omega_{xx} - \Omega_{xy}\Omega_{yy}^{-1}\Omega_{yx}
+\end{aligned}</script><p>也就是说对信息矩阵使用舒尔补求的是边缘概率，而直接扔掉求的是条件概率。</p>
+<h3 id="高斯牛顿法的边缘化"><a href="#高斯牛顿法的边缘化" class="headerlink" title="高斯牛顿法的边缘化"></a>高斯牛顿法的边缘化</h3><p>我们知道海森矩阵就是信息矩阵，于是如果我们想要扔掉一些变量，就用舒尔补进行边缘化。直接抠掉信息矩阵中对应行列的话，相当于把扔掉的变量作为条件传递下去了；而条件概率的方差总是要小于等于非条件概率，那么就会导致对剩下变量的估计“过于乐观”。因此我们应该选择边缘概率而不是条件概率。</p>
+<p>下面我们推导边缘化之后的信息矩阵和信息向量。边缘化之前：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\bf x &= \begin{bmatrix} \bf \Delta x_B \\ \bf \Delta x_C \end{bmatrix}, \\
+\bf b &= \begin{bmatrix} \bf b_B \\ \bf b_C \end{bmatrix}, \\
+\bf H &= \begin{bmatrix} \bf B & \bf E \\ \bf E^T & \bf C \end{bmatrix} \\
+ &= \begin{bmatrix} \bf I & \bf EC^{-1} \\ & \bf I \end{bmatrix}
+\underbrace {
+    \begin{bmatrix} \bf B-EC^{-1}E^T & \\ & \bf C \end{bmatrix}
+    \begin{bmatrix} \bf I & \\ \bf C^{-1}E^T & \bf I \end{bmatrix} }\\
+ &= \begin{bmatrix} \bf I & \bf EC^{-1} \\ & \bf I \end{bmatrix}
+    \begin{bmatrix} \bf B-EC^{-1}E^T & \\ \bf E^T & \bf C \end{bmatrix}
+\end{aligned}</script><p>于是高斯牛顿法要求的方程如下：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\bf Hx &= \bf b \\
+\bf \begin{bmatrix} \bf I & \bf EC^{-1} \\ & \bf I \end{bmatrix}
+    \begin{bmatrix} \bf B-EC^{-1}E^T & \\ \bf E^T & \bf C \end{bmatrix} x &= \bf b \\
+     \bf \begin{bmatrix} \bf B-EC^{-1}E^T & \\ \bf E^T & \bf C \end{bmatrix} x &= \bf \begin{bmatrix} \bf I & \bf -EC^{-1} \\ & \bf I \end{bmatrix} b \\
+    \bf \begin{bmatrix} \bf B-EC^{-1}E^T & \\ \bf E^T & \bf C \end{bmatrix} \begin{bmatrix} \bf \Delta x_B \\ \bf \Delta x_C \end{bmatrix} &= \bf \begin{bmatrix} \bf I & \bf -EC^{-1} \\ & \bf I \end{bmatrix} \begin{bmatrix} \bf b_B \\ \bf b_C \end{bmatrix} \\
+\bf \begin{bmatrix} \bf B-EC^{-1}E^T & \\ \bf E^T & \bf C \end{bmatrix} \begin{bmatrix} \bf \Delta x_B \\ \bf \Delta x_C \end{bmatrix} &= \begin{bmatrix} \bf b_B - EC^{-1} b_C\\ \bf b_C \end{bmatrix} \\
+\Downarrow \Downarrow \Downarrow\\
+\end{aligned}</script><script type="math/tex; mode=display">
+\begin{cases}
+\bf \underbrace{(B-EC^{-1}E^T)}_{\bar H}\Delta x_B &= \bf \underbrace{b_B - EC^{-1} b_C}_{\bar b} \\
+\bf E^T\Delta x_B + C\Delta x_C &= \bf b_C
+\end{cases}</script><p>于是将$\bf\Delta x_C$边缘化后，$\bf Hx=b$转为$\bf \bar Hx=\bar b$。这个$\bf\Delta x_C$可以代表老旧的状态变量更新量，这意味着被边缘化之后的变量将固定下来不再变化。</p>
+<h2 id="不同窗口大小的最大后验估计法"><a href="#不同窗口大小的最大后验估计法" class="headerlink" title="不同窗口大小的最大后验估计法"></a>不同窗口大小的最大后验估计法</h2><p>下面要讨论卡尔曼滤波（KF）、扩展KF（EKF）、迭代EKF（IEKF）、滑动窗口滤波（SWF）、光束平差法（bundle adjustment，BA）之间的关系。IEKF、SWF、BA都是最大后验估计的方法，只不过窗口大小不同。</p>
+<p><a href="/kalman">上一篇博客</a>比较详细地推导了<strong>卡尔曼滤波器</strong>的5个公式如下，用到的方法是，先求$\bf p(x)$先验以及$\bf p(x,y)$联合概率，从而得到$\bf p(x|y)$后验概率。求先验的时候总结出<strong>预测</strong>两个式子，求后验时候总结出<strong>更新</strong>两个式子，而后验中重复性高的式子总结为<strong>卡尔曼增益</strong>：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+系统建模：&
+\begin{cases}
+  \bf x_k = A_k x_{k-1} + \overbrace{w_k}^\text{输入} + \overbrace{u_k}^{\text{噪声方差}Q_k} \\
+  \bf y_k = C_k x_{k} + \underbrace{v_k}_{\text{噪声方差}R_k}
+\end{cases} \\
+\\
+预测(先验)：&
+\begin{cases}
+  \bf\check{x}_k &= \bf A_k\hat{x}_{k-1} + w_k \\
+  \bf\check{P}_k &= \bf A_k\hat{P}_{k-1} A_k^T + Q_k
+\end{cases} \\
+卡尔曼增益：&
+\begin{cases}
+  \bf K_k &= \bf\check{P}_k C_k^T(C_k\check{P}_kC_k^T + R_k)^{-1}
+\end{cases} \\
+更新(后验)：&
+\begin{cases}
+  \bf\hat{x}_k &= \bf \check{x}_k + K_k(y_k - C_k\check{x}_k) \\
+  \bf\hat{P}_k &= \bf (I - K_kC_k)\check{P}_k
+\end{cases}
+\end{aligned}</script><p>线性情况的卡尔曼滤波(KF)扩展到非线性情况下就是<strong>扩展卡尔曼滤波</strong>(EKF)。具体方法是，将<strong>观测方程</strong>进行一阶泰勒展开从而线性化</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+系统建模：&
+\begin{cases}
+  \bf x_k &= \bf f(x_{k-1}) + \overbrace{w_k}^\text{输入} + \overbrace{u_k}^{\text{噪声方差}Q_k} \\
+    & \approx \bf f(\bar x_{k-1}) + F_k \Delta x_{k} + w_k + u_k \\
+  \bf y_k &= \bf g(x_{k}) + \underbrace{v_k}_{\text{噪声方差}R_k} \\
+    & \approx \bf g(\bar x_{k}) + G_k \Delta x_{k} + v_k
+\end{cases} \\
+\\
+预测(先验)：&
+\begin{cases}
+  \bf\check{x}_k &= \bf f(\hat{x}_{k-1}) + w_k \\
+  \bf\check{P}_k &= \bf F_k\hat{P}_{k-1} F_k^T + Q_k
+\end{cases} \\
+卡尔曼增益：&
+\begin{cases}
+  \bf K_k &= \bf\check{P}_k G_k^T(G_k\check{P}_kG_k^T + R_k)^{-1}
+\end{cases} \\
+更新(后验)：&
+\begin{cases}
+  \bf\hat{x}_k &= \bf \check{x}_k + K_k(y_k - G_k\check{x}_k) \\
+  \bf\hat{P}_k &= \bf (I - K_kG_k)\check{P}_k
+\end{cases}
+\end{aligned}</script><p>在非线性情况下，EKF仅通过一次线性近似去估计后验状态，这在很多情况下是不够的；很自然地我们想到对它进行<strong>多轮迭代</strong>，每次估计$\bf \hat x_k$都进行多次EKF，每次都对运动方程和观测方程线性化得到一系列$\bf F_{k,i}$和$\bf G_{k,i}$，进而得到一系列$\bf x_{k,i}$不断收敛至真实值。这就是IEKF，显然这是比单纯EKF要好，但是计算量更大。</p>
+<p>下面我们讨论<strong>滑动窗口</strong>，即建立一个长度为$m$的窗口，储存$\bf [ x_{k-m}, \dots, x_{k-1}]$共m个状态值。当需要估计新的状态$\bf x_k$时，将其加入窗口，然后将最老的状态$\bf x_{k-m}$<strong>边缘化</strong>出去。这也被称为<strong>局部BA</strong>。显然所谓<strong>全局BA</strong>就是窗口达到最大，包含了所有需要估计的状态的bundle adjustment。</p>
+<p>窗口中的变量可以写在一起：$\bf X_k = [ x_{k-m}, \dots, x_{k-1} ]$，$\bf Y_k = [ y_{k-m}, \dots, y_{k-1} ]$，从而要求的是$\bf p(X_k|Y_k)$。这可以用<strong>迭代卡尔曼滤波器</strong>的方法，也可以用<strong>高斯牛顿法</strong>；这两种方法本质上是一样的，讨论如下：</p>
+<p>我们首先仅考虑观测方程，也就是没有运动方程，也就是没有先验，也就是先验的协方差矩阵$\bf \check P_k = \infty$。为了统一，我们用$\bf J_k$而不是$\bf G_k$来表示观测方程的一阶导数，即<strong>雅可比矩阵</strong>；同时观测方程的方差写为$\bf W$而不是$\bf R_k$。</p>
+<p>IEKF中，卡尔曼增益利用<a href="#舒尔补与矩阵求逆引理">矩阵求逆引理</a>改写为以下形式：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+  \bf K_k &= \bf\check{P}_k J_k^T(J_k\check{P}_kJ_k^T + W)^{-1} \\
+    &= \bf (\underbrace{\check{P}_k^{-1}}_{\infty^{-1}=0} + J_k^TW^{-1}J_k)^{-1}J_k^TW^{-1} \\
+    &= \bf (J_k^TW^{-1}J_k)^{-1}J_k^TW^{-1}
+\end{aligned}</script><p>代入后验更新中：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+  \bf\hat{x}_k &= \bf \underbrace{\check{x}_k}_{\bf \hat x_{k-1}} + \underbrace{K_k \overbrace{(y_k - G_k\check{x}_k)}^{\text{估计误差}e_{k-1}}}_{\bf\Delta x} \\
+  & \Downarrow \\
+  \bf \Delta x &= \bf (J_k^TW^{-1}J_k)^{-1}J_k^TW^{-1}e_{k-1} \\
+  & \Downarrow \\
+  \bf \underbrace{J_k^TW^{-1}J_k}_{\text{海森矩阵}H} \Delta x &= \bf J_k^TW^{-1}e_{k-1}
+\end{aligned}</script><p><strong>于是就得到了高斯牛顿法</strong>。这正好说明IEKF是<strong>窗口长度为1的局部BA</strong>。</p>
+<p>如果我们考虑先验的话，海森矩阵就会加上先验：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+  \bf K_k &= \bf\check{P}_k J_k^T(J_k\check{P}_kJ_k^T + W)^{-1} \\
+    &= \bf (\underbrace{\check{P}_k^{-1}}_\text{先验信息矩阵} + J_k^TW^{-1}J_k)^{-1}J_k^TW^{-1} \\
+  \\
+  \bf \Delta x &= \bf (\check{P}_k^{-1} + J_k^TW^{-1}J_k)^{-1}J_k^TW^{-1}e_{k-1} \\
+  & \Downarrow \\
+  \bf \underbrace{(\check{P}_k^{-1} + J_k^TW^{-1}J_k)}_{\text{海森矩阵}H} \Delta x &= \bf J_k^TW^{-1}e_{k-1}
+\end{aligned}</script><p>这个先验，可以来自于真的环境的先验，也可以来自于边缘化老的与窗口内的状态变量有关联的变量，也就是<a href="#高斯牛顿法的边缘化">舒尔补边缘化海森矩阵</a>中的$\bf -EC^{-1}E^T$部分。</p>
+<p>虽然迭代卡尔曼滤波的方法和高斯牛顿法本质上一样，但是卡尔曼滤波器关注的是协方差矩阵，这并不那么直接可以得到的，会引入更多的矩阵求逆运算；而高斯牛顿法使用的信息矩阵则可以直接通过观测方程的导数得到，如果观测方程是解析的那就更直接了。因此在大规模的情况下，后者要比前者更有优越性。</p>
+<h2 id="滑动窗口边缘化的弊端与FEJ"><a href="#滑动窗口边缘化的弊端与FEJ" class="headerlink" title="滑动窗口边缘化的弊端与FEJ"></a>滑动窗口边缘化的弊端与FEJ</h2><p>关于First estimate Jacobian（FEJ）有关于<strong>系统能观性</strong>的<a href="http://paopaorobot.org/704.html" target="_blank" rel="noopener">更深刻的讨论</a>，但这里仅做感性的讨论。</p>
+<p>因为每做一次估计，都要迭代多次，计算多个海森矩阵以及$\bf \Delta x$，每次都在不同的$\bf x+\Delta x$处对观测方程求导。对于已经边缘化了的变量，它们不再更新，相当于它们的线性化点固定住了；但是如果我们却继续更新窗口中的点，在整个系统的角度上讲就是<strong>在不同的点上做了线性化</strong>，然后会导致系统的零空间降维，使得我们获得“过于乐观”的解，于是可能会慢慢地破坏整个系统。。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/marginalization/1.jpeg" alt="例子" title="">
+                </div>
+                <div class="image-caption">例子</div>
+            </figure>
+<p>为了避免系统在边缘化前后在不同点上做线性化，就需要<strong>保持雅可比矩阵在随后的迭代中不变</strong>，也就是只在边缘化时候算一次雅可比，随后就不改变雅可比了，即所谓的“first estimate Jacobian”。DSO等基于滑动窗口的视觉里程计中就是这样做的。这样做显然会降低估计的精度：因为迭代时候它只往同一个方向去搜索，不过它好处是保持了系统零空间维度，保证它的“一致性”（consistency）从而让系统更稳定，而且降低了计算量。</p>
+<p>但是有一个问题是，滑动窗口总是要滑动的，也就是说即使保证了这一时刻跟上一时刻系统在同一个点上线性化，但是下一时刻还是计算了新的雅可比，于是下一时刻跟上一时刻就在不同的点上线性化了，总而言之这就是“推迟”了不同点线性化这种情况，而不是“解决”了它；而增大窗口的大小同样可以缓解零空间降维的情况。个人拙见，零空间降维是滑窗方法无法避免的，真正解决这个问题的则要做全局的优化；而FEJ的确大大降低了计算量，虽然对精度有所损失，但毕竟天下没有免费的午餐，更便宜的计算肯定需要忍受精度的损失。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>求高斯分布的后验分布的均值会引出最小二乘法</li>
+<li>高斯牛顿方程的海森矩阵就是后验分布的信息矩阵，方程右手边的向量就是其信息向量</li>
+<li>直接抠出协方差矩阵对应变量的子矩阵得到其边缘分布，做舒尔补则得到其条件分布</li>
+<li>直接抠出信息矩阵对应变量的子矩阵得到的是其条件分布，做舒尔补则得到的是其边缘分布</li>
+<li>IEKF相当于窗口长度为1的滑动窗口方法，窗口长度扩展到所有变量则等价于全局BA</li>
+<li>滑动窗口边缘化变量时不再更新老变量从而导致系统的线性化点不同，FEJ可能只能缓解而无法根治这个问题</li>
+</ul>
+<p>参考资料</p>
+<ul>
+<li>G. Sibley, L. Matthies, and G. Sukhatme. Sliding window filterwith application to planetary landing.JFR, 27(5):587–608, 2010.</li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-08-21T15:11:59.556Z" itemprop="dateUpdated">2019-08-21 23:11:59</time>
+</span><br>
+
+
+        
+        欢迎留言，大佬轻拍。。
+        
+    </div>
+    
+    <footer>
+        <a href="https://hhuysqt.github.io">
+            <img src="/img/avatar.jpg" alt="hhuysqt">
+            hhuysqt
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://hhuysqt.github.io/marginalization/&title=《最小二乘法，非线性优化和边缘化》 — hhuysqt&pic=https://hhuysqt.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://hhuysqt.github.io/marginalization/&title=《最小二乘法，非线性优化和边缘化》 — hhuysqt&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://hhuysqt.github.io/marginalization/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《最小二乘法，非线性优化和边缘化》 — hhuysqt&url=https://hhuysqt.github.io/marginalization/&via=https://hhuysqt.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://hhuysqt.github.io/marginalization/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/kalman/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">卡尔曼滤波器</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+<section class="comments" id="comments">
+    <div id="gitment_thread"></div>
+    <link rel="stylesheet" href="https://jjeejj.github.io/css/gitment.css">
+    <script src="https://jjeejj.github.io/js/gitment.js"></script>
+    <script>
+        var gitment = new Gitment({
+            owner: 'hhuysqt',
+            repo: 'hhuysqt.github.io',
+            oauth: {
+                client_id: 'f3accf3be337dcd6d61d',
+                client_secret: 'af75b9e501d76dc85f1f0417d7307419df49aeec',
+            },
+        })
+        gitment.render('comments')
+    </script>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>hhuysqt &copy; 2015 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://hhuysqt.github.io/marginalization/&title=《最小二乘法，非线性优化和边缘化》 — hhuysqt&pic=https://hhuysqt.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://hhuysqt.github.io/marginalization/&title=《最小二乘法，非线性优化和边缘化》 — hhuysqt&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://hhuysqt.github.io/marginalization/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《最小二乘法，非线性优化和边缘化》 — hhuysqt&url=https://hhuysqt.github.io/marginalization/&via=https://hhuysqt.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://hhuysqt.github.io/marginalization/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://hhuysqt.github.io/marginalization/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</body>
+</html>
