@@ -28,12 +28,15 @@
 <meta property="og:site_name" content="hhuysqt">
 <meta property="og:description" content="这篇博客对以下问题进行粗略的讨论：  最小二乘法和高斯分布的联系 高斯牛顿法与联合高斯分布的信息矩阵、信息向量的关系 舒尔补进行边缘化，边缘化产生了先验，为啥舒尔补这么随处可见 卡尔曼滤波（KF）、扩展KF（EKF）、迭代EKF（IEKF）、滑动窗口滤波（SWF）、光束平差法（bundle adjustment），它们的关系 优化问题中的first estimate Jacobian（FEJ）">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://hhuysqt.github.io/marginalization/2.jpeg">
+<meta property="og:image" content="https://hhuysqt.github.io/marginalization/3.jpeg">
+<meta property="og:image" content="https://hhuysqt.github.io/marginalization/4.jpeg">
 <meta property="og:image" content="https://hhuysqt.github.io/marginalization/1.jpeg">
-<meta property="og:updated_time" content="2019-08-21T15:11:59.556Z">
+<meta property="og:updated_time" content="2019-08-22T14:56:45.947Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="最小二乘法，非线性优化和边缘化">
 <meta name="twitter:description" content="这篇博客对以下问题进行粗略的讨论：  最小二乘法和高斯分布的联系 高斯牛顿法与联合高斯分布的信息矩阵、信息向量的关系 舒尔补进行边缘化，边缘化产生了先验，为啥舒尔补这么随处可见 卡尔曼滤波（KF）、扩展KF（EKF）、迭代EKF（IEKF）、滑动窗口滤波（SWF）、光束平差法（bundle adjustment），它们的关系 优化问题中的first estimate Jacobian（FEJ）">
-<meta name="twitter:image" content="https://hhuysqt.github.io/marginalization/1.jpeg">
+<meta name="twitter:image" content="https://hhuysqt.github.io/marginalization/2.jpeg">
     
     <link rel="shortcut icon" href="/img/m.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
@@ -486,6 +489,28 @@ p(\bf x, y) &= \bf\mathcal N^{-1} \left(
 \bf \underbrace{(B-EC^{-1}E^T)}_{\bar H}\Delta x_B &= \bf \underbrace{b_B - EC^{-1} b_C}_{\bar b} \\
 \bf E^T\Delta x_B + C\Delta x_C &= \bf b_C
 \end{cases}</script><p>于是将$\bf\Delta x_C$边缘化后，$\bf Hx=b$转为$\bf \bar Hx=\bar b$。这个$\bf\Delta x_C$可以代表老旧的状态变量更新量，这意味着被边缘化之后的变量将固定下来不再变化。</p>
+<p>需要注意的是，在边缘化之后信息矩阵引入了<strong>先验</strong>$\bf -EC^{-1}E^T$，而在边缘化之前这块矩阵可能是对角块矩阵，边缘化之后剩下的这块矩阵就不一定是对角块矩阵了，于是求逆变得比较困难，这种情况被称为“fill-in”：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/marginalization/2.jpeg" alt="总信息矩阵=其他的先验+似然（观测）+运动先验" title="">
+                </div>
+                <div class="image-caption">总信息矩阵=其他的先验+似然（观测）+运动先验</div>
+            </figure>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/marginalization/3.jpeg" alt="将p1和m1边缘化之后矩阵变小而更加稠密" title="">
+                </div>
+                <div class="image-caption">将p1和m1边缘化之后矩阵变小而更加稠密</div>
+            </figure>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/marginalization/4.jpeg" alt="边缘化过程的因子图：边缘化之后产生了新的边" title="">
+                </div>
+                <div class="image-caption">边缘化过程的因子图：边缘化之后产生了新的边</div>
+            </figure>
 <h2 id="不同窗口大小的最大后验估计法"><a href="#不同窗口大小的最大后验估计法" class="headerlink" title="不同窗口大小的最大后验估计法"></a>不同窗口大小的最大后验估计法</h2><p>下面要讨论卡尔曼滤波（KF）、扩展KF（EKF）、迭代EKF（IEKF）、滑动窗口滤波（SWF）、光束平差法（bundle adjustment，BA）之间的关系。IEKF、SWF、BA都是最大后验估计的方法，只不过窗口大小不同。</p>
 <p><a href="/kalman">上一篇博客</a>比较详细地推导了<strong>卡尔曼滤波器</strong>的5个公式如下，用到的方法是，先求$\bf p(x)$先验以及$\bf p(x,y)$联合概率，从而得到$\bf p(x|y)$后验概率。求先验的时候总结出<strong>预测</strong>两个式子，求后验时候总结出<strong>更新</strong>两个式子，而后验中重复性高的式子总结为<strong>卡尔曼增益</strong>：</p>
 <script type="math/tex; mode=display">
@@ -564,7 +589,7 @@ p(\bf x, y) &= \bf\mathcal N^{-1} \left(
   & \Downarrow \\
   \bf \underbrace{(\check{P}_k^{-1} + J_k^TW^{-1}J_k)}_{\text{海森矩阵}H} \Delta x &= \bf J_k^TW^{-1}e_{k-1}
 \end{aligned}</script><p>这个先验，可以来自于真的环境的先验，也可以来自于边缘化老的与窗口内的状态变量有关联的变量，也就是<a href="#高斯牛顿法的边缘化">舒尔补边缘化海森矩阵</a>中的$\bf -EC^{-1}E^T$部分。</p>
-<p>虽然迭代卡尔曼滤波的方法和高斯牛顿法本质上一样，但是卡尔曼滤波器关注的是协方差矩阵，这并不那么直接可以得到的，会引入更多的矩阵求逆运算；而高斯牛顿法使用的信息矩阵则可以直接通过观测方程的导数得到，如果观测方程是解析的那就更直接了。因此在大规模的情况下，后者要比前者更有优越性。</p>
+<p>虽然迭代卡尔曼滤波的方法和高斯牛顿法本质上一样，但是卡尔曼滤波器关注的是协方差矩阵，这并不那么直接可以得到的，会引入更多的矩阵求逆运算；而高斯牛顿法使用的信息矩阵则可以直接通过观测方程的导数得到，如果观测方程是解析的那就更直接了。因此在大规模的情况下，后者要比前者更有优越性。应该说，卡尔曼滤波关注<strong>均值</strong>和<strong>协方差矩阵</strong>，信息滤波关注<strong>信息向量</strong>和<strong>信息矩阵</strong>，而最小二乘法或高斯牛顿法则关注<strong>均值</strong>和<strong>信息矩阵</strong>；后者选择的两方面都恰好容易直接获得，而且具有符合现实的含义。</p>
 <h2 id="滑动窗口边缘化的弊端与FEJ"><a href="#滑动窗口边缘化的弊端与FEJ" class="headerlink" title="滑动窗口边缘化的弊端与FEJ"></a>滑动窗口边缘化的弊端与FEJ</h2><p>关于First estimate Jacobian（FEJ）有关于<strong>系统能观性</strong>的<a href="http://paopaorobot.org/704.html" target="_blank" rel="noopener">更深刻的讨论</a>，但这里仅做感性的讨论。</p>
 <p>因为每做一次估计，都要迭代多次，计算多个海森矩阵以及$\bf \Delta x$，每次都在不同的$\bf x+\Delta x$处对观测方程求导。对于已经边缘化了的变量，它们不再更新，相当于它们的线性化点固定住了；但是如果我们却继续更新窗口中的点，在整个系统的角度上讲就是<strong>在不同的点上做了线性化</strong>，然后会导致系统的零空间降维，使得我们获得“过于乐观”的解，于是可能会慢慢地破坏整个系统。。</p>
 <figure class="image-bubble">
@@ -596,7 +621,7 @@ p(\bf x, y) &= \bf\mathcal N^{-1} \left(
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2019-08-21T15:11:59.556Z" itemprop="dateUpdated">2019-08-21 23:11:59</time>
+    最后更新时间：<time datetime="2019-08-22T14:56:45.947Z" itemprop="dateUpdated">2019-08-22 22:56:45</time>
 </span><br>
 
 
