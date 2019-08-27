@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://hhuysqt.github.io/marginalization/3.jpeg">
 <meta property="og:image" content="https://hhuysqt.github.io/marginalization/4.jpeg">
 <meta property="og:image" content="https://hhuysqt.github.io/marginalization/1.jpeg">
-<meta property="og:updated_time" content="2019-08-22T14:56:45.947Z">
+<meta property="og:updated_time" content="2019-08-27T11:28:08.336Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="最小二乘法，非线性优化和边缘化">
 <meta name="twitter:description" content="这篇博客对以下问题进行粗略的讨论：  最小二乘法和高斯分布的联系 高斯牛顿法与联合高斯分布的信息矩阵、信息向量的关系 舒尔补进行边缘化，边缘化产生了先验，为啥舒尔补这么随处可见 卡尔曼滤波（KF）、扩展KF（EKF）、迭代EKF（IEKF）、滑动窗口滤波（SWF）、光束平差法（bundle adjustment），它们的关系 优化问题中的first estimate Jacobian（FEJ）">
@@ -175,7 +175,7 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
             <h4>目录</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#乘法原理和贝叶斯公式"><span class="post-toc-number">1.</span> <span class="post-toc-text">乘法原理和贝叶斯公式</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#最小二乘法"><span class="post-toc-number">2.</span> <span class="post-toc-text">最小二乘法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#非线性优化"><span class="post-toc-number">3.</span> <span class="post-toc-text">非线性优化</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#高斯分布的信息矩阵"><span class="post-toc-number">4.</span> <span class="post-toc-text">高斯分布的信息矩阵</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#舒尔补进行边缘化"><span class="post-toc-number">5.</span> <span class="post-toc-text">舒尔补进行边缘化</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#舒尔补与矩阵求逆引理"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">舒尔补与矩阵求逆引理</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#联合高斯分布（正则参数）的边缘化"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">联合高斯分布（正则参数）的边缘化</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#高斯牛顿法的边缘化"><span class="post-toc-number">5.3.</span> <span class="post-toc-text">高斯牛顿法的边缘化</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#不同窗口大小的最大后验估计法"><span class="post-toc-number">6.</span> <span class="post-toc-text">不同窗口大小的最大后验估计法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#滑动窗口边缘化的弊端与FEJ"><span class="post-toc-number">7.</span> <span class="post-toc-text">滑动窗口边缘化的弊端与FEJ</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总结"><span class="post-toc-number">8.</span> <span class="post-toc-text">总结</span></a></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#乘法原理和贝叶斯公式"><span class="post-toc-number">1.</span> <span class="post-toc-text">乘法原理和贝叶斯公式</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#最小二乘法"><span class="post-toc-number">2.</span> <span class="post-toc-text">最小二乘法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#非线性优化"><span class="post-toc-number">3.</span> <span class="post-toc-text">非线性优化</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#高斯分布的信息矩阵"><span class="post-toc-number">4.</span> <span class="post-toc-text">高斯分布的信息矩阵</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#舒尔补进行边缘化"><span class="post-toc-number">5.</span> <span class="post-toc-text">舒尔补进行边缘化</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#舒尔补与矩阵求逆引理"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">舒尔补与矩阵求逆引理</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#联合高斯分布（正则参数）的边缘化"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">联合高斯分布（正则参数）的边缘化</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#高斯牛顿法的边缘化"><span class="post-toc-number">5.3.</span> <span class="post-toc-text">高斯牛顿法的边缘化</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#不同窗口大小的最大后验估计法"><span class="post-toc-number">6.</span> <span class="post-toc-text">不同窗口大小的最大后验估计法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#滑动窗口边缘化的弊端与FEJ"><span class="post-toc-number">7.</span> <span class="post-toc-text">滑动窗口边缘化的弊端与FEJ</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#图像对齐：FA"><span class="post-toc-number">7.1.</span> <span class="post-toc-text">图像对齐：FA</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#图像对齐：FC"><span class="post-toc-number">7.2.</span> <span class="post-toc-text">图像对齐：FC</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#图像对齐：IC"><span class="post-toc-number">7.3.</span> <span class="post-toc-text">图像对齐：IC</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总结"><span class="post-toc-number">8.</span> <span class="post-toc-text">总结</span></a></li></ol>
         </nav>
     </aside>
 
@@ -600,18 +600,89 @@ p(\bf x, y) &= \bf\mathcal N^{-1} \left(
                 <div class="image-caption">例子</div>
             </figure>
 <p>为了避免系统在边缘化前后在不同点上做线性化，就需要<strong>保持雅可比矩阵在随后的迭代中不变</strong>，也就是只在边缘化时候算一次雅可比，随后就不改变雅可比了，即所谓的“first estimate Jacobian”。DSO等基于滑动窗口的视觉里程计中就是这样做的。这样做显然会降低估计的精度：因为迭代时候它只往同一个方向去搜索，不过它好处是保持了系统零空间维度，保证它的“一致性”（consistency）从而让系统更稳定，而且降低了计算量。</p>
-<p>但是有一个问题是，滑动窗口总是要滑动的，也就是说即使保证了这一时刻跟上一时刻系统在同一个点上线性化，但是下一时刻还是计算了新的雅可比，于是下一时刻跟上一时刻就在不同的点上线性化了，总而言之这就是“推迟”了不同点线性化这种情况，而不是“解决”了它；而增大窗口的大小同样可以缓解零空间降维的情况。个人拙见，零空间降维是滑窗方法无法避免的，真正解决这个问题的则要做全局的优化；而FEJ的确大大降低了计算量，虽然对精度有所损失，但毕竟天下没有免费的午餐，更便宜的计算肯定需要忍受精度的损失。</p>
+<p>FEJ的做法其实跟所谓<strong>forwards compositional</strong>法求解图像对齐问题是一样的，下面根据<a href="http://www.ncorr.com/download/publications/bakerunify.pdf" target="_blank" rel="noopener">Lucas-Kanade 20 Years on</a>，选取其中几种方法进行介绍。</p>
+<p>光流、仿射变换、三维点重投影等操作，都是求两帧图片之间的关系，将某张图<code>T</code>上的像素点经过各自的方法<code>映射</code>到另一张图<code>I</code>上。这些算法可以统一为一类：<code>图像对齐</code>（image alignment），图像对齐用到的映射被称为<code>wrap</code>，它是一个2d到2d的映射：</p>
+<script type="math/tex; mode=display">
+\bf W(\underbrace{x}_\text{像素坐标}, \underbrace{p}_\text{不同算法的参数})</script><p>例如，如果求的是光流的话，那么wrap可以这样定义：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\bf W(x,p) &= \bf W(\begin{bmatrix}u\\v\end{bmatrix}, \begin{bmatrix}I_u\\I_v\end{bmatrix}) \\
+  &= \begin{bmatrix} u+I_u \\ v+I_v \end{bmatrix}
+\end{aligned}</script><p>对于三维点重投影的情况，wrap就是将参考帧上的特征点投影到当前帧上的函数。</p>
+<script type="math/tex; mode=display">
+\bf W(x,p) = \pi ( exp(\xi) \pi^{-1}(x, d_x))</script><p>图像对齐要求的问题是wrap中的参数$\bf p$，对于光流，就是光流向量$\begin{bmatrix}I_u\\I_v\end{bmatrix}$，对于三维点重投影，就是这个点的深度$d_x$和相机之间的相对位移$\xi$。</p>
+<h3 id="图像对齐：FA"><a href="#图像对齐：FA" class="headerlink" title="图像对齐：FA"></a>图像对齐：FA</h3><p><strong>forwards additive</strong>就是最传统的图像对齐方式，它最小化像素的光度差：</p>
+<script type="math/tex; mode=display">
+\bf p = \arg \min_p \sum_x \left[I(W(x,p+\Delta p)) - T(x)\right]^2</script><p>误差项进行一阶泰勒展开：</p>
+<script type="math/tex; mode=display">
+\bf I(W(x,p+\Delta p)) - T(x) \approx I(W(x,p)) + 
+  \underbrace{
+    \overbrace{\frac{\partial I(u)}{\partial u}}^\text{图像梯度}
+    \overbrace{\frac{\partial W(x,p)}{\partial p}}^\text{W在p处的导数}
+  }_\text{雅可比矩阵}
+  \Delta p - T(x)</script><p>然后按照上文介绍的高斯牛顿法进行迭代优化，得到$\bf p$。</p>
+<h3 id="图像对齐：FC"><a href="#图像对齐：FC" class="headerlink" title="图像对齐：FC"></a>图像对齐：FC</h3><p>FA法需要在每次迭代时候重新算一次整个雅可比矩阵，效率并不那么高。而<strong>forwards compositional</strong>法则采取了另一个角度：先对<code>I</code>做一次小wrap，再在小wrap的基础上做一次大wrap：</p>
+<script type="math/tex; mode=display">
+\bf p = \arg \min_p \sum_x \left[I(W(W(x,\Delta p)),p) - T(x)\right]^2</script><script type="math/tex; mode=display">
+\begin{aligned}
+\bf I(W(W(x,\Delta p),p)) - T(x) & \approx \bf
+  \underbrace{
+    I(W(\overbrace{W(x,0)}^\text{单位wrap，即x},p))
+  }_\text{在p=0处进行泰勒展开}
+  + 
+  \underbrace{
+    \overbrace{\frac{\partial I(u)}{\partial u}}^\text{I上的图像梯度}
+    \overbrace{\frac{\partial W(x,p)}{\partial x}}^\text{W对x}
+  }_\text{小wrap之后的图像梯度}
+  \overbrace{\frac{\partial W(x,p)}{\partial p}}^\text{W在p=0处的导数}
+  \Delta p \\ &\quad \bf - \quad T(x) \\
+
+  &= \bf I(W(x,p)) +
+  \underbrace{
+    \frac{\partial I}{\partial W}
+    \frac{\partial W}{\partial p}
+  }_\text{雅可比矩阵}
+  \Delta p - T(x)
+\end{aligned}</script><p>可以看到在雅可比矩阵中$\bf \frac{\partial W}{\partial p}$是$\bf p=0$处的导数，不用随着$\bf p$更新而更新，这也顺便降低了一些计算量。当然最大的计算量是海森矩阵的求逆，而因为有$\bf \frac{\partial I}{\partial W}$，海森矩阵并不固定。</p>
+<p>而这种方法也被用于所谓FEJ中——<strong>海森矩阵与当前的$\bf p$无关，从而就避免了在不同的$\bf p$点上对系统线性化的不一致性。</strong></p>
+<h3 id="图像对齐：IC"><a href="#图像对齐：IC" class="headerlink" title="图像对齐：IC"></a>图像对齐：IC</h3><p>补充<strong>inverse compositional</strong>法。与FC法不同，IC法将参考图像和目标图像的地位改变了一下，采取这种策略：将<code>I</code>做一次大wrap，将<code>T</code>做一次小wrap，将这二者进行对齐：</p>
+<script type="math/tex; mode=display">
+\bf p = \arg \min_p \sum_x \left[T(W(x,\Delta p)) - I(W(x,p))\right]^2</script><script type="math/tex; mode=display">
+\begin{aligned}
+\bf T(W(x,\Delta p)) - I(W(x,p)) & \approx \bf
+  \underbrace{
+    T(\overbrace{
+      W(x,0)
+    }^\text{单位wrap即x})
+  }_\text{在p=0处泰勒展开}
+   + \overbrace{
+     \frac{\partial T(u)}{\partial u}
+    }^\text{T上的梯度}
+    \overbrace{
+     \frac{\partial W(x,p)}{\partial p}
+    }^\text{W在p=0处的导数}
+    \Delta p
+   - I(W(x,p)) \\
+
+  &= \bf T(x) + 
+  \underbrace{
+    \frac{\partial T}{\partial u} \frac{\partial W}{\partial p}
+  }_\text{雅可比矩阵}
+  \Delta p - I(W(x,p))
+
+\end{aligned}</script><p>这时我们可以看到，雅可比矩阵的两个乘数项都与$\bf p$无关，不用随着$\bf p$更新而更新，<strong>从而海森矩阵是固定的，海森矩阵的逆也是固定的，进而大大降低了计算量。</strong></p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
 <li>求高斯分布的后验分布的均值会引出最小二乘法</li>
 <li>高斯牛顿方程的海森矩阵就是后验分布的信息矩阵，方程右手边的向量就是其信息向量</li>
 <li>直接抠出协方差矩阵对应变量的子矩阵得到其边缘分布，做舒尔补则得到其条件分布</li>
 <li>直接抠出信息矩阵对应变量的子矩阵得到的是其条件分布，做舒尔补则得到的是其边缘分布</li>
 <li>IEKF相当于窗口长度为1的滑动窗口方法，窗口长度扩展到所有变量则等价于全局BA</li>
-<li>滑动窗口边缘化变量时不再更新老变量从而导致系统的线性化点不同，FEJ可能只能缓解而无法根治这个问题</li>
+<li>滑动窗口边缘化变量时不再更新老变量从而导致系统的线性化点不同，FEJ只使用0点的雅可比从而保证一致性</li>
 </ul>
 <p>参考资料</p>
 <ul>
 <li>G. Sibley, L. Matthies, and G. Sukhatme. Sliding window filterwith application to planetary landing.JFR, 27(5):587–608, 2010.</li>
+<li>S. Baker, and I. Matthews, “Lucas-Kanade 20 Years on: A Unifying Framework: Part 1,” Int’l J. Computer Vision, vol. 56, no. 3, pp. 221-255, 2004.</li>
 </ul>
 
         </div>
@@ -621,7 +692,7 @@ p(\bf x, y) &= \bf\mathcal N^{-1} \left(
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2019-08-22T14:56:45.947Z" itemprop="dateUpdated">2019-08-22 22:56:45</time>
+    最后更新时间：<time datetime="2019-08-27T11:28:08.336Z" itemprop="dateUpdated">2019-08-27 19:28:08</time>
 </span><br>
 
 
