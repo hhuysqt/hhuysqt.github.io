@@ -28,7 +28,7 @@
 <meta property="og:site_name" content="hhuysqt">
 <meta property="og:description" content="卡尔曼滤波器有无数种推导方法：你可以将因果IIR维纳滤波器写成递推的形式，那么就是卡尔曼滤波器；你可以将估计值测量值等等都假设为高斯分布，通过最大后验估计(maximun a posterior)得到批量最小二乘法(batch least-squares)：$(H^TW^{-1}H)x = H^TW^{-1}z$，利用$H^TW^{-1}H$的稀疏性，通过Cholesky分解并发现其中的递推规则，">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-08-21T14:43:16.200Z">
+<meta property="og:updated_time" content="2019-11-12T09:36:55.228Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="卡尔曼滤波器">
 <meta name="twitter:description" content="卡尔曼滤波器有无数种推导方法：你可以将因果IIR维纳滤波器写成递推的形式，那么就是卡尔曼滤波器；你可以将估计值测量值等等都假设为高斯分布，通过最大后验估计(maximun a posterior)得到批量最小二乘法(batch least-squares)：$(H^TW^{-1}H)x = H^TW^{-1}z$，利用$H^TW^{-1}H$的稀疏性，通过Cholesky分解并发现其中的递推规则，">
@@ -299,14 +299,14 @@ p(y|x) = \frac{p(x|y)p(y)}{p(x)}</script><p>赋予它一些含义：$p(y|x)$称�
 <p>我们先得到$p(\bf x_k | \bf x_{k-1})\sim\mathcal N(\bf\check{x}_k,\bf\check{P}_k)$，即卡尔曼滤波的<code>预测</code>：</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-\bf\check{x}_k &= E[\bf x_k] = E[\bf A_k\bf x_{k-1} + \bf w_k + \bf u_k] \\
-&= \bf A_kE[\bf x_{k-1}] + \bf w_k + E[\bf u_k] \\
-&= \bf A_k\bf\hat{x}_{k-1} + \underbrace {\bf w_k}_\text{输入} \\ \\
+\bf\check{x}_k &= \bf E[\bf x_k] = E[A_k x_{k-1} + w_k + u_k] \\
+&= \bf A_kE[x_{k-1}] + w_k + E[u_k] \\
+&= \bf A_k\hat{x}_{k-1} + \underbrace {w_k}_\text{输入} \\ \\
 
 \bf\check{P}_k &= \bf E[(x_k - E[x_k])(x_k - E[x_k])^T] \\
-&= \bf E[(A_k x_{k-1} + w_k + u_k - A_k\check{x}_{k-1} - w_k) \\
-&\quad \bf *(A_kx_{k-1} + w_k + u_k - A_k\check{x}_{k-1} - w_k)^T] \\
-&= \bf A_k E[(x_{k-1} - \check{x}_{k-1})(x_{k-1} - \check{x}_{k-1})^T]A_k^T + E[u_k u_k^T] \\
+&= \bf E[(A_k x_{k-1} + w_k + u_k - A_k\hat{x}_{k-1} - w_k) \\
+&\quad \bf *(A_kx_{k-1} + w_k + u_k - A_k\hat{x}_{k-1} - w_k)^T] \\
+&= \bf A_k E[(x_{k-1} - \hat{x}_{k-1})(x_{k-1} - \hat{x}_{k-1})^T]A_k^T + E[u_k u_k^T] \\
 &= \bf A_k \hat{P}_{k-1} A_k^T + Q_k
 
 \end{aligned}</script><p>对于y：</p>
@@ -314,7 +314,7 @@ p(y|x) = \frac{p(x|y)p(y)}{p(x)}</script><p>赋予它一些含义：$p(y|x)$称�
 \begin{aligned}
 \mu_y &= \bf E[\bf y_k] \\
  &= \bf C_k\check{x}_k \\
- &= \bf C_k(\bf A_k\bf\check{x}_{k-1} + \bf w_k) \\ \\
+ &= \bf C_k(\bf A_k\bf\hat{x}_{k-1} + \bf w_k) \\ \\
 
 \bf\Sigma_{yy} &= \bf E[(y_k - E[y_k])(y_k - E[y_k])^T] \\
 &= \bf E[(C_k x_{k} + v_k - C_k\check{x}_k)(C_k x_{k} + v_k - C_k\check{x}_k)^T] \\
@@ -324,8 +324,9 @@ p(y|x) = \frac{p(x|y)p(y)}{p(x)}</script><p>赋予它一些含义：$p(y|x)$称�
 <script type="math/tex; mode=display">
 \begin{aligned}
 \bf\Sigma_{xy} &= \bf E[(x_k - E[x_k])(y_k - E[y_k])^T] \\
-&= \bf E[(A_k(x_{k-1} - \check{x}_{k-1}) + u_k)(C_k(A_k(x_{k-1} - \check{x}_{k-1}) + u_k) + v_k)^T] \\
-&= \bf \left( A_k E[(x_{k-1} - \check{x}_{k-1})(x_{k-1} - \check{x}_{k-1})^T]A_k^T + E[u_k u_k^T] \right) C_k^T + 0 + 0 + 0 + 0 + 0 \\
+&= \bf E[(A_k(x_{k-1} - \hat{x}_{k-1}) + u_k)(C_k(A_k(x_{k-1} - \hat{x}_{k-1}) + u_k) + v_k)^T] \\
+&= \bf \left( A_k E[(x_{k-1} - \hat{x}_{k-1})(x_{k-1} - \hat{x}_{k-1})^T]A_k^T + E[u_k u_k^T] \right) C_k^T + 0 + 0 + 0 + 0 + 0 \\
+&= \bf(\underbrace{A_k \hat{P}_{k-1} A_k^T + Q_k}_{\check{P}_k})C_k^T \\
 &= \bf\check{P}_k C_k^T
 \end{aligned}</script><p>然后我们直接写出联合高斯分布$\bf p( x_k, y_k | x_{k-1})$：</p>
 <script type="math/tex; mode=display">
@@ -339,7 +340,7 @@ p(y|x) = \frac{p(x|y)p(y)}{p(x)}</script><p>赋予它一些含义：$p(y|x)$称�
 \end{aligned}</script><p>由上文<a href="#展开联合高斯概率密度函数">展开联合高斯概率密度函数</a>得到后验概率，即卡尔曼滤波器的<code>更新</code>：</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-&p(\bf x_k | \bf x_{k-1},\bf y_k) \\
+&\bf p(x_k | x_{k-1}, y_k) \\
 &= \bf \mathcal N\left( \mu_x + \Sigma_{xy}\Sigma_{yy}^{-1}(y - \mu_y), \quad \Sigma_{xx} - \Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx} \right) \\
 &= \bf \mathcal N\left( \overbrace{ \check{x}_k + \underline{\check{P}_k C_k^T(C_k\check{P}_kC_k^T + R_k)^{-1}}(y_k - C_k\check{x}_k)}^{\text{后验均值}\hat x}, \quad 
   \overbrace{(I - \underline{\check{P}_k C_k^T(\bf C_k\check{P}_kC_k^T + R_k)^{-1}} C_k)\check{P}_k}^{\text{后验方差}\hat P} \right)
@@ -380,7 +381,7 @@ p(y|x) = \frac{p(x|y)p(y)}{p(x)}</script><p>赋予它一些含义：$p(y|x)$称�
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2019-08-21T14:43:16.200Z" itemprop="dateUpdated">2019-08-21 22:43:16</time>
+    最后更新时间：<time datetime="2019-11-12T09:36:55.228Z" itemprop="dateUpdated">2019-11-12 17:36:55</time>
 </span><br>
 
 
