@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>carla-autoware多机部署 | hhuysqt</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="autonomous-driving">
+    <meta name="description" content="最近组里想在诸如NVIDIA TX2之类的硬件上搞自动驾驶，用以研究自动驾驶框架和算法性能。真车是真的搞不起，因为购置和维护成本太高，场地搭建不现实，测试安全性风险也太高，只能用软件模拟搭个沙盘才能过得了生活。自动驾驶模拟器自然应该在服务器上跑，自动驾驶软件又应该在板子上跑；模拟器就相当是个赛车游戏，板子就是个车手。问题来了：如何将一个硬件接入模拟器？鉴于机器人项目一般使用ROS作为中间件，而RO">
+<meta name="keywords" content="autonomous-driving">
+<meta property="og:type" content="article">
+<meta property="og:title" content="carla-autoware多机部署">
+<meta property="og:url" content="https://hhuysqt.github.io/carla-autoware/index.html">
+<meta property="og:site_name" content="hhuysqt">
+<meta property="og:description" content="最近组里想在诸如NVIDIA TX2之类的硬件上搞自动驾驶，用以研究自动驾驶框架和算法性能。真车是真的搞不起，因为购置和维护成本太高，场地搭建不现实，测试安全性风险也太高，只能用软件模拟搭个沙盘才能过得了生活。自动驾驶模拟器自然应该在服务器上跑，自动驾驶软件又应该在板子上跑；模拟器就相当是个赛车游戏，板子就是个车手。问题来了：如何将一个硬件接入模拟器？鉴于机器人项目一般使用ROS作为中间件，而RO">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://hhuysqt.github.io/carla-autoware/simulators.jpg">
+<meta property="og:image" content="https://hhuysqt.github.io/carla-autoware/carla.png">
+<meta property="og:image" content="https://hhuysqt.github.io/carla-autoware/weather.jpeg">
+<meta property="og:image" content="https://hhuysqt.github.io/carla-autoware/map.jpeg">
+<meta property="og:image" content="https://hhuysqt.github.io/carla-autoware/joustick.jpg">
+<meta property="og:image" content="https://hhuysqt.github.io/carla-autoware/pygame.jpg">
+<meta property="og:image" content="https://hhuysqt.github.io/carla-autoware/rviz.png">
+<meta property="og:image" content="https://hhuysqt.github.io/carla-autoware/rviz2.png">
+<meta property="og:updated_time" content="2021-02-01T06:50:04.801Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="carla-autoware多机部署">
+<meta name="twitter:description" content="最近组里想在诸如NVIDIA TX2之类的硬件上搞自动驾驶，用以研究自动驾驶框架和算法性能。真车是真的搞不起，因为购置和维护成本太高，场地搭建不现实，测试安全性风险也太高，只能用软件模拟搭个沙盘才能过得了生活。自动驾驶模拟器自然应该在服务器上跑，自动驾驶软件又应该在板子上跑；模拟器就相当是个赛车游戏，板子就是个车手。问题来了：如何将一个硬件接入模拟器？鉴于机器人项目一般使用ROS作为中间件，而RO">
+<meta name="twitter:image" content="https://hhuysqt.github.io/carla-autoware/simulators.jpg">
+    
+    <link rel="shortcut icon" href="/img/m.png">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+  <!-- highlight.js代码高亮主题 css 引入-->
+  <link rel="stylesheet" href="/plugins/highlight/styles/github.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+<!--
+  <script src="/plugins/highlight/highlight.pack.js"></script>
+-->
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- highlight.js代码高亮主题 css 引入-->
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">hhuysqt</h5>
+          <a href="mailto:1020988872@qq.com" title="1020988872@qq.com" class="mail">1020988872@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                所有文章
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                索引
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/hhuysqt" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.zhihu.com/people/hhuysqt/activities" target="_blank" >
+                <i class="icon icon-lg icon-search-plus"></i>
+                知乎
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-male"></i>
+                个人&amp;友链
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">carla-autoware多机部署</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">carla-autoware多机部署</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2021-01-30T15:32:39.000Z" itemprop="datePublished" class="page-time">
+  2021-01-30
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>目录</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#carla模拟器搭建"><span class="post-toc-number">1.</span> <span class="post-toc-text">carla模拟器搭建</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#安装"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">安装</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#配置操作"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">配置操作</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#开车"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">开车</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#嵌入式端"><span class="post-toc-number">2.</span> <span class="post-toc-text">嵌入式端</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#刷机，安装依赖包"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">刷机，安装依赖包</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#编译autoware和bridge"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">编译autoware和bridge</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#编译carla的PythonAPI"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">编译carla的PythonAPI</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#编译carla-ros-bridge"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">编译carla ros bridge</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#运行"><span class="post-toc-number">3.</span> <span class="post-toc-text">运行</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-carla-autoware"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">carla-autoware多机部署</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2021-01-30 23:32:39" datetime="2021-01-30T15:32:39.000Z"  itemprop="datePublished">2021-01-30</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>最近组里想在诸如NVIDIA TX2之类的硬件上搞自动驾驶，用以研究自动驾驶框架和算法性能。真车是真的搞不起，因为购置和维护成本太高，场地搭建不现实，测试安全性风险也太高，只能用软件模拟搭个沙盘才能过得了生活。自动驾驶模拟器自然应该在服务器上跑，自动驾驶软件又应该在板子上跑；模拟器就相当是个赛车游戏，板子就是个车手。问题来了：如何将一个硬件接入模拟器？鉴于机器人项目一般使用ROS作为中间件，而ROS本身是分布式的，只要模拟器和自动驾驶框架支持ROS或者有ROS的转接口就可以了。</p>
+<a id="more"></a>
+<p>自动驾驶软件方面，在目前开源的两大框架<a href="https://apollo.auto/" target="_blank" rel="noopener">Apollo</a>和<a href="https://www.autoware.org/" target="_blank" rel="noopener">autoware</a>之中，由于阿波罗太过沉重，板子上跑不动，我选择用autoware。autoware按使用的中间件不同分两版本，其中<a href="http://www.autoware.ai/" target="_blank" rel="noopener">autoware.ai</a>使用老版的ROS1，<a href="http://www.autoware.auto/" target="_blank" rel="noopener">autoware.auto</a>使用新的ROS2；由于后者还需要大量折腾，我选择旧版autoware。</p>
+<p>模拟器方面，目前流行的开源方案有<a href="https://www.lgsvlsimulator.com/docs/" target="_blank" rel="noopener">lgsvl</a>和<a href="https://carla.readthedocs.io/" target="_blank" rel="noopener">carla</a>，它们功能都相当强大：可以模拟自然环境、道路建筑、交通信号、行人车辆、各种天气情况等，还有诸如GPS、IMU、摄像头、激光雷达等传感器，并提供ROS接口供软件接入。</p>
+<ul>
+<li>lgsvl是LG开源的模拟器，使用unity引擎，有许多官方企业合作，图形界面做的很完整，自带有一键傻瓜式的连接Apollo或者autoware的例程，自带了一个几条道路的小地图；</li>
+<li>carla是开源社区开发的，使用Unreal4引擎，没啥界面，基本上需要用python调它API才能操作，例程比较充分，自带了七八个小村镇的地图模型。</li>
+</ul>
+<p>个人感觉二者功能都可比，不过lgsvl太官方了，不够自由，开放的模型和地图没carla多，所以我选择用carla模拟器。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/carla-autoware/simulators.jpg" alt="simulators" title="">
+                </div>
+                <div class="image-caption">simulators</div>
+            </figure>
+<p>实验设置：</p>
+<ul>
+<li>局域网：千兆以太网。</li>
+<li>服务器：CPU选用i7-6700，内存32GB；至于显卡，我最开始用P106-100矿卡，性能略低于1060，结果无论是单独跑模拟器还是驾驶软件都非常勉强，还严重连累了图形界面的响应速度；后来升级到泰坦X（12GB）之后模拟器和自动驾驶都可以同时实时跑。</li>
+<li>操作系统：服务器上Ubuntu 18.04或者20.04都亲测能跑，嵌入式端最好用Ubuntu 18.04。</li>
+<li>嵌入式：我首先试了4G内存版的树莓派4，它启动autoware时候直接爆内存；又尝试TX2，8GB内存加开zram swap之后惊险地跑起来了，但是目测处理速度只有一两帧每秒，经常因为localization模块处理不过来而撞车；最后我升级到NVIDIA AGX Xavier，32GB内存，相传它比TX2高20倍的算力；但是最后发现<strong>网络通信成了瓶颈</strong>。</li>
+</ul>
+<p>carla提供了一个<a href="https://github.com/carla-simulator/carla-autoware" target="_blank" rel="noopener">carla-autoware的仿真组合</a>，使用docker一键编译和部署，在本机上开carla，而在docker上开autoware。这就好办了，把它docker构建过程依葫芦画瓢在嵌入式端部署一遍就好了。</p>
+<h3 id="carla模拟器搭建"><a href="#carla模拟器搭建" class="headerlink" title="carla模拟器搭建"></a>carla模拟器搭建</h3><p>直接参考<a href="https://carla.readthedocs.io/en/latest/start_quickstart/" target="_blank" rel="noopener">carla quick start guide</a>。由于国内git访问速度相当糟糕，我尽量选择下载release压缩包。</p>
+<h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><p>先安装一些依赖包：</p>
+<pre><code class="lang-sh"># ubuntu20.04已经没有python-pip包了。。
+sudo apt install -y python3-pip
+pip3 install --user pygame numpy
+</code></pre>
+<p>从<a href="https://github.com/carla-simulator/carla/releases" target="_blank" rel="noopener">release</a>中下载<code>CARLA_xx.tar.gz</code>（或者<code>CARLA_xx_RSS.tar.gz</code>，二选一），还有<code>AdditionalMaps_xx.tar.gz</code>。推荐使用最新的0.9.11版本。将CARLA解压，再将AdditionalMaps解压到<code>Import</code>目录中：</p>
+<pre><code class="lang-sh">mkdir carla-simulator
+tar xf CARLA_0.9.11.tar.gz -C carla-simulator
+tar xf AdditionalMaps_0.9.11.tar.gz -C carla-simulator/Import
+</code></pre>
+<p>然后一键启动carla：</p>
+<pre><code class="lang-sh">cd carla-simulator
+./CarlaUE4.sh
+</code></pre>
+<p>等上一会儿就会启动carla的world视图，在这里可以用WASD和鼠标来游玩。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/carla-autoware/carla.png" alt="carla-world" title="">
+                </div>
+                <div class="image-caption">carla-world</div>
+            </figure>
+<h4 id="配置操作"><a href="#配置操作" class="headerlink" title="配置操作"></a>配置操作</h4><p>对carla的操作全凭它的python API。。可以在另外的电脑上对它操作，不过得把carla-simulator下的<code>PythonAPI</code>文件夹拷贝过去，然后使用<code>PythonAPI/util</code>和<code>PythonAPI/examples</code>里面的例程，它们在<code>import carla</code>时候会引用<code>PythonAPI/carla/dist/</code>的egg包，默认只提供了python2.7和3.7的版本，如果python版本不对还会报错。这时可以做一些hack：如果你用ubuntu18.04自带的python3.6，就需要将<code>carla-0.9.11-py3.7-linux-x86_64.egg</code>拷贝一份为<code>carla-0.9.11-py3.6-linux-x86_64.egg</code>；或者你用的是ubuntu20.04的python3.8，就将它拷贝为<code>carla-0.9.11-py3.8-linux-x86_64.egg</code>，以此类推。</p>
+<p>还需要注意，跑这些例程时候得先cd到它们的目录中。。下面列举一些常用操作：</p>
+<p><code>PythonAPI/util/test_connection.py</code>用于测试模拟器的连接情况。需要使用<code>--host</code>指明服务器IP：</p>
+<pre><code class="lang-sh">$ python3 ./test_connection.py --host 192.168.xxx.xxx
+CARLA 61caeef4 connected at 192.168.xxx.xxx:2000.
+</code></pre>
+<p><code>PythonAPI/util/config.py</code>对carla进行操作。首先使用<code>-l</code>列举天气和地图的配置：</p>
+<pre><code class="lang-sh">$ python3 ./config.py --host 192.168.xxx.xxx -l
+weather presets:
+
+    ClearNoon, ClearSunset, CloudyNoon, CloudySunset, Default,
+    HardRainNoon, HardRainSunset, MidRainSunset, MidRainyNoon,
+    SoftRainNoon, SoftRainSunset, WetCloudyNoon, WetCloudySunset,
+    WetNoon, WetSunset.
+
+available maps:
+
+    Town01, Town01_Opt, Town02, Town02_Opt, Town03, Town03_Opt,
+    Town04, Town04_Opt, Town05, Town05_Opt.
+</code></pre>
+<p>随后可以使用<code>--weather</code>换天气，或者<code>--map</code>换地图。参考<a href="https://carla.readthedocs.io/en/latest/core_map/#carla-maps" target="_blank" rel="noopener">自带的地图配置</a>。目前默认地图Town03。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/carla-autoware/weather.jpeg" alt="不同天气：HardRainSunset, CloudyNoon, ClearSunset, ClearNoon" title="">
+                </div>
+                <div class="image-caption">不同天气：HardRainSunset, CloudyNoon, ClearSunset, ClearNoon</div>
+            </figure>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/carla-autoware/map.jpeg" alt="不同地图：Town01, Town02, Town04, Town05" title="">
+                </div>
+                <div class="image-caption">不同地图：Town01, Town02, Town04, Town05</div>
+            </figure>
+<h4 id="开车"><a href="#开车" class="headerlink" title="开车"></a>开车</h4><p>在<code>PythonAPI/examples</code>下面有<code>manual_control.py</code>和<code>manual_control_steeringwheel.py</code>可供玩耍。前者是鼠标键盘控制，后者用pygame接口，可以用手柄控制。玩手柄的时候，需要在本文件夹下面新建<code>wheel_config.ini</code>文件映射键位，配置诸如方向盘、油门、刹车的按键编号。可以使用<code>jstest-gtk</code>来确认按键配置：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/carla-autoware/joustick.jpg" alt="jstest-gtk" title="">
+                </div>
+                <div class="image-caption">jstest-gtk</div>
+            </figure>
+<p>安排好按键之后，可以写如下配置文件：</p>
+<pre><code>[G29 Racing Wheel]
+steering_wheel = 3
+throttle = 2
+brake = 5
+reverse = 0
+handbrake = 1
+</code></pre><p>然后就可以愉快的玩耍了。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/carla-autoware/pygame.jpg" alt="pygame" title="">
+                </div>
+                <div class="image-caption">pygame</div>
+            </figure>
+<h3 id="嵌入式端"><a href="#嵌入式端" class="headerlink" title="嵌入式端"></a>嵌入式端</h3><h4 id="刷机，安装依赖包"><a href="#刷机，安装依赖包" class="headerlink" title="刷机，安装依赖包"></a>刷机，安装依赖包</h4><p><strong>刷机工具问题</strong>：在主机上，用<a href="https://developer.nvidia.com/NVIDIA-sdk-manager" target="_blank" rel="noopener">NVIDIA sdkmanager</a>来给板子刷机。目前（2021-1）这个刷机工具拒绝在Ubuntu 20.04上运行，如果要强行运行，就要欺骗它：将<code>/etc/os-release</code>改为Ubuntu 18.04的！当然这可能会给别的工具造成一些困扰，到时候再改回去即可。。以下是一个例子：</p>
+<pre><code>NAME=&quot;Ubuntu&quot;
+VERSION=&quot;18.04.4 LTS (Bionic Beaver)&quot;
+ID=ubuntu
+ID_LIKE=debian
+PRETTY_NAME=&quot;Ubuntu 18.04.4 LTS&quot;
+VERSION_ID=&quot;18.04&quot;
+HOME_URL=&quot;https://www.ubuntu.com/&quot;
+SUPPORT_URL=&quot;https://help.ubuntu.com/&quot;
+BUG_REPORT_URL=&quot;https://bugs.launchpad.net/ubuntu/&quot;
+PRIVACY_POLICY_URL=&quot;https://www.ubuntu.com/legal/terms-and-policies/privacy-policy&quot;
+VERSION_CODENAME=bionic
+UBUNTU_CODENAME=bionic
+</code></pre><p><strong>Jetpack版本问题</strong>：目前autoware工程里面定死CUDA版本要小于等于10.0，凡是10.1、10.2通通报错，如果想省点心的话就给板子刷<code>Jetpack 4.3</code>，它带的是CUDA 10.0。</p>
+<p><strong>添加SSD</strong>：工程代码体积很大，板子自带的32GB闪存根本不够用。我给AGX Xavier加了个512G的SN750，不过测试读写速度只有1500MB左右，看样子其实可以用更低档次的SSD。可以将整个rootfs都移到SSD上，参考<code>https://github.com/jetsonhacks/rootOnNVMe</code>，这个代码的原理是先从32G的闪存上启动（uboot和内核都没动），然后利用一个systemd service将文件系统chroot到SSD上。<strong>首先对SSD分区</strong>：可以用fdisk、gparted等，分一个区就行了；接着格式化为ext4文件系统，可以用mkfs.ext4等工具；这两步可以在板子上做，也可以先弄好再装到板子上；然后依次运行这个代码里的<code>copy-rootfs-ssd.sh</code>和<code>setup-service.sh</code>；最后重启即可。</p>
+<p><strong>改为国内软件源</strong>：刷机完成之后，将<code>/etc/apt/sources.list</code>里面的URL改为国内的源，推荐清华源：<code>https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/</code>，注意Ubuntu的非x86的源的URL一般是<code>xxxxx/ubuntu-ports/</code>，而不是<code>xxxxx/ubuntu/</code>。</p>
+<p><strong>OpenCV版本问题</strong>：nvidia的jetson源里面画蛇添足地提供了opencv-4.1.1的包（而且这个包都没开cuda），然而ubuntu源是opencv-3.2.0，而且ros里面很多包都依赖这个版本的opencv。opencv3到4之间有大量接口更改，比如有很多<code>CV_xxx</code>宏定义改成了<code>cv::xxx</code>，又比如配置文件读写通通只认流式接口而不认以前的节点对象；而autoware代码用的是opencv3，要编译通过就有两种选择：改代码（亲测，修完接口之后没问题），不想改代码就降级opencv：</p>
+<p>首先使用<code>apt-cache policy libopencv-dev</code>查看都有哪些版本的包：</p>
+<pre><code>$ apt-cache policy libopencv-dev
+libopencv-dev:
+  Installed: 3.2.0+dfsg-4ubuntu0.1
+  Candidate: 4.1.1-2-gd5a58aa75
+  Version table:
+ *** 4.1.1-2-gd5a58aa75 500
+        500 https://repo.download.nvidia.com/jetson/common r32/main arm64 Packages
+     3.2.0+dfsg-4ubuntu0.1 500
+        500 https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports bionic-updates/universe arm64 Packages
+        500 https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports bionic-security/universe arm64 Packages
+        100 /var/lib/dpkg/status
+     3.2.0+dfsg-4build2 500
+        500 https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports bionic/universe arm64 Packages
+</code></pre><p>这里我选择<code>3.2.0+dfsg-4ubuntu0.1</code>版本的，重新安装<code>libopencv-dev</code>，并且用<code>apt-mark hold</code><strong>锁死它</strong>：</p>
+<pre><code class="lang-sh">sudo apt install --reinstall libopencv-dev=3.2.0+dfsg-4ubuntu0.1
+sudo apt-mark hold libopencv-dev
+</code></pre>
+<p><strong>然后安装ros</strong>，参考<a href="http://wiki.ros.org/melodic/Installation/Ubuntu" target="_blank" rel="noopener">ros ubuntu安装文档</a>。这里我还是选用清华源：</p>
+<pre><code>sudo sh -c &#39;. /etc/lsb-release &amp;&amp; echo &quot;deb http://mirrors.tuna.tsinghua.edu.cn/ros/ubuntu/ `lsb_release -cs` main&quot; &gt; /etc/apt/sources.list.d/ros-latest.list&#39;
+sudo apt-key adv --keyserver &#39;hkp://keyserver.ubuntu.com:80&#39; --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+sudo apt update
+sudo apt install ros-melodic-desktop-full
+</code></pre><p>用<code>rosdep</code>初始化ROS依赖项。注意国内访问github raw可能会出问题，因此最好买一个梯子。可以使用<code>proxychains4</code>进行代理：</p>
+<pre><code class="lang-sh">source /opt/ros/melodic/setup.sh
+sudo rosdep init
+rosdep update
+# 这两步会访问https://raw.githubusercontent.com/，可能需要代理：
+# sudo apt install proxychains4
+# 装完之后记得修改/etc/proxychains4.conf配置代理，记得要开启quiet_mode
+# 然后使用proxychains4代理这两个操作：
+#   sudo proxychains4 rosdep init
+#   proxychains4 rosdep update
+</code></pre>
+<p>接着就可以开始部署autoware了。</p>
+<h4 id="编译autoware和bridge"><a href="#编译autoware和bridge" class="headerlink" title="编译autoware和bridge"></a>编译autoware和bridge</h4><p>玩嵌入式端之前，先在主机上搭建<a href="https://github.com/carla-simulator/carla-autoware" target="_blank" rel="noopener">carla-autoware的docker</a>，确认能跑通了，再将里面的程序从docker里面拷贝出来到板子上部署。在主机上我没碰到什么问题，只是国内访问github相当慢，最好搭个代理；编译也要花上一段时间，耐心等待。</p>
+<p>在板子上，为了加快编译速度，我将板子CPU性能拉到最高（8核@2.265GHz），并且开风扇散热：</p>
+<pre><code>sudo nvpmodel -m 0
+sudo sh -c &#39;echo 100 &gt; /sys/devices/pwm-fan/target_pwm&#39;
+</code></pre><p>在板子上，先建立工程目录，并启动ROS环境：</p>
+<pre><code class="lang-sh">mkdir ~/autoware.ai/src -p
+source /opt/ros/melodic/setup.sh
+</code></pre>
+<p>在主机上，将carla-autoware的docker里面<code>~/Autoware/src</code>打包出来，拷贝到板子的<code>~/autoware.ai/src</code>里。</p>
+<p>以下配置均在板子上操作，参考<a href="https://github.com/Autoware-AI/autoware.ai/wiki/Source-Build" target="_blank" rel="noopener">autoware源码编译</a>和<a href="https://github.com/carla-simulator/carla-autoware/blob/master/Dockerfile" target="_blank" rel="noopener">carla-autoware docker例程</a>。</p>
+<p>安装依赖项：</p>
+<pre><code class="lang-sh">sudo apt install -y python-catkin-pkg python-rosdep \
+  ros-$ROS_DISTRO-catkin python3-pip \
+  python3-colcon-common-extensions \
+  python3-setuptools python3-vcstool
+pip3 install -U setuptools
+</code></pre>
+<p>升级eigen库以支持cuda：</p>
+<pre><code class="lang-sh">cd &amp;&amp; wget http://bitbucket.org/eigen/eigen/get/3.3.7.tar.gz #Download Eigen
+mkdir eigen &amp;&amp; tar xf 3.3.7.tar.gz -C eigen #Decompress
+cd eigen &amp;&amp; mkdir build &amp;&amp; cd build &amp;&amp; cmake .. &amp;&amp; make &amp;&amp; make install #Build and install
+cd &amp;&amp; rm -rf 3.3.7.tar.gz &amp;&amp; rm -rf eigen #Remove downloaded and temporary files
+</code></pre>
+<p>安装autoware的依赖库：</p>
+<pre><code class="lang-sh">cd ~/autoware.ai
+rosdep install -y --from-paths src --ignore-src --rosdistro $ROS_DISTRO
+</code></pre>
+<p>最后开始编译：</p>
+<pre><code class="lang-sh">AUTOWARE_COMPILE_WITH_CUDA=1 colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
+</code></pre>
+<h4 id="编译carla的PythonAPI"><a href="#编译carla的PythonAPI" class="headerlink" title="编译carla的PythonAPI"></a>编译carla的PythonAPI</h4><p>板子作为client，还需要carla的python包以和carla服务器交互，这需要在板子上编译carla的client部分。参考<a href="https://carla.readthedocs.io/en/latest/build_linux/" target="_blank" rel="noopener">carla的linux编译流程</a>，首先下载<a href="https://github.com/carla-simulator/carla/releases/tag/0.9.11" target="_blank" rel="noopener">完整的源代码</a>。我们新建文件夹<code>carla-0.9.11</code>并将代码解压进去。</p>
+<p>安装依赖项：</p>
+<pre><code class="lang-sh">sudo apt install build-essential \
+  clang-8 lld-8 g++-7 cmake \
+  ninja-build libvulkan1 python \
+  python-pip python-wheel python-dev \
+  python3-dev python3-pip libpng-dev \
+  libtiff5-dev libjpeg-dev tzdata sed \
+  curl unzip autoconf libtool rsync \
+  libxml2-dev ros-melodic-ackermann-msgs \
+  ros-melodic-derived-object-msgs
+pip2 install --user distro
+pip3 install --user distro
+</code></pre>
+<p>然后<strong>将clang-8拷贝为clang</strong>，否则后面会找不到clang：</p>
+<pre><code class="lang-sh">cd /usr/bin/
+sudo ln -s clang-8 clang
+sudo ln -s clang++-8 clang++
+cd - # cd空格减号回车：切换回到原来的目录
+</code></pre>
+<p>接着修改<code>Util/BuildTools/Setup.sh</code>，将<code>CARLA_VERSION</code>直接定义为<code>&quot;0.9.11&quot;</code>而不是通过git去找，因为这是release代码包，并没有git仓库：</p>
+<pre><code class="lang-diff">@@ -465,7 +465,8 @@
+ # -- Generate Version.h --------------------------------------------------------
+ # ==============================================================================
+
+-CARLA_VERSION=$(get_git_repository_version)
++#CARLA_VERSION=$(get_git_repository_version)
++CARLA_VERSION=&quot;0.9.11&quot;
+
+ log &quot;CARLA version ${CARLA_VERSION}.&quot;
+</code></pre>
+<p>随后开始编译。编译时会下载一堆东西导致很慢，耐心等待。。。</p>
+<pre><code class="lang-sh"># 编译python2，因为carla-autoware例程只用python2
+make PythonAPI ARGS=&quot;--python-version=2&quot;
+</code></pre>
+<p>最后在<code>PythonAPI/carla/dist/</code>下就会生成<code>aarch64</code>的python egg包。将它们拷贝出来，比方说放在<code>~/PythonAPI/</code>目录下面，那么就要将<code>PYTHONPATH</code>环境变量指向那里。可以在<code>~/.bashrc</code>里面添加：</p>
+<pre><code class="lang-sh">export PYTHONPATH=$PYTHONPATH:~/PythonAPI/carla-0.9.11-py2.7-linux-aarch64.egg
+</code></pre>
+<h4 id="编译carla-ros-bridge"><a href="#编译carla-ros-bridge" class="headerlink" title="编译carla ros bridge"></a>编译carla ros bridge</h4><p>首先安装依赖项：</p>
+<pre><code class="lang-sh">sudo apt install python-pip python-wheel \
+  ros-melodic-ackermann-msgs \
+  ros-melodic-derived-object-msgs \
+  libsdl2-dev libsdl2-ttf-dev libsdl2-image-dev \
+  libsdl2-mixer-dev libsdl2-gfx-dev \
+  libsdl2-net-dev libportmidi-dev
+pip install simple-pid pygame networkx==2.2
+</code></pre>
+<p>下载代码，姑且放在<code>~/</code>目录：</p>
+<pre><code class="lang-sh">cd
+# bridge代码
+git clone -b &#39;0.9.10.1&#39; --recurse-submodules https://github.com/carla-simulator/ros-bridge.git
+# 地图配置和点云数据，2.4G，git仓库另占有2.4G
+git clone --recurse-submodules https://github.com/carla-simulator/carla-autoware
+# 以上两步可以直接从docker里面拷出来，反正它们都已经下载过了。注意它们的.git目录就不需要拷贝了
+</code></pre>
+<p>建立ros工作目录为<code>~/carla_ws</code>：</p>
+<pre><code class="lang-sh">mkdir -p ~/carla_ws/src
+cd ~/carla_ws/src
+ln -s ~/ros-bridge
+ln -s ~/carla-autoware/carla-autoware-agent
+</code></pre>
+<p>编译它：</p>
+<pre><code class="lang-sh">cd ~/carla_ws
+source /opt/ros/melodic/setup.bash
+catkin_make
+</code></pre>
+<p>最后在<code>~/.bashrc</code>最后追加设置<code>CARLA_AUTOWARE_CONTENTS</code>环境变量，指向地图目录：</p>
+<pre><code class="lang-sh">export CARLA_AUTOWARE_CONTENTS=~/carla-autoware/autoware-contents
+</code></pre>
+<h3 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h3><p>先<strong>在服务器上</strong>启动carla，即运行<code>CarlaUE4.sh</code>。然后用python API切换地图，详见上文。假设切为Town01。</p>
+<p><strong>在板子的图形界面里</strong>打开一个终端，初始化autoware环境：</p>
+<pre><code class="lang-sh">source ~/carla_ws/devel/setup.bash
+source ~/autoware.ai/install/setup.bash
+</code></pre>
+<p>最后<strong>开始运行例程</strong>，需要设置<code>town</code>和<code>host</code>参数：</p>
+<pre><code class="lang-sh">roslaunch carla_autoware_agent carla_autoware_agent.launch town:=Town01 host:=192.168.xxx.xxx
+</code></pre>
+<p>它启动了一个rviz界面，可以通过它进行操作：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/carla-autoware/rviz.png" alt="启动rviz" title="">
+                </div>
+                <div class="image-caption">启动rviz</div>
+            </figure>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/carla-autoware/rviz2.png" alt="设置目的地，开始自动驾驶" title="">
+                </div>
+                <div class="image-caption">设置目的地，开始自动驾驶</div>
+            </figure>
+<p>看上去可以跑了，然而在AGX Xavier板子上运行仍未达到实时，转弯之后还是撞车了；CPU和内存利用率都还好，但是千兆网络下行速度80MBps左右，考虑到给板子scp大文件时候也基本上这个速度，可以认为网络IO已经跑满了。想必瓶颈就在ros以及跟服务器的网络通信上了，这将是以后需要优化的目标，可选的方案：数据压缩、减少连接个数、RDMA。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2021-02-01T06:50:04.801Z" itemprop="dateUpdated">2021-02-01 14:50:04</time>
+</span><br>
+
+
+        
+        欢迎留言，大佬轻拍。。
+        
+    </div>
+    
+    <footer>
+        <a href="https://hhuysqt.github.io">
+            <img src="/img/avatar.jpg" alt="hhuysqt">
+            hhuysqt
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/autonomous-driving/">autonomous-driving</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://hhuysqt.github.io/carla-autoware/&title=《carla-autoware多机部署》 — hhuysqt&pic=https://hhuysqt.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://hhuysqt.github.io/carla-autoware/&title=《carla-autoware多机部署》 — hhuysqt&source=最近组里想在诸如NVIDIA TX2之类的硬件上搞自动驾驶，用以研究自动驾驶框架和算法性能。真车是真的搞不起，因为购置和维护成本太高，场地搭建不现实，测试..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://hhuysqt.github.io/carla-autoware/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《carla-autoware多机部署》 — hhuysqt&url=https://hhuysqt.github.io/carla-autoware/&via=https://hhuysqt.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://hhuysqt.github.io/carla-autoware/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/marginalization/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">最小二乘法，非线性优化和边缘化</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+<section class="comments" id="comments">
+    <div id="gitment_thread"></div>
+    <link rel="stylesheet" href="https://jjeejj.github.io/css/gitment.css">
+    <script src="https://jjeejj.github.io/js/gitment.js"></script>
+    <script>
+        var gitment = new Gitment({
+            owner: 'hhuysqt',
+            repo: 'hhuysqt.github.io',
+            oauth: {
+                client_id: 'f3accf3be337dcd6d61d',
+                client_secret: 'af75b9e501d76dc85f1f0417d7307419df49aeec',
+            },
+        })
+        gitment.render('comments')
+    </script>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>hhuysqt &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://hhuysqt.github.io/carla-autoware/&title=《carla-autoware多机部署》 — hhuysqt&pic=https://hhuysqt.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://hhuysqt.github.io/carla-autoware/&title=《carla-autoware多机部署》 — hhuysqt&source=最近组里想在诸如NVIDIA TX2之类的硬件上搞自动驾驶，用以研究自动驾驶框架和算法性能。真车是真的搞不起，因为购置和维护成本太高，场地搭建不现实，测试..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://hhuysqt.github.io/carla-autoware/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《carla-autoware多机部署》 — hhuysqt&url=https://hhuysqt.github.io/carla-autoware/&via=https://hhuysqt.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://hhuysqt.github.io/carla-autoware/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://hhuysqt.github.io/carla-autoware/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</body>
+</html>

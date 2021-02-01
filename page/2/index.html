@@ -161,6 +161,59 @@
     <ul class="post-list">
     
         <li class="post-list-item fade">
+            <article id="post-bcmf2"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2018-04-27 11:57:26" datetime="2018-04-27T03:57:26.000Z"  itemprop="datePublished">2018-04-27</time>
+
+        
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/bcmf2/">bcmf[2] 驱动：初始化</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        本文总结BCM43438的初始化流程，初始化成功的标志是连上WiFi。
+参考WICED SDK、NuttX，以及Linux的源码，它们的流程略有不同。Linux的驱动面面俱到；WICED的驱动虽只针对物联网设备，却写得相当冗杂；nuttx的驱动则相当简洁恰好能用。
+
+WICED可从Cypress官网上下载，注册个账号就好了。这份软件架构简直是一切以WICED为中心，有bootloader、dct（Device Configuration Table）、OTA（Over The Air）等自创的元素，如果用它支持的平台如stm32的话，那可以非常迅速地出成果，然而如果要移植到别的CPU架构的话它并不太友好。。
+NuttX可从bitbucket/nuttx上git clone一份，或者从SourceForge下载代码包。SourceForge上面的7.24及以前的驱动有问题，我在bitbucket上提交了这份commit。bitbucket在墙内访问相当不稳定。。
+Linux可以直接访问Bootlin的Linux Cross Reference。在Linux内核中，博通SDIO接口的网卡驱动是brcmfmac，归类到brcm80211，这是博通官方提供的驱动，需要non-free的固件。b43的驱动是社区通过一些逆向工程实现的，只支持老版的PCIe网卡。。
+
+初始化过程纯粹就是面向过程的代码，因此以下通过罗列它们的流程来进行分析。
+固件这玩意儿想必是厂商喜闻乐见的东西——在你编写的程序中安插黑盒子，而你又无可奈何。
+    
+
+        <a href="/bcmf2/" class="post-more waves-effect waves-button">
+            阅读全文…
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bcm-wifi/">bcm-wifi</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
             <article id="post-bcmf1"
   class="article-card article-type-post" itemprop="blogPost">
 
@@ -610,54 +663,6 @@ hardfault来源Cortex M3、M4的向量表中，3号异常是HardFault；接下�
 
         </li>
     
-        <li class="post-list-item fade">
-            <article id="post-gdb调试技巧"
-  class="article-card article-type-post" itemprop="blogPost">
-
-    <div class="post-meta">
-        <time class="post-time" title="2018-02-25 00:08:35" datetime="2018-02-24T16:08:35.000Z"  itemprop="datePublished">2018-02-25</time>
-
-        
-
-
-    </div>
-
-    
-
-
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/gdb调试技巧/">gdb调试stm32的技巧</a>
-    </h3>
-  
-
-
-
-
-    <div class="post-content" id="post-content" itemprop="postContent">
-
-    
-        很多人开发C程序就像写脚本那样，查错，靠的是眼睛看；但是作为系统开发程序员，bug单纯靠看是查不出来的，于是就用printf，于是每一次查错都不可避免要机械地写printf、编译、烧写、运行，没有IDE的时候烧写、运行还不太方便。如果能在命令行下面设断点、单步调试什么的，想必是极好的。
-有时候开发一些程序还不得不在Ubuntu下弄，比方说国外的不少开源项目像px4、openmv之类的，又比方说Linux、nuttx之类的系统开发，等等。当然诸如Eclipse之类的IDE配置一下也能聊胜于无，但是配置它们的复杂度不亚于在命令行下面弄，而且连接板子、开gdb server这些工序只能在命令行下完成；好处是调试时候能用鼠标操作。
-其实，命令行下面用gdb调试，熟悉基本命令之后，用起来相当顺手；在TUI模式下面调试，视觉效果不亚于使用IDE。
-需要安装的软件gdb包管理装就行：
-$ sudo apt-get install gdb-arm-none-eabi
-当然也可以选用别的，比方说
-
-arm-uclinuxeabi-2010q1里面就有arm-uclinuxeabi-gdb。不过这个的TUI有问题。
-SourceForge的uclinux下载页面（崩掉了）
-
-    
-
-        <a href="/gdb调试技巧/" class="post-more waves-effect waves-button">
-            阅读全文…
-        </a>
-    </div>
-    
-</article>
-
-        </li>
-    
     </ul>
 
     
@@ -689,7 +694,7 @@ SourceForge的uclinux下载页面（崩掉了）
         </p>
     </div>
     <div class="bottom">
-        <p><span>hhuysqt &copy; 2015 - 2019</span>
+        <p><span>hhuysqt &copy; 2015 - 2021</span>
             <span>
                 
                 Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>

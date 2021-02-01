@@ -161,6 +161,54 @@
     <ul class="post-list">
     
         <li class="post-list-item fade">
+            <article id="post-gdb调试技巧"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2018-02-25 00:08:35" datetime="2018-02-24T16:08:35.000Z"  itemprop="datePublished">2018-02-25</time>
+
+        
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/gdb调试技巧/">gdb调试stm32的技巧</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        很多人开发C程序就像写脚本那样，查错，靠的是眼睛看；但是作为系统开发程序员，bug单纯靠看是查不出来的，于是就用printf，于是每一次查错都不可避免要机械地写printf、编译、烧写、运行，没有IDE的时候烧写、运行还不太方便。如果能在命令行下面设断点、单步调试什么的，想必是极好的。
+有时候开发一些程序还不得不在Ubuntu下弄，比方说国外的不少开源项目像px4、openmv之类的，又比方说Linux、nuttx之类的系统开发，等等。当然诸如Eclipse之类的IDE配置一下也能聊胜于无，但是配置它们的复杂度不亚于在命令行下面弄，而且连接板子、开gdb server这些工序只能在命令行下完成；好处是调试时候能用鼠标操作。
+其实，命令行下面用gdb调试，熟悉基本命令之后，用起来相当顺手；在TUI模式下面调试，视觉效果不亚于使用IDE。
+需要安装的软件gdb包管理装就行：
+$ sudo apt-get install gdb-arm-none-eabi
+当然也可以选用别的，比方说
+
+arm-uclinuxeabi-2010q1里面就有arm-uclinuxeabi-gdb。不过这个的TUI有问题。
+SourceForge的uclinux下载页面（崩掉了）
+
+    
+
+        <a href="/gdb调试技巧/" class="post-more waves-effect waves-button">
+            阅读全文…
+        </a>
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
             <article id="post-cross-compiler"
   class="article-card article-type-post" itemprop="blogPost">
 
@@ -287,7 +335,7 @@ Emcraft为一些ST的板子做了第三方的BSP，其中包括STM32F429I-disc�
         </p>
     </div>
     <div class="bottom">
-        <p><span>hhuysqt &copy; 2015 - 2019</span>
+        <p><span>hhuysqt &copy; 2015 - 2021</span>
             <span>
                 
                 Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
