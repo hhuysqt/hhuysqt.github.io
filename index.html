@@ -277,7 +277,7 @@
     <div class="post-content" id="post-content" itemprop="postContent">
 
     
-        卡尔曼滤波器有无数种推导方法：你可以将因果IIR维纳滤波器写成递推的形式，那么就是卡尔曼滤波器；你可以将估计值测量值等等都假设为高斯分布，通过最大后验估计(maximun a posterior)得到批量最小二乘法(batch least-squares)：$(H^TW^{-1}H)x = H^TW^{-1}z$，利用$H^TW^{-1}H$的稀疏性，通过Cholesky分解并发现其中的递推...
+        贝叶斯框架下的传感器融合，或者说状态估计，说的是如何求条件概率问题：假设系统的状态，诸如位置、角度、速度等，用n维向量$\bf x$表示，其分布为$p(\bf x)$；又另有一系列传感器对状态$\bf x$进行各种不同概念的观测，诸如距离、角度、图像等，输出为一个m维向量$\bf z$，其分布为$p(\bf z)$；那么就想得到状态$\bf x$关于观测$\bf z$的条件概率$p(\bf ...
     
 
         <a href="/kalman/" class="post-more waves-effect waves-button">

@@ -21,17 +21,17 @@
     
     
     <meta name="keywords" content="">
-    <meta name="description" content="卡尔曼滤波器有无数种推导方法：你可以将因果IIR维纳滤波器写成递推的形式，那么就是卡尔曼滤波器；你可以将估计值测量值等等都假设为高斯分布，通过最大后验估计(maximun a posterior)得到批量最小二乘法(batch least-squares)：$(H^TW^{-1}H)x = H^TW^{-1}z$，利用$H^TW^{-1}H$的稀疏性，通过Cholesky分解并发现其中的递推规则，">
+    <meta name="description" content="贝叶斯框架下的传感器融合，或者说状态估计，说的是如何求条件概率问题：假设系统的状态，诸如位置、角度、速度等，用n维向量$\bf x$表示，其分布为$p(\bf x)$；又另有一系列传感器对状态$\bf x$进行各种不同概念的观测，诸如距离、角度、图像等，输出为一个m维向量$\bf z$，其分布为$p(\bf z)$；那么就想得到状态$\bf x$关于观测$\bf z$的条件概率$p(\bf x |">
 <meta property="og:type" content="article">
 <meta property="og:title" content="卡尔曼滤波器">
 <meta property="og:url" content="https://hhuysqt.github.io/kalman/index.html">
 <meta property="og:site_name" content="hhuysqt">
-<meta property="og:description" content="卡尔曼滤波器有无数种推导方法：你可以将因果IIR维纳滤波器写成递推的形式，那么就是卡尔曼滤波器；你可以将估计值测量值等等都假设为高斯分布，通过最大后验估计(maximun a posterior)得到批量最小二乘法(batch least-squares)：$(H^TW^{-1}H)x = H^TW^{-1}z$，利用$H^TW^{-1}H$的稀疏性，通过Cholesky分解并发现其中的递推规则，">
+<meta property="og:description" content="贝叶斯框架下的传感器融合，或者说状态估计，说的是如何求条件概率问题：假设系统的状态，诸如位置、角度、速度等，用n维向量$\bf x$表示，其分布为$p(\bf x)$；又另有一系列传感器对状态$\bf x$进行各种不同概念的观测，诸如距离、角度、图像等，输出为一个m维向量$\bf z$，其分布为$p(\bf z)$；那么就想得到状态$\bf x$关于观测$\bf z$的条件概率$p(\bf x |">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-12T09:36:55.228Z">
+<meta property="og:updated_time" content="2021-10-08T16:19:27.814Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="卡尔曼滤波器">
-<meta name="twitter:description" content="卡尔曼滤波器有无数种推导方法：你可以将因果IIR维纳滤波器写成递推的形式，那么就是卡尔曼滤波器；你可以将估计值测量值等等都假设为高斯分布，通过最大后验估计(maximun a posterior)得到批量最小二乘法(batch least-squares)：$(H^TW^{-1}H)x = H^TW^{-1}z$，利用$H^TW^{-1}H$的稀疏性，通过Cholesky分解并发现其中的递推规则，">
+<meta name="twitter:description" content="贝叶斯框架下的传感器融合，或者说状态估计，说的是如何求条件概率问题：假设系统的状态，诸如位置、角度、速度等，用n维向量$\bf x$表示，其分布为$p(\bf x)$；又另有一系列传感器对状态$\bf x$进行各种不同概念的观测，诸如距离、角度、图像等，输出为一个m维向量$\bf z$，其分布为$p(\bf z)$；那么就想得到状态$\bf x$关于观测$\bf z$的条件概率$p(\bf x |">
     
     <link rel="shortcut icon" href="/img/m.png">
     <link rel="stylesheet" href="/css/style.css?v=1.7.2">
@@ -170,7 +170,7 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
             <h4>目录</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#多维高斯分布"><span class="post-toc-number">1.</span> <span class="post-toc-text">多维高斯分布</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#舒尔补"><span class="post-toc-number">2.</span> <span class="post-toc-text">舒尔补</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#乘法原理和贝叶斯公式"><span class="post-toc-number">3.</span> <span class="post-toc-text">乘法原理和贝叶斯公式</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#展开联合高斯概率密度函数"><span class="post-toc-number">4.</span> <span class="post-toc-text">展开联合高斯概率密度函数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#推导经典的5个卡尔曼滤波器公式"><span class="post-toc-number">5.</span> <span class="post-toc-text">推导经典的5个卡尔曼滤波器公式</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总结"><span class="post-toc-number">6.</span> <span class="post-toc-text">总结</span></a></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#多维高斯分布"><span class="post-toc-number">1.</span> <span class="post-toc-text">多维高斯分布</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#矩阵求逆引理"><span class="post-toc-number">2.</span> <span class="post-toc-text">矩阵求逆引理</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#由联合高斯分布得到条件分布"><span class="post-toc-number">3.</span> <span class="post-toc-text">由联合高斯分布得到条件分布</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#推导经典的5个卡尔曼滤波器公式"><span class="post-toc-number">4.</span> <span class="post-toc-text">推导经典的5个卡尔曼滤波器公式</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#联合分布"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">联合分布</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#条件分布"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">条件分布</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#总结"><span class="post-toc-number">4.3.</span> <span class="post-toc-text">总结</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#讨论：正则参数：信息矩阵和信息向量"><span class="post-toc-number">5.</span> <span class="post-toc-text">讨论：正则参数：信息矩阵和信息向量</span></a></li></ol>
         </nav>
     </aside>
 
@@ -194,165 +194,400 @@
 
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
-            <p>卡尔曼滤波器有无数种推导方法：你可以将<strong>因果IIR维纳滤波器</strong>写成递推的形式，那么就是卡尔曼滤波器；你可以将估计值测量值等等都假设为高斯分布，通过<strong>最大后验估计</strong>(maximun a posterior)得到<strong>批量最小二乘法</strong>(batch least-squares)：$(H^TW^{-1}H)x = H^TW^{-1}z$，利用$H^TW^{-1}H$的稀疏性，通过Cholesky分解并发现其中的递推规则，总结出卡尔曼滤波器。。。你也可以直接解析地求得后验分布并总结出卡尔曼滤波器，而这种推导方法是最简洁的。</p>
-<p>为什么要将估计量和测量值建模为高斯分布？一方面因为这是现实世界的合理假设，另外高斯分布这种指数上二次型有很好的特性：两个高斯分布的和、积都是高斯分布，从而高斯分布经过线性变换之后还是高斯分布。</p>
-<p>将参数建模为高斯分布的<strong>均值</strong>，假设只有线性变换，然后该怎么求？高斯分布的均值和最大值一样，而且它是凸的，而且指数只是二次的，于是求导令它等于0就得到结果了。求导得到的就是最小二乘法的方程，也就是说高斯分布求最值其实是最小二乘意义下的最优值。。然后接下来就要神奇地“看出”最小二乘方程里面的稀疏性并化简那些华丽的公式，才能得到卡尔曼滤波器。。</p>
-<p>然而，利用贝叶斯公式，从联合高斯分布推导出后验分布的解析表达式，就可以得到后验的均值和方差，就是我们想要的东西了。</p>
+            <p>贝叶斯框架下的传感器融合，或者说状态估计，说的是如何求条件概率问题：假设系统的<strong>状态</strong>，诸如位置、角度、速度等，用n维向量$\bf x$表示，其分布为$p(\bf x)$；又另有一系列传感器对状态$\bf x$进行各种不同概念的<strong>观测</strong>，诸如距离、角度、图像等，输出为一个m维向量$\bf z$，其分布为$p(\bf z)$；那么就想得到状态$\bf x$关于观测$\bf z$的条件概率$p(\bf x | z)$，求法就是经典的贝叶斯公式：</p>
+<script type="math/tex; mode=display">
+p({\bf x, z}) = p({\bf x | z}) p({\bf z})
+\tag{1}</script><p>对于参数化估计而言，$p(\bf x)$和$p(\bf z)$往往假设为高斯分布，因其具有很多计算、实现上的优势：可以仅用<strong>均值</strong>$\bf \mu$和<strong>协方差矩阵</strong>$\bf \Sigma$这两组参数就可以唯一确定；其最值、极值、期望都相等；关于乘法的封闭性：两个高斯分布pdf乘积归一化后依然满足高斯；关于线性运算的封闭性：满足高斯的自变量线性变换之后仍然满足高斯；等等。基于高斯分布、线性变换的假设下求条件分布的一系列算法，诸如卡尔曼滤波、信息滤波、最大后验迭代优化等，在线性或者一阶近似之下都是等价的；而卡尔曼滤波器正是其中最经典的。</p>
+<p>所谓“滤波”，就是每进来一个输入，就根据上一时刻的状态以及输入产出一个输出，即本时刻的状态仅与上一时刻状态以及本时刻输入有关系，即所谓马尔可夫性；诸如位置、角度、速度等都满足马尔可夫性。卡尔曼滤波器有无数种推导方法：在信号处理领域将<strong>因果IIR维纳滤波器</strong>写成递推的形式，那么就是卡尔曼滤波器；或者通过<strong>最大后验估计</strong>(maximun a posterior)，对误差函数求导等于0以求极值，高斯的极值又等于最值，得到<strong>批量最小二乘法</strong>(batch least-squares)：$\bf(H^TW^{-1}H)x = H^TW^{-1}z$，又利用马尔可夫性导致$\bf H^TW^{-1}H$的稀疏性，通过乔里斯基分解(Cholesky)并发现其中的递推规则，总结出卡尔曼滤波器。。。也可以直接利用贝叶斯公式，解析地求得后验分布并总结出卡尔曼滤波器，而这种推导方法是最简洁的。</p>
 <h2 id="多维高斯分布"><a href="#多维高斯分布" class="headerlink" title="多维高斯分布"></a>多维高斯分布</h2><script type="math/tex; mode=display">
-\mathcal N(\bf\mu, \bf\Sigma) \sim p(\bf x) = \frac{1}{\sqrt{(2\pi)^Ndet(\bf\Sigma)}}exp(-\frac{1}{2}(\bf x - \bf\mu)^T\Sigma^{-1}(\bf x - \bf\mu))</script><p>其中$\bf\mu = \bigl[ \begin{matrix} \mu_1&amp;…&amp;\mu_N \end{matrix} \bigr]^T$ 为N个随机变量的均值，$\bf\Sigma = E[(\bf x - \bf\mu)(\bf x - \bf\mu)^T]$为N个随机变量的协方差矩阵。</p>
-<h2 id="舒尔补"><a href="#舒尔补" class="headerlink" title="舒尔补"></a>舒尔补</h2><p>Schur complement将一个分4块的可逆矩阵分解为<code>上三角×对角×下三角</code>(UDL)，或者<code>下三角×对角×上三角</code>(LDU)形式：</p>
+\mathcal N({\bf\mu, \Sigma}) \sim p({\bf X}) = 
+\frac{1}{\sqrt{(2\pi)^N\det(\bf\Sigma)}}
+\exp \left(
+  -\frac{1}{2}{\bf(X - \mu)^T \Sigma^{-1} (X - \mu)}
+\right)
+\tag{2}</script><p>其中$\bf\mu = \bigl[ \begin{matrix} \mu_1&amp;…&amp;\mu_N \end{matrix} \bigr]^T$ 为N个随机变量的均值，正定矩阵$\bf\Sigma = E[({\bf X - \mu})({\bf X - \mu})^T]$为N个随机变量的协方差矩阵。这是N个变量的联合分布，为清晰起见省略指数前面的归一化参数，并将自变量分为两块$\bf X = [x^T, y^T]^T$：</p>
 <script type="math/tex; mode=display">
-\begin{aligned}
-\begin{bmatrix} A&B\\C&D \end{bmatrix} &= 
-\begin{bmatrix} I& \\ CA^{-1}&I \end{bmatrix} 
-\begin{bmatrix} A& \\ &D-CA^{-1}B \end{bmatrix}
-\begin{bmatrix} I&A^{-1}B \\ &I \end{bmatrix} \\
-&= 
-\begin{bmatrix} I&BD^{-1} \\ &I \end{bmatrix}
-\begin{bmatrix} A-BD^{-1}C& \\ &D \end{bmatrix}
-\begin{bmatrix} I& \\ D^{-1}C&I \end{bmatrix}
-\end{aligned}</script><p>其中$D-CA^{-1}B$和$A-BD^{-1}C$就是舒尔补，字母顺序是顺时针的，方便记忆。</p>
-<p>求逆也很方便：</p>
+p({\bf x, y}) = \eta \exp \left( -\frac{1}{2} 
+  {\bf 
+  \begin{bmatrix} \bf x - \mu_x \\ \bf y - \mu_y \end{bmatrix} ^T
+  \begin{bmatrix} \bf \Sigma_{xx} & \bf \Sigma_{xy} \\ \bf \Sigma_{xy}^T & \bf \Sigma_{yy} \end{bmatrix}^{-1}
+  \begin{bmatrix} \bf x - \mu_x \\ \bf y - \mu_y \end{bmatrix}
+  }
+\right)
+\tag{3}</script><h2 id="矩阵求逆引理"><a href="#矩阵求逆引理" class="headerlink" title="矩阵求逆引理"></a>矩阵求逆引理</h2><p>可以看到式(3)中协方差矩阵要求逆，我们不妨使用经典的高斯消元法手工求逆。首先我们在右边扩一个单位阵得到增广矩阵：</p>
 <script type="math/tex; mode=display">
-\begin{aligned}
-\begin{bmatrix} A&B\\C&D \end{bmatrix}^{-1} &= 
-\begin{bmatrix} I&-A^{-1}B \\ &I \end{bmatrix}
-\begin{bmatrix} A^{-1}& \\ &(D-CA^{-1}B)^{-1} \end{bmatrix}
-\begin{bmatrix} I& \\ -CA^{-1}&I \end{bmatrix} \\
-&= 
-\begin{bmatrix} I& \\ -D^{-1}C&I \end{bmatrix}
-\begin{bmatrix} (A-BD^{-1}C)^{-1}& \\ &D^{-1} \end{bmatrix}
-\begin{bmatrix} I&-BD^{-1} \\ &I \end{bmatrix}
-\end{aligned}</script><p>对于协方差矩阵这种对称矩阵求舒尔补，$B=C$，随处可见有二次型。</p>
-<p>将上面求逆的式子乘起来得到华丽的式子：</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-\begin{bmatrix} 
-A^{-1}+A^{-1}B(D-CA^{-1}B)^{-1}CA^{-1} & -A^{-1}B(D-CA^{-1}B)^{-1} \\
--(D-CA^{-1}B)^{-1}CA^{-1} & (D-CA^{-1}B)^{-1}
-\end{bmatrix} \\
+\left [
+  \begin{array}{c:c}
+  \bf \Sigma & \bf I
+  \end{array}
+\right ]
 =
+\left [
+\begin{array}{c:c}
+  \begin{matrix}
+    \bf A & \bf B \\ \bf C & \bf D
+  \end{matrix} &
+  \begin{matrix}
+    \bf I & \\ & \bf I
+  \end{matrix}
+\end{array}
+\right ]
+\tag{4}</script><p>接下来我们用高斯消元法，相当于左乘一系列矩阵，将(4)的左半部化为单位阵之后，右半部就变为原矩阵的逆了。我们先使用第一种消元顺序，先消第二行再消第一行：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+用第一行消去{\bf C}： \\
+\left [
+  \begin{matrix}
+    \bf I & \\ \bf -CA^{-1} & \bf I
+  \end{matrix}
+\right ] &
+\left [
+\begin{array}{c:c}
+  \begin{matrix}
+    \bf A & \bf B \\ \bf C & \bf D
+  \end{matrix} &
+  \begin{matrix}
+    \bf I & \\ & \bf I
+  \end{matrix}
+\end{array}
+\right ] \\
+=
+& \left [
+\begin{array}{c:c}
+  \begin{matrix}
+    \bf A & \bf B \\ & \bf D-CA^{-1}B
+  \end{matrix} &
+  \begin{matrix}
+    \bf I & \\ \bf -CA^{-1} & \bf I
+  \end{matrix}
+\end{array}
+\right ],
+
+\\\\
+用第二行消去{\bf B}： \\
+\left [
+  \begin{matrix}
+    \bf I & \bf -B(D-CA^{-1}B)^{-1} \\ & \bf I
+  \end{matrix}
+\right ] &
+\left [
+\begin{array}{c:c}
+  \begin{matrix}
+    \bf A & \bf B \\ & \bf D-CA^{-1}B
+  \end{matrix} &
+  \begin{matrix}
+    \bf I & \\ \bf -CA^{-1} & \bf I
+  \end{matrix}
+\end{array}
+\right ] \\
+=
+& \left [
+\begin{array}{c:c}
+  \begin{matrix}
+    \bf A & \bf \\ & \bf D-CA^{-1}B
+  \end{matrix} &
+  \begin{matrix}
+    \bf I+B(D-CA^{-1}B)^{-1}CA^{-1} & \bf -B(D-CA^{-1}B)^{-1} \\ 
+    \bf -CA^{-1} & \bf I
+  \end{matrix}
+\end{array}
+\right ],
+
+\\\\
+调整对角块： \\
+\left [
+  \begin{matrix}
+    \bf A^{-1} & \\ & \bf (D-CA^{-1}B)^{-1}
+  \end{matrix}
+\right ] &
+\left [
+\begin{array}{c:c}
+  \begin{matrix}
+    \bf A & \\ & \bf D-CA^{-1}B
+  \end{matrix}&
+  \begin{matrix}
+    ... & ... \\ ... & \bf I
+  \end{matrix}
+\end{array}
+\right ] \\
+=
+& \left [
+\begin{array}{c:c}
+  \begin{matrix}
+    \bf I & \\ & \bf I
+  \end{matrix} &
+  \begin{matrix}
+    \bf A^{-1}+A^{-1}B(D-CA^{-1}B)^{-1}CA^{-1} & \bf -A^{-1}B(D-CA^{-1}B)^{-1} \\ 
+    \bf -(D-CA^{-1}B)^{-1}CA^{-1} & \bf (D-CA^{-1}B)^{-1}
+  \end{matrix}
+\end{array}
+\right ]
+\end{aligned}</script><p>我们不妨用另一种顺序求逆：先消第一行再消第二行：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+用第二行消去{\bf B}： \\
+\left [
+  \begin{matrix}
+    \bf I & \bf -BD^{-1}\\ & \bf I
+  \end{matrix}
+\right ] &
+\left [
+\begin{array}{c:c}
+  \begin{matrix}
+    \bf A & \bf B \\ \bf C & \bf D
+  \end{matrix} &
+  \begin{matrix}
+    \bf I & \\ & \bf I
+  \end{matrix}
+\end{array}
+\right ] \\
+=
+& \left [
+\begin{array}{c:c}
+  \begin{matrix}
+    \bf A-BD^{-1}C & \\ \bf C & \bf D
+  \end{matrix} &
+  \begin{matrix}
+    \bf I & \bf -BD^{-1} \\ & \bf I
+  \end{matrix}
+\end{array}
+\right ],
+
+\\\\
+用第一行消去{\bf C}： \\
+\left [
+  \begin{matrix}
+    \bf I & \\ \bf -C(A-BD^{-1}C)^{-1} & \bf I
+  \end{matrix}
+\right ] &
+\left [
+\begin{array}{c:c}
+  \begin{matrix}
+    \bf A-BD^{-1}C & \\ \bf C & \bf D
+  \end{matrix} &
+  \begin{matrix}
+    \bf I & \bf -BD^{-1} \\ & \bf I
+  \end{matrix}
+\end{array}
+\right ] \\
+=
+& \left [
+\begin{array}{c:c}
+  \begin{matrix}
+    \bf A-BD^{-1}C & \bf \\ & \bf D
+  \end{matrix} &
+  \begin{matrix}
+    \bf I & \bf -BD^{-1} \\
+    \bf -C(A-BD^{-1}C)^{-1} & \bf I+C(A-BD^{-1}C)^{-1}BD^{-1}
+  \end{matrix}
+\end{array}
+\right ],
+
+\\\\
+调整对角块： \\
+\left [
+  \begin{matrix}
+    \bf (A-BD^{-1}C)^{-1} & \\ & \bf D^{-1}
+  \end{matrix}
+\right ] &
+\left [
+\begin{array}{c:c}
+  \begin{matrix}
+    \bf A-BD^{-1}C & \bf \\ & \bf D
+  \end{matrix} &
+  \begin{matrix}
+    \bf I & \bf -BD^{-1} \\
+    \bf -C(A-BD^{-1}C)^{-1} & \bf I+C(A-BD^{-1}C)^{-1}BD^{-1}
+  \end{matrix}
+\end{array}
+\right ] \\
+=
+& \left [
+\begin{array}{c:c}
+  \begin{matrix}
+    \bf I & \\ & \bf I
+  \end{matrix} &
+  \begin{matrix}
+    \bf (A-BD^{-1}C)^{-1} & \bf -(A-BD^{-1}C)^{-1}BD^{-1}\\
+    \bf -D^{-1}C(A-BD^{-1}C)^{-1} & \bf D^{-1}+D^{-1}C(A-BD^{-1}C)^{-1}BD^{-1} 
+  \end{matrix}
+\end{array}
+\right ]
+\end{aligned}</script><p>我们可以发现，$\bf D-CA^{-1}B$和$\bf A-BD^{-1}C$这样的结构很常见，这被称为舒尔补(Schur complement)。为方便记诵可以留意到字母顺序是顺时针的。</p>
+<p>这两种求逆方式是等价的：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&
+\begin{bmatrix}
+  \bf A & \bf B \\ \bf C & \bf D
+\end{bmatrix}^{-1} \\
+=&
 \begin{bmatrix} 
-(A-BD^{-1}C)^{-1} & -(A-BD^{-1}C)^{-1}BD^{-1} \\
--D^{-1}C(A-BD^{-1}C)^{-1} & D^{-1}+D^{-1}C(A-BD^{-1}C)^{-1}BD^{-1}
+    \bf A^{-1}+A^{-1}B(D-CA^{-1}B)^{-1}CA^{-1} & \bf -A^{-1}B(D-CA^{-1}B)^{-1} \\ 
+    \bf -(D-CA^{-1}B)^{-1}CA^{-1} & \bf (D-CA^{-1}B)^{-1}
+\end{bmatrix} \\
+=&
+\begin{bmatrix} 
+    \bf (A-BD^{-1}C)^{-1} & \bf -(A-BD^{-1}C)^{-1}BD^{-1}\\
+    \bf -D^{-1}C(A-BD^{-1}C)^{-1} & \bf D^{-1}+D^{-1}C(A-BD^{-1}C)^{-1}BD^{-1} 
 \end{bmatrix}
-\end{aligned}</script><p>拆开4个式子，称为<code>SMW等式</code>(Sherman-Morrison-Woodbury)：</p>
+\end{aligned}
+\tag{5}</script><p>拆开4个式子，称为<code>SMW等式</code>(Sherman-Morrison-Woodbury)：</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-(A-BD^{-1}C)^{-1} &\equiv A^{-1}+A^{-1}B(D-CA^{-1}B)^{-1}CA^{-1} \\
-(D-CA^{-1}B)^{-1} &\equiv D^{-1}+D^{-1}C(A-BD^{-1}C)^{-1}BD^{-1} \\
-A^{-1}B(D-CA^{-1}B)^{-1} &\equiv (A-BD^{-1}C)^{-1}BD^{-1} \\
-D^{-1}C(A-BD^{-1}C)^{-1} &\equiv (D-CA^{-1}B)^{-1}CA^{-1}
-\end{aligned}</script><p>其实可以看出，若ABCD分别代换为DCBA，前面两组式子是等价的，后面两组式子也是等价的，相当于只有两条等式。利用这些等式可以进行化简，两个项变一个项，左乘变右乘等等。虽然后文并没用到，但是别的卡尔曼滤波器推导方法则是反复利用这些公式来将结果化到标准形式。。</p>
-<h2 id="乘法原理和贝叶斯公式"><a href="#乘法原理和贝叶斯公式" class="headerlink" title="乘法原理和贝叶斯公式"></a>乘法原理和贝叶斯公式</h2><p>一个联合概率密度函数可以写成连乘的形式；其中$\bf {x_i}$也可以是个向量：</p>
-<script type="math/tex; mode=display">
-p(x_1,x_2,...) = p(x_1)p(x_2|x_1)p(x_3|x_1,x_2)...</script><p>如果只有两个（两组）随机变量，联合概率密度函数可以写成两种形式：</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-p(x,y) &= p(x)p(y|x) \\
-&= p(y)p(x|y)
-\end{aligned}</script><p>调整一下就是常见的贝叶斯公式：</p>
-<script type="math/tex; mode=display">
-p(y|x) = \frac{p(x|y)p(y)}{p(x)}</script><p>赋予它一些含义：$p(y|x)$称为<strong>后验(posterior)</strong>，$p(x|y)$称为<strong>似然(likelihood)</strong>，$p(y)$称为<strong>先验(prior)</strong>。</p>
-<h2 id="展开联合高斯概率密度函数"><a href="#展开联合高斯概率密度函数" class="headerlink" title="展开联合高斯概率密度函数"></a>展开联合高斯概率密度函数</h2><p>已知</p>
+\bf (A-BD^{-1}C)^{-1} &\equiv \bf A^{-1}+A^{-1}B(D-CA^{-1}B)^{-1}CA^{-1} \\
+\bf (D-CA^{-1}B)^{-1} &\equiv \bf D^{-1}+D^{-1}C(A-BD^{-1}C)^{-1}BD^{-1} \\
+\bf A^{-1}B(D-CA^{-1}B)^{-1} &\equiv \bf (A-BD^{-1}C)^{-1}BD^{-1} \\
+\bf D^{-1}C(A-BD^{-1}C)^{-1} &\equiv \bf (D-CA^{-1}B)^{-1}CA^{-1}
+\end{aligned}
+\tag{6}</script><p>其实可以看出，若ABCD分别代换为DCBA，前面两组式子是等价的，后面两组式子也是等价的，相当于只有两条等式。利用这些等式可以进行化简，两个项变一个项，左乘变右乘等等。</p>
+<h2 id="由联合高斯分布得到条件分布"><a href="#由联合高斯分布得到条件分布" class="headerlink" title="由联合高斯分布得到条件分布"></a>由联合高斯分布得到条件分布</h2><p>已知</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
 \bf p(x) &= \bf \mathcal N(\mu_x, \Sigma_{xx}) \\
 \bf p(y) &= \bf \mathcal N(\mu_y, \Sigma_{yy}) \\
 \bf p(x, y) &= \mathcal N \left(\begin{bmatrix} \mu_x \\ \mu_y \end{bmatrix}, \begin{bmatrix} \bf\Sigma_{xx}&\bf\Sigma_{xy}\\\bf\Sigma_{yx}&\bf\Sigma_{yy} \end{bmatrix} \right) \\
- &= \bf \eta \space exp \left(-\frac{1}{2} \begin{bmatrix} \bf x-\mu_x \\ \bf y-\mu_y \end{bmatrix}^T
+ &= \bf \eta \space \exp \left(-\frac{1}{2} \begin{bmatrix} \bf x-\mu_x \\ \bf y-\mu_y \end{bmatrix}^T
  \begin{bmatrix} \bf\Sigma_{xx}&\bf\Sigma_{xy}\\\bf\Sigma_{yx}&\bf\Sigma_{yy} \end{bmatrix}^{-1}
  \begin{bmatrix} \bf x-\mu_x \\ \bf y-\mu_y \end{bmatrix} \right)
-\end{aligned}</script><p>其中$\bf\Sigma_{xy} = \bf\Sigma_{yx}^T$。我们展开联合分布$\bf p(x,y)$，只考虑指数部分的二次型：</p>
+\end{aligned}</script><p>其中$\bf\Sigma_{xy} = \bf\Sigma_{yx}^T$。我们目的是展开为一个乘积：$p({\bf x,y}) = p({\bf x|y})p({\bf y})$，从而将$\bf y$条件化。相当于在指数部分分离出关于$\bf y<script type="math/tex">和</script>\Sigma_{yy}$的二次型。将(5)代入联合协方差矩阵：</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-&\overbrace{
- \begin{bmatrix} \bf x-\mu_x \\ \bf y-\mu_y \end{bmatrix}^T
- \underbrace{\begin{bmatrix} \bf\Sigma_{xx}&\bf\Sigma_{xy}\\\bf\Sigma_{yx}&\bf\Sigma_{yy} \end{bmatrix}^{-1}}_\text{使用求逆的舒尔补展开}
- \begin{bmatrix} \bf x-\mu_x \\ \bf y-\mu_y \end{bmatrix}
- }^{\bf p(x,y)\text{联合概率密度}} \\
-=&\underbrace{ \begin{bmatrix} \bf x-\mu_x \\ \bf y-\mu_y \end{bmatrix}^T
- \begin{bmatrix} I & \\ \bf-\Sigma_{yy}^{-1}\Sigma_{yx} & I \end{bmatrix}
- }
- \begin{bmatrix} \bf(\Sigma_{xx} - \Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx})^{-1} & \\ & \bf\Sigma_{yy}^{-1} \end{bmatrix}
- \underbrace{\begin{bmatrix} I & \bf-\Sigma_{xy}\Sigma_{yy}^{-1} \\ & I \end{bmatrix}
- \begin{bmatrix} \bf x-\mu_x \\ \bf y-\mu_y \end{bmatrix}} \\
-=& \begin{bmatrix} \bf x-\mu_x-\Sigma_{xy}\Sigma_{yy}^{-1}(y-\mu_y) \\ \bf (y-\mu_y) \end{bmatrix} ^T
- \underbrace {\begin{bmatrix} \bf(\Sigma_{xx} - \Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx})^{-1} & \\ & \bf\Sigma_{yy}^{-1} \end{bmatrix}
- }_\text{对角块矩阵，二次型展开很方便}
-  \begin{bmatrix} \bf x-\mu_x-\Sigma_{xy}\Sigma_{yy}^{-1}(y-\mu_y) \\ \bf (y-\mu_y) \end{bmatrix} \\
-=& \underbrace{ \bf (x-\mu_x-\Sigma_{xy}\Sigma_{yy}^{-1}(y-\mu_y))^T(\Sigma_{xx} - \Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx})^{-1}(x-\mu_x-\Sigma_{xy}\Sigma_{yy}^{-1}(y-\mu_y)) }_{\bf p(x|y)\text{部分}} \\
- &+ \underbrace{ \bf (y-\mu_y)^T\Sigma_{yy}^{-1}(y-\mu_y) }_{\bf p(y)\text{部分}}
-\end{aligned}</script><p>从而得到后验概率$\bf p(x|y)$，其中协方差矩阵是一个关于$\bf\Sigma_{xx}$的舒尔补：</p>
+ &\bf
+  \begin{bmatrix} \bf x - \mu_x \\ \bf y - \mu_y \end{bmatrix} ^T
+  \begin{bmatrix} \bf \Sigma_{xx} & \bf \Sigma_{xy} \\ \bf \Sigma_{yx} & \bf \Sigma_{yy} \end{bmatrix}^{-1}
+  \begin{bmatrix} \bf x - \mu_x \\ \bf y - \mu_y \end{bmatrix} \\
+=&\bf
+  \begin{bmatrix} \bf x - \mu_x \\ \bf y - \mu_y \end{bmatrix} ^T
+  \begin{bmatrix} 
+    \bf (\Sigma_{xx}-\Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx})^{-1} & 
+    \bf -(\Sigma_{xx}-\Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx})^{-1}\Sigma_{xy}\Sigma_{yy}^{-1} \\ 
+    \bf -\Sigma_{yy}^{-1}\Sigma_{yx}(\Sigma_{xx}-\Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx})^{-1} & 
+    \bf \Sigma_{yy}^{-1} + \Sigma_{yy}^{-1}\Sigma_{yx}(\Sigma_{xx}-\Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx})^{-1}\Sigma_{xy}\Sigma_{yy}^{-1} 
+  \end{bmatrix} \\
+  & \quad \begin{bmatrix} \bf x - \mu_x \\ \bf y - \mu_y \end{bmatrix} \\
+=&\bf\space 
+  (y-\mu_y)^T\Sigma_{yy}^{-1}(y-\mu_y)\\
+  &\bf +\space \underline { (x-\mu_x)^T(\Sigma_{xx}-\Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx})^{-1} } (x-\mu_x)\\
+  &\bf -\space \underline { (x-\mu_x)^T(\Sigma_{xx}-\Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx})^{-1} } \Sigma_{xy}\Sigma_{yy}^{-1}(y-\mu_y) \\
+  &\bf -\space \underline { (y-\mu_y)^T\Sigma_{yy}^{-1}\Sigma_{yx} (\Sigma_{xx}-\Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx})^{-1} } (x-\mu_x) \\
+  &\bf +\space \underline { (y-\mu_y)^T\Sigma_{yy}^{-1}\Sigma_{yx} (\Sigma_{xx}-\Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx})^{-1} }\Sigma_{xy}\Sigma_{yy}^{-1}(y-\mu_y) \\
+=&\bf\space
+  (y-\mu_y)^T\Sigma_{yy}^{-1}(y-\mu_y)\\
+  &\bf +\space (x-\mu_x)^T\underline{(\Sigma_{xx}-\Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx})^{-1} \left(x-\mu_x - \Sigma_{xy}\Sigma_{yy}^{-1}(y-\mu_y) \right)} \\
+  &\bf - \space (y-\mu_y)^T\Sigma_{yy}^{-1}\Sigma_{yx} \underline{(\Sigma_{xx}-\Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx})^{-1} \left( x-\mu_x - \Sigma_{xy}\Sigma_{yy}^{-1}(y-\mu_y) \right) } \\
+=&\bf\space
+  \underbrace{(y-\mu_y)^T\Sigma_{yy}^{-1}(y-\mu_y)}_{p(y)部分}\\
+  &\bf +\space \underbrace{\left( x-\mu_x - \Sigma_{xy}\Sigma_{yy}^{-1}(y-\mu_y) \right)^T (\Sigma_{xx}-\Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx})^{-1} \left( x-\mu_x - \Sigma_{xy}\Sigma_{yy}^{-1}(y-\mu_y) \right)}_{p(x|y)部分} \\
+\end{aligned}</script><p>从而得到$\bf x$关于$\bf y$的条件概率$\bf p(x|y)$，其中协方差矩阵是一个关于$\bf\Sigma_{xx}$的舒尔补：</p>
 <script type="math/tex; mode=display">
-\bf p(x | y) = \mathcal N\left( \mu_x + \Sigma_{xy}\Sigma_{yy}^{-1}( y - \mu_y), \quad \Sigma_{xx} - \Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx} \right)</script><p>同理，用另一种方式展开舒尔补，我们可以得到x的后验概率：</p>
+\bf p(x | y) = \mathcal N\left( \mu_x + \Sigma_{xy}\Sigma_{yy}^{-1}( y - \mu_y), \quad \Sigma_{xx} - \Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx} \right)
+\tag{7}</script><p>另一方面，如果我们将$\bf x$条件化则可以得到$\bf y$的条件概率：</p>
 <script type="math/tex; mode=display">
-\bf p(y | x) = \mathcal N\left( \mu_y + \Sigma_{yx}\Sigma_{xx}^{-1}( x - \mu_x), \quad \Sigma_{yy} - \Sigma_{yx}\Sigma_{xx}^{-1}\Sigma_{xy} \right)</script><h2 id="推导经典的5个卡尔曼滤波器公式"><a href="#推导经典的5个卡尔曼滤波器公式" class="headerlink" title="推导经典的5个卡尔曼滤波器公式"></a>推导经典的5个卡尔曼滤波器公式</h2><p>将系统建模为以下两个<strong>线性</strong>方程：<code>运动方程</code>和<code>观测方程</code>：</p>
+\bf p(y | x) = \mathcal N\left( \mu_y + \Sigma_{yx}\Sigma_{xx}^{-1}( x - \mu_x), \quad \Sigma_{yy} - \Sigma_{yx}\Sigma_{xx}^{-1}\Sigma_{xy} \right)
+\tag{8}</script><h2 id="推导经典的5个卡尔曼滤波器公式"><a href="#推导经典的5个卡尔曼滤波器公式" class="headerlink" title="推导经典的5个卡尔曼滤波器公式"></a>推导经典的5个卡尔曼滤波器公式</h2><p>将系统建模为以下两个<strong>线性</strong>方程：<code>运动方程</code>和<code>观测方程</code>：</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
 \begin{cases}
-\bf x_k = \bf A_k\bf x_{k-1} &+ \bf w_k + &\bf u_k \\
-\bf y_k = \bf C_k\bf x_{k} &+ &\bf v_k
+\bf x_k = \bf A_k\bf x_{k-1} &+ \bf w_k + &\bf u_k & 运动方程 \\
+\bf y_k = \bf C_k\bf x_{k} &+ &\bf v_k & 观测方程
 \end{cases}
-\end{aligned}</script><p>其中，$\bf x_k$是当前系统的状态（比如速度、位姿等），$\bf w_k$为当前时刻系统的输入（外界驱动的因素），$\bf y_k$是当前观测（传感器测得值）；它们都加上了0均值的高斯噪声$\bf u_k \sim \mathcal N(\bf 0, \bf Q_k)$和$\bf v_k \sim \mathcal N(\bf 0, \bf R_k)$。</p>
-<p>由运动方程看出，系统是一个由带$\bf u_k$噪声的$\bf w_k$驱动的一阶自回归系统（AR(1)模型），因此系统是一定程度上可预测的；另外系统的观测方程描述了在$\bf x_k$状态下传感器可能的读数$\bf y_k$。根据运动方程得到的是$p(\bf x_k | \bf x_{k-1})$的分布，根据观测方程则得到$p(\bf y_k | \bf x_{k-1})$的分布。我们先算得它们的联合分布$p(\bf x_k,\bf y_k | \bf x_{k-1})$，进而得到后验分布$p(\bf x_k | \bf x_{k-1},\bf y_k)$，得于是到后验的均值和方差，这就是卡尔曼滤波的想法。</p>
-<p>我们先得到$p(\bf x_k | \bf x_{k-1})\sim\mathcal N(\bf\check{x}_k,\bf\check{P}_k)$，即卡尔曼滤波的<code>预测</code>：</p>
+\end{aligned}
+\tag{9}</script><p>其中，$\bf x_k$是当前系统的状态（比如速度、位姿等），$\bf w_k$为当前时刻系统的输入（外界驱动的因素），$\bf y_k$是当前传感器测得值（比如距离、角度等）；它们都加上了0均值的高斯噪声$\bf u_k \sim \mathcal N(\bf 0, \bf N_x)$和$\bf v_k \sim \mathcal N(\bf 0, \bf N_y)$。我们统一符号：$\bf x$的方差是$\bf P$，$\bf y$的方差是$\bf Q$；不带尖号的$\bf x_k, y_k$是$k$时刻状态和观测的真值，作为自变量；头顶上尖号$\bf \hat{y}_k$是$k$时刻传感器观测值，上尖号$\bf \hat{x}_k, \hat{P}_k$是$k$时刻传感器融合得到的最优估计值；下尖号的$\bf \check{x}_k, \check{P}_k, \check{y}_k, \check{Q}_k$是由$k-1$时刻的上尖号$\bf \hat{x}_{k-1}, \hat{P}_{k-1}$根据运动方程和观测方程算出来的估计值。</p>
+<p>我们目的是求后验 $p(\bf x_k|x_{k-1} = \hat{x}_{k-1}, y_k = \hat{y}_k)$，方法是通过将$\bf{y}_k$从联合分布$p(\bf x_k,{y}_k|{x}_{k-1})$中利用式(7)条件化。可以形象地理解为，先将状态$[\bf x_k]$扩增为$[\bf x_k, y_k]$以求联合分布，然后将$\bf y_k$给条件化掉。</p>
+<h3 id="联合分布"><a href="#联合分布" class="headerlink" title="联合分布"></a>联合分布</h3><p>对于联合分布我们要一个个来。先关注$\bf{x}_k$在$\bf x_{k-1} = \hat x_{k-1}$条件下的边缘分布。记$p(\bf {x}_k | x_{k-1} = \hat{x}_{k-1})\sim\mathcal N(\bf\check{x}_k,\bf\check{P}_k)$，这个过程被称为卡尔曼滤波的<code>预测</code>：</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-\bf\check{x}_k &= \bf E[\bf x_k] = E[A_k x_{k-1} + w_k + u_k] \\
+\bf \mu_x = \check{x}_k &= \bf E[\bf x_k] = E[A_k x_{k-1} + w_k + u_k] \\
 &= \bf A_kE[x_{k-1}] + w_k + E[u_k] \\
-&= \bf A_k\hat{x}_{k-1} + \underbrace {w_k}_\text{输入} \\ \\
-
-\bf\check{P}_k &= \bf E[(x_k - E[x_k])(x_k - E[x_k])^T] \\
+&= \bf A_k\hat{x}_{k-1} + \underbrace {w_k}_\text{输入}
+\end{aligned}
+\tag{10}</script><script type="math/tex; mode=display">
+\begin{aligned}
+\bf \Sigma_{xx} = \check{P}_k &= \bf E[(x_k - E[x_k])(x_k - E[x_k])^T] \\
 &= \bf E[(A_k x_{k-1} + w_k + u_k - A_k\hat{x}_{k-1} - w_k) \\
-&\quad \bf *(A_kx_{k-1} + w_k + u_k - A_k\hat{x}_{k-1} - w_k)^T] \\
+&\qquad \bf *(A_kx_{k-1} + w_k + u_k - A_k\hat{x}_{k-1} - w_k)^T] \\
 &= \bf A_k E[(x_{k-1} - \hat{x}_{k-1})(x_{k-1} - \hat{x}_{k-1})^T]A_k^T + E[u_k u_k^T] \\
-&= \bf A_k \hat{P}_{k-1} A_k^T + Q_k
+&= \bf A_k \hat{P}_{k-1} A_k^T + N_x
 
-\end{aligned}</script><p>对于y：</p>
+\end{aligned}
+\tag{11}</script><p>预测得到了$\bf \check x_{k}, \check P_k$，评估一下$\bf y_k$在这个$\bf x_k = \check x_{k}$条件下的边缘分布。记$p({\bf y_k|x_k=\check x_k, x_{k-1}=\hat x_{k-1}}) = p({\bf y_k|x_{k-1}=\hat x_{k-1}}) \sim \mathcal N(\check y_k, \check Q_k)$：</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-\mu_y &= \bf E[\bf y_k] \\
+\bf \mu_y = \check y_k &= \bf E[\bf y_k] \\
  &= \bf C_k\check{x}_k \\
- &= \bf C_k(\bf A_k\bf\hat{x}_{k-1} + \bf w_k) \\ \\
-
-\bf\Sigma_{yy} &= \bf E[(y_k - E[y_k])(y_k - E[y_k])^T] \\
+ &= \bf C_k(\bf A_k\bf\hat{x}_{k-1} + \bf w_k)
+\end{aligned}
+\tag{12}</script><script type="math/tex; mode=display">
+\begin{aligned}
+\bf\Sigma_{yy} = \check Q_k &= \bf E[(y_k - E[y_k])(y_k - E[y_k])^T] \\
 &= \bf E[(C_k x_{k} + v_k - C_k\check{x}_k)(C_k x_{k} + v_k - C_k\check{x}_k)^T] \\
 &= \bf C_k E[(x_{k} - \check{x}_{k})(x_{k} - \check{x}_{k})^T]C_k^T + E[v_k v_k^T] \\
-&= \bf C_k\check{P}_kC_k^T + R_k
-\end{aligned}</script><p>要得到联合高斯分布还需要$\bf x,y$的协方差矩阵：</p>
+&= \bf C_k\check{P}_kC_k^T + N_y
+\end{aligned}
+\tag{13}</script><p>$\bf {x}_k$与$\bf y_k$当然不独立，那么就要有协方差矩阵：</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
 \bf\Sigma_{xy} &= \bf E[(x_k - E[x_k])(y_k - E[y_k])^T] \\
 &= \bf E[(A_k(x_{k-1} - \hat{x}_{k-1}) + u_k)(C_k(A_k(x_{k-1} - \hat{x}_{k-1}) + u_k) + v_k)^T] \\
 &= \bf \left( A_k E[(x_{k-1} - \hat{x}_{k-1})(x_{k-1} - \hat{x}_{k-1})^T]A_k^T + E[u_k u_k^T] \right) C_k^T + 0 + 0 + 0 + 0 + 0 \\
-&= \bf(\underbrace{A_k \hat{P}_{k-1} A_k^T + Q_k}_{\check{P}_k})C_k^T \\
+&= \bf(\underbrace{A_k \hat{P}_{k-1} A_k^T + N_x}_{\check{P}_k})C_k^T \\
 &= \bf\check{P}_k C_k^T
-\end{aligned}</script><p>然后我们直接写出联合高斯分布$\bf p( x_k, y_k | x_{k-1})$：</p>
+\end{aligned}
+\tag{14}</script><p>由式(10-14)我们直接写出联合高斯分布$p(\bf x_k, y_k | x_{k-1} = \hat x_{k-1})$：</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-\bf p(x_k,y_k | x_{k-1}) &= \mathcal N\left(\begin{bmatrix} \mu_x \\ \mu_y \end{bmatrix}, \begin{bmatrix} \bf\Sigma_{xx}&\bf\Sigma_{xy}\\\bf\Sigma_{yx}&\bf\Sigma_{yy} \end{bmatrix} \right) \\
+\bf p(x_k,y_k | x_{k-1} = \hat x_{k-1}) &= \mathcal N\left(\begin{bmatrix} \mu_x \\ \mu_y \end{bmatrix}, \begin{bmatrix} \bf\Sigma_{xx}&\bf\Sigma_{xy}\\\bf\Sigma_{yx}&\bf\Sigma_{yy} \end{bmatrix} \right) \\
 &= \mathcal N\left(\begin{bmatrix} \bf\check{x}_k \\ \bf C_k\bf\check{x}_k \end{bmatrix}, 
 \begin{bmatrix} 
 \bf\check{P}_k & \bf\check{P}_k C_k^T \\ 
-\bf C_k\check{P}_k & \bf C_k\check{P}_kC_k^T + R_k 
+\bf C_k\check{P}_k & \bf C_k\check{P}_kC_k^T + N_y 
 \end{bmatrix} \right)
-\end{aligned}</script><p>由上文<a href="#展开联合高斯概率密度函数">展开联合高斯概率密度函数</a>得到后验概率，即卡尔曼滤波器的<code>更新</code>：</p>
+\end{aligned}</script><h3 id="条件分布"><a href="#条件分布" class="headerlink" title="条件分布"></a>条件分布</h3><p>由式(7)得到后验概率，即卡尔曼滤波器的<code>更新</code>：</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-&\bf p(x_k | x_{k-1}, y_k) \\
-&= \bf \mathcal N\left( \mu_x + \Sigma_{xy}\Sigma_{yy}^{-1}(y - \mu_y), \quad \Sigma_{xx} - \Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx} \right) \\
-&= \bf \mathcal N\left( \overbrace{ \check{x}_k + \underline{\check{P}_k C_k^T(C_k\check{P}_kC_k^T + R_k)^{-1}}(y_k - C_k\check{x}_k)}^{\text{后验均值}\hat x}, \quad 
-  \overbrace{(I - \underline{\check{P}_k C_k^T(\bf C_k\check{P}_kC_k^T + R_k)^{-1}} C_k)\check{P}_k}^{\text{后验方差}\hat P} \right)
+&\bf p(x_k | x_{k-1} = \hat x_{k-1}, y_k = \hat y_k) \\
+&= \bf \mathcal N \left( \mu_x + \Sigma_{xy}\Sigma_{yy}^{-1}(\hat y_k - \mu_y), \quad \Sigma_{xx} - \Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx} \right) \\
+&= \bf \mathcal N\left( \overbrace{ \check{x}_k + \underline{\check{P}_k C_k^T(C_k\check{P}_kC_k^T + N_y)^{-1}}(\hat y_k - C_k\check{x}_k)}^{\text{后验均值}\hat x}, \quad 
+  \overbrace{(I - \underline{\check{P}_k C_k^T(\bf C_k\check{P}_kC_k^T + N_y)^{-1}} C_k)\check{P}_k}^{\text{后验方差}\hat P} \right)
 
-\end{aligned}</script><p>发现有一些项重复性很高，总结为<code>卡尔曼增益</code>。（注意它的形式跟<a href="#舒尔补">第三条SMW等式</a>一样，意味着它也可以写成另外的形式）</p>
+\end{aligned}</script><p>发现有一些项重复性很高，总结为<code>卡尔曼增益</code>。（注意它的形式跟式(6)第三条一样，意味着它也可以写成另外的形式）</p>
 <script type="math/tex; mode=display">
-\bf K_k = \bf\check{P}_k C_k^T(C_k\check{P}_kC_k^T + R_k)^{-1}</script><p>于是后验的均值和方差为:</p>
+\bf K_k = \bf\check{P}_k C_k^T(C_k\check{P}_kC_k^T + N_y)^{-1}</script><p>于是后验的均值和方差为:</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
 \bf\hat{x}_k &= \bf \check{x}_k + K_k(y_k - C_k\check{x}_k) \\
 \bf\hat{P}_k &= \bf (I - K_kC_k)\check{P}_k
-\end{aligned}</script><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><script type="math/tex; mode=display">
+\end{aligned}</script><p>后验协方差更新有3种等价形式，将$\bf K_k$代进去可以很方便验证其相互等价，实际操作按需取用：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:left"></th>
+<th style="text-align:left">更新$\bf\hat P_k$</th>
+<th style="text-align:left">特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">基本形式</td>
+<td style="text-align:left">$\bf (I - K_kC_k)\check{P}_k$</td>
+<td style="text-align:left">数值稳定性差，不保证对称、正定</td>
+</tr>
+<tr>
+<td style="text-align:left">对称形式</td>
+<td style="text-align:left">$\bf \check P_k - K_k(C_k\check{P}_kC_k^T + N_y)K_k^T$</td>
+<td style="text-align:left">保证对称，不保证正定</td>
+</tr>
+<tr>
+<td style="text-align:left">正定形式</td>
+<td style="text-align:left">$\bf (I - K_kC_k)\check P_k(I - K_kC_k)^T + K_kN_yK_k^T$</td>
+<td style="text-align:left">保证对称而且正定</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><script type="math/tex; mode=display">
 \begin{aligned}
 系统建模：&
 \begin{cases}
@@ -362,18 +597,88 @@ p(y|x) = \frac{p(x|y)p(y)}{p(x)}</script><p>赋予它一些含义：$p(y|x)$称�
 预测(先验)：&
 \begin{cases}
   \bf\check{x}_k &= \bf A_k\hat{x}_{k-1} + w_k \\
-  \bf\check{P}_k &= \bf A_k\hat{P}_{k-1} A_k^T + Q_k
+  \bf\check{P}_k &= \bf A_k\hat{P}_{k-1} A_k^T + N_x
 \end{cases} \\
 卡尔曼增益：&
 \begin{cases}
-  \bf K_k &= \bf\check{P}_k C_k^T(C_k\check{P}_kC_k^T + R_k)^{-1}
+  \bf K_k &= \bf\check{P}_k C_k^T(C_k\check{P}_kC_k^T + N_y)^{-1}
 \end{cases} \\
 更新(后验)：&
 \begin{cases}
   \bf\hat{x}_k &= \bf \check{x}_k + K_k(y_k - C_k\check{x}_k) \\
   \bf\hat{P}_k &= \bf (I - K_kC_k)\check{P}_k
 \end{cases}
-\end{aligned}</script>
+\end{aligned}</script><h2 id="讨论：正则参数：信息矩阵和信息向量"><a href="#讨论：正则参数：信息矩阵和信息向量" class="headerlink" title="讨论：正则参数：信息矩阵和信息向量"></a>讨论：正则参数：信息矩阵和信息向量</h2><p>众所周知，高斯分布有两种对偶形式：可以表示为均值$\bf\mu$和协方差矩阵$\bf\Sigma$，也可表示为信息向量$\bf\xi$和信息矩阵$\bf\Omega$：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\bf\mathcal N(\mu, \Sigma)
+\begin{cases}
+\bf x-\mu &= \bf \Omega^{-1} (\tau-\xi) \\
+\bf \Sigma &= \bf \Omega^{-1}
+\end{cases}
+\qquad
+\bf\mathcal N^{-1}(\xi, \Omega)
+\begin{cases}
+\bf \tau-\xi &= \bf \Sigma^{-1} (x-\mu) \\
+\bf \Omega &= \bf \Sigma^{-1}
+\end{cases}
+\end{aligned}</script><script type="math/tex; mode=display">
+\bf 
+\eta\exp(-\frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu))
+\qquad
+\eta'\exp(-\frac{1}{2}(\tau-\xi)^T\Omega^{-1} (\tau-\xi))</script><p>给定一个联合分布，我们现在关注两种操作：求<code>边缘分布</code>和<code>条件分布</code>。对于均值、协方差矩阵的表示，若求边缘分布则直接提取$\bf\mu_x$和$\bf\Sigma_{xx}$矩阵块；求条件分布则需要做舒尔补等计算。另外我们由式(5)得到：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\begin{bmatrix} \bf\Sigma_{xx}&\bf\Sigma_{xy}\\\bf\Sigma_{yx}&\bf\Sigma_{yy} \end{bmatrix}^{-1} &= 
+\begin{bmatrix} 
+  \bf (\Sigma_{xx}-\Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx})^{-1} & 
+  \bf -(\Sigma_{xx}-\Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx})^{-1}\Sigma_{xy}\Sigma_{yy}^{-1} \\ 
+  \bf -\Sigma_{yy}^{-1}\Sigma_{yx}(\Sigma_{xx}-\Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx})^{-1} & 
+  \bf \Sigma_{yy}^{-1} + \Sigma_{yy}^{-1}\Sigma_{yx}(\Sigma_{xx}-\Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx})^{-1}\Sigma_{xy}\Sigma_{yy}^{-1} 
+\end{bmatrix} \\
+&= \begin{bmatrix} \bf\Omega_{xx}&\bf\Omega_{xy}\\\bf\Omega_{yx}&\bf\Omega_{yy} \end{bmatrix}
+\end{aligned}</script><p>即$\bf\Omega_{xx} = (\Sigma_{xx}-\Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx})^{-1}$，结合式(7)我们发现，信息矩阵的这个分块$\bf\Omega_{xx}$<strong>恰好等于条件分布的信息矩阵</strong>！这意味着给定协方差矩阵，要求条件分布的协方差矩阵时，相当于先求信息矩阵，挖掉其他部分之后再逆回来得到结果。</p>
+<p>均值跟信息向量也有相似的效果。均值先翻去信息向量：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\begin{bmatrix} \bf\tau_x-\xi_x \\ \bf\tau_y-\xi_y \end{bmatrix} &= 
+\begin{bmatrix} \bf\Sigma_{xx}&\bf\Sigma_{xy}\\\bf\Sigma_{yx}&\bf\Sigma_{yy} \end{bmatrix}^{-1} \begin{bmatrix} \bf x-\mu_x \\ \bf y-\mu_y \end{bmatrix} \\&= 
+\begin{bmatrix} \bf (\Sigma_{xx}-\Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx})^{-1}\left( x-\mu_x - \Sigma_{xy}\Sigma_{yy}^{-1} (y-\mu_y)\right) \\ ...\end{bmatrix} \\
+\end{aligned}</script><p>截取$\bf\tau_x-\xi_x$然后翻回均值：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\bf x - \hat\mu_x &= \bf (...)(...)^{-1}\left( x-\mu_x - \Sigma_{xy}\Sigma_{yy}^{-1} (y-\mu_y)\right) \\
+ &= \bf x- (\mu_x + \Sigma_{xy}\Sigma_{yy}^{-1} (y-\mu_y))
+\end{aligned}</script><p>恰好与式(7)一样。</p>
+<p>由信息矩阵信息向量跟均值方差表达式的对偶性，不难看出前者与后者求边缘分布和条件分布的操作恰好相反，总结如下：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:left"></th>
+<th style="text-align:left">参数表示</th>
+<th style="text-align:left">边缘分布</th>
+<th style="text-align:left">条件分布</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">均值协方差</td>
+<td style="text-align:left">$\begin{bmatrix}\bf\mu_x \ \bf\mu_y \end{bmatrix},\begin{bmatrix} \bf\Sigma_{xx}&amp;\bf\Sigma_{xy}\\\bf\Sigma_{yx}&amp;\bf\Sigma_{yy} \end{bmatrix}$</td>
+<td style="text-align:left">$\bf [\mu_x], \space [\Sigma_{xx}]$</td>
+<td style="text-align:left">$\begin{matrix} \bf [\mu_x + \Sigma_{xy}\Sigma_{yy}^{-1}( y - \mu_y)], \ \bf [\Sigma_{xx} - \Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx}]\end{matrix}$</td>
+</tr>
+<tr>
+<td style="text-align:left">信息向量矩阵</td>
+<td style="text-align:left">$\begin{bmatrix}\bf\xi_x \ \bf\xi_y \end{bmatrix},\begin{bmatrix} \bf\Omega_{xx}&amp;\bf\Omega_{xy}\\\bf\Omega_{yx}&amp;\bf\Omega_{yy} \end{bmatrix}$</td>
+<td style="text-align:left">$\begin{matrix} \bf [\xi_x + \Omega_{xy}\Omega_{yy}^{-1}( y - \xi_y)], \ \bf [\Omega_{xx} - \Omega_{xy}\Omega_{yy}^{-1}\Omega_{yx}]\end{matrix}$</td>
+<td style="text-align:left">$\bf [\xi_x], \space [\Omega_{xx}]$</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>由这一点我们可以得到一个最懒的卡尔曼滤波器更新形式：现将状态$\bf x$与观测$\bf y$构成增广的状态向量$[\bf x, y]$，求其均值和方差；然后对于均值，先翻去信息向量，截取$\bf\xi_x$之后求回后验均值；对于方差，则将整个硕大的协方差矩阵求逆得到信息矩阵，截取$\bf\Omega_{xx}$之后求逆得到后验协方差。而经典卡尔曼滤波器相当于优化了这个过程，减少了求逆的次数。</p>
+
         </div>
 
         <blockquote class="post-copyright">
@@ -381,7 +686,7 @@ p(y|x) = \frac{p(x|y)p(y)}{p(x)}</script><p>赋予它一些含义：$p(y|x)$称�
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2019-11-12T09:36:55.228Z" itemprop="dateUpdated">2019-11-12 17:36:55</time>
+    最后更新时间：<time datetime="2021-10-08T16:19:27.814Z" itemprop="dateUpdated">2021-10-09 00:19:27</time>
 </span><br>
 
 
